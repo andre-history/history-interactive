@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social-darwinistisk rashierarki — Nazistisk ideologi 1933–1945</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #1a1410 0%, #0d0a07 100%);
+    color: #d4c8b8;
+    font-family: 'Crimson Text', Georgia, serif;
+    padding: 24px 16px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-era {
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: #8a7a66;
+    margin-bottom: 10px;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: #e8ddd0;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #8a7a66, transparent);
+    margin: 14px auto 10px;
+  }
+
+  .header-desc {
+    font-size: 14px;
+    color: #8a7a66;
+    max-width: 520px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 28px;
+  }
+
+  .tab-btn {
+    background: transparent;
+    border: 1px solid rgba(138,122,102,0.2);
+    color: #8a7a66;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .tab-btn.active {
+    background: rgba(138,122,102,0.2);
+    border-color: #8a7a66;
+    color: #e8ddd0;
+  }
+
+  .tab-btn:hover:not(.active) {
+    border-color: rgba(138,122,102,0.4);
+    color: #b0a494;
+  }
+
+  /* Pyramid */
+  .pyramid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .tier-wrapper {
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    min-width: 200px;
+  }
+
+  .tier-wrapper:hover {
+    transform: scale(1.02);
+  }
+
+  .tier-wrapper.selected {
+    transform: scale(1.03);
+    z-index: 10;
+  }
+
+  .tier-block {
+    padding: 14px 18px;
+    text-align: center;
+    position: relative;
+    transition: all 0.35s ease;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .tier-wrapper.selected .tier-block {
+    border-color: #c4a870 !important;
+    box-shadow: 0 0 30px rgba(196,168,112,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  .tier-num {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: rgba(212,200,184,0.3);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+  }
+
+  .tier-title {
+    font-size: clamp(14px, 3vw, 18px);
+    font-weight: 600;
+    color: #e8ddd0;
+    margin-bottom: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  .tier-subtitle {
+    font-size: clamp(10px, 2vw, 12px);
+    color: rgba(212,200,184,0.6);
+    font-style: italic;
+  }
+
+  .tier-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: rgba(212,200,184,0.25);
+    transition: color 0.3s;
+  }
+
+  .tier-wrapper.selected .tier-arrow { display: none; }
+
+  .arrow-indicator {
+    text-align: center;
+    margin: 12px 0 4px;
+    font-size: 10px;
+    color: rgba(138,122,102,0.4);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .click-hint {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(138,122,102,0.4);
+    margin-top: 20px;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* Detail Panel */
+  .detail-panel {
+    margin-top: 24px;
+    background: rgba(30,24,18,0.8);
+    border: 1px solid rgba(138,122,102,0.25);
+    padding: 24px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .detail-level {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #8a7a66;
+    margin-bottom: 6px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .detail-title {
+    font-size: 22px;
+    font-weight: 400;
+    color: #e8ddd0;
+    margin: 0 0 6px;
+  }
+
+  .detail-summary {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #b0a494;
+    margin: 0 0 20px;
+    font-style: italic;
+  }
+
+  .group-card {
+    background: rgba(138,122,102,0.06);
+    border: 1px solid rgba(138,122,102,0.12);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .group-card:last-child { margin-bottom: 0; }
+
+  .group-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #c4b8a4;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .group-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .group-detail {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #9a8e7e;
+    padding-left: 14px;
+  }
+
+  /* Purge section */
+  .purge-intro {
+    font-size: 14px;
+    color: #8a7a66;
+    max-width: 520px;
+    margin: 0 auto 20px;
+    line-height: 1.6;
+    font-style: italic;
+    text-align: center;
+  }
+
+  .purge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .purge-item {
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(138,122,102,0.15);
+  }
+
+  .purge-item:hover {
+    transform: scale(1.01);
+  }
+
+  .purge-item.selected {
+    transform: scale(1.02);
+    border-color: rgba(180,120,100,0.4);
+  }
+
+  .purge-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .purge-icon {
+    font-size: 18px;
+    opacity: 0.5;
+    width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .purge-category {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e0d0c0;
+    letter-spacing: 0.3px;
+  }
+
+  .purge-chevron {
+    margin-left: auto;
+    font-size: 14px;
+    color: rgba(212,200,184,0.25);
+    transition: transform 0.3s;
+  }
+
+  .purge-item.selected .purge-chevron {
+    transform: rotate(90deg);
+  }
+
+  .purge-detail {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(138,122,102,0.15);
+    font-size: 13px;
+    line-height: 1.7;
+    color: #9a8e7e;
+    padding-left: 40px;
+    animation: fadeIn 0.25s ease;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(138,122,102,0.12);
+    text-align: center;
+  }
+
+  .footer p {
+    font-size: 11px;
+    color: rgba(138,122,102,0.4);
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto;
+    font-family: 'Courier New', monospace;
+  }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header-era">Nazistisk ideologi · 1933–1945</div>
+  <h1>Social-darwinistisk rashierarki</h1>
+  <div class="divider"></div>
+  <p class="header-desc">
+    Nazisternas pseudovetenskapliga rasbiologi delade in mänskligheten i en
+    strikt hierarki — från "herrefolk" till de som inte ens ansågs mänskliga.
+  </p>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('pyramid')">Rashierarkin</button>
+    <button class="tab-btn" onclick="switchTab('purge')">Utrensningsobjekt</button>
+  </div>
+
+  <!-- Pyramid Tab -->
+  <div id="tab-pyramid">
+    <div class="pyramid" id="pyramid-container"></div>
+    <div class="arrow-indicator">▼ Lägre rasmässig status ▼</div>
+    <div id="pyramid-detail"></div>
+    <p class="click-hint" id="pyramid-hint">Klicka på en nivå för att läsa mer</p>
+  </div>
+
+  <!-- Purge Tab -->
+  <div id="tab-purge" class="hidden">
+    <p class="purge-intro">
+      Parallellt med rashierarkin rensade nazisterna ut grupper som inte passade
+      in i "folkgemenskapen" — oavsett etnisk bakgrund.
+    </p>
+    <div class="purge-list" id="purge-container"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>
+      Denna visualisering presenterar nazisternas rasideologi i undervisningssyfte.
+      Ideologin saknade vetenskaplig grund och ledde till historiens värsta folkmord.
+    </p>
+  </div>
+</div>
+
+<script>
+const pyramidData = [
+  {
+    level: 1,
+    title: "Den ariska rasen",
+    subtitle: 'Herrefolket / "Übermenschen"',
+    color: "#8B7355",
+    borderColor: "#A0885A",
+    summary: "Högst upp stod den ariska rasen — de enda skaparna av kultur och civilisation enligt nazismen.",
+    groups: [
+      { name: "Tyskar", detail: 'Kärnan i det framtida "Stortyska riket". Betraktades som den renaste grenen av den ariska rasen.' },
+      { name: "Germanska folk", detail: 'Skandinaver, holländare, luxemburgare, tyskspråkiga schweizare och flamländska belgare — "utvalda folk" som skulle införlivas i riket.' },
+      { name: "Engelsmän", detail: "Hitler såg dem som en tyskättad ras och en potentiell allierad som kunde få behålla sin självständighet om de var fogliga." }
+    ]
+  },
+  {
+    level: 2,
+    title: '"Hedersarier"',
+    subtitle: "Rasmässigt värdefulla individer",
+    color: "#6B6B5E",
+    borderColor: "#858573",
+    summary: "Grupper som inte var germanska men som ansågs rasmässigt värdefulla eller strategiskt viktiga.",
+    groups: [
+      { name: "Japaner", detail: 'Beundrades för sin militära styrka och expansionism. Sågs som en strategisk partner i kampen mot "judisk bolsjevism".' },
+      { name: '"Germaniseringsbara" individer', detail: 'I ockuperade områden (t.ex. Polen) kunde barn med blont hår och blå ögon tas från sina familjer för att adopteras och "återskapas" som arier i Tyskland.' }
+    ]
+  },
+  {
+    level: 3,
+    title: "Undermänniskor",
+    subtitle: '"Untermenschen"',
+    color: "#5A4A3A",
+    borderColor: "#6E5C48",
+    summary: "Rasmässigt underlägsna grupper vars öde varierade mellan förslavning och utrotning.",
+    groups: [
+      { name: "Slaver", detail: 'Polacker, ryssar, ukrainare m.fl. beskrevs som en "lägre form av mänsklighet". Lebensraum-planen innebar förslavning — miljontals skulle dö genom svält för att ge plats åt tyska nybyggare.' },
+      { name: "Romer", detail: 'Betraktades som rasmässigt "avskräde". Dömdes till samma öde som judarna — total utrotning i dödslägren.' }
+    ]
+  },
+  {
+    level: 4,
+    title: "Den rasmässiga motpolen",
+    subtitle: "Längst ner i hierarkin",
+    color: "#3A2A1A",
+    borderColor: "#4E3A28",
+    summary: 'Judarna ansågs inte ens vara mänskliga. De beskrevs som mänsklighetens "variga blindtarm".',
+    groups: [
+      { name: "Judar", detail: 'Beskrevs som roten till allt ont — Tysklands förlust i WWI, den ekonomiska krisen. Nazisterna ansåg dem vara en parasitisk anti-ras. Målet var fullständig "biologisk utrotning".' }
+    ]
+  }
+];
+
+const purgeData = [
+  { category: "Politiska fiender", icon: "⚔", color: "#6B3A3A", detail: "Kommunister och socialdemokrater var de farligaste ideologiska motståndarna och de första som skickades till koncentrationsläger som Dachau." },
+  { category: '"Biologiskt ovärdiga" tyskar', icon: "✕", color: "#5A3333", detail: 'Mentalsjuka, funktionsnedsatta och kroniskt sjuka betraktades som "liv ovärdigt att leva". Genom T4-programmet mördades ca 70 000–80 000 personer för att de ansågs försvaga den ariska rasens arvsmassa.' },
+  { category: "Homosexuella", icon: "△", color: "#4D2D2D", detail: "Förföljdes eftersom de inte bidrog till rasens fortplantning." },
+  { category: "Jehovas vittnen", icon: "◇", color: "#422828", detail: "Förföljdes för att de vägrade svära trohet till staten eller bära vapen." },
+  { category: '"Asociala"', icon: "▽", color: "#382222", detail: 'Prostituerade, tiggare och återfallsförbrytare placerades i läger för att "rensa upp i samhället".' }
+];
+
+let selectedLevel = null;
+let selectedPurge = null;
+
+function buildPyramid() {
+  const container = document.getElementById('pyramid-container');
+  container.innerHTML = '';
+  pyramidData.forEach((tier, i) => {
+    const widthPercent = 25 + (i * 25);
+    const wrapper = document.createElement('div');
+    wrapper.className = 'tier-wrapper' + (selectedLevel === i ? ' selected' : '');
+    wrapper.style.width = widthPercent + '%';
+    wrapper.style.maxWidth = '700px';
+    wrapper.onclick = () => { selectLevel(i); };
+
+    wrapper.innerHTML = `
+      <div class="tier-block" style="background: linear-gradient(135deg, ${tier.color}, ${tier.color}dd); border: 1px solid ${selectedLevel === i ? '#c4a870' : tier.borderColor};">
+        <div class="tier-num">${i + 1}</div>
+        <div class="tier-title">${tier.title}</div>
+        <div class="tier-subtitle">${tier.subtitle}</div>
+        ${selectedLevel !== i ? '<div class="tier-arrow">›</div>' : ''}
+      </div>
+    `;
+    container.appendChild(wrapper);
+  });
+}
+
+function selectLevel(i) {
+  selectedLevel = selectedLevel === i ? null : i;
+  buildPyramid();
+  renderPyramidDetail();
+}
+
+function renderPyramidDetail() {
+  const el = document.getElementById('pyramid-detail');
+  const hint = document.getElementById('pyramid-hint');
+  if (selectedLevel === null) {
+    el.innerHTML = '';
+    hint.classList.remove('hidden');
+    return;
+  }
+  hint.classList.add('hidden');
+  const tier = pyramidData[selectedLevel];
+  el.innerHTML = `
+    <div class="detail-panel">
+      <div class="detail-level">Nivå ${tier.level} av 4</div>
+      <h3 class="detail-title">${tier.title}</h3>
+      <p class="detail-summary">${tier.summary}</p>
+      ${tier.groups.map(g => `
+        <div class="group-card">
+          <div class="group-name">
+            <span class="group-dot" style="background: ${tier.borderColor};"></span>
+            ${g.name}
+          </div>
+          <div class="group-detail">${g.detail}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function buildPurge() {
+  const container = document.getElementById('purge-container');
+  container.innerHTML = '';
+  purgeData.forEach((item, idx) => {
+    const isSelected = selectedPurge === idx;
+    const div = document.createElement('div');
+    div.className = 'purge-item' + (isSelected ? ' selected' : '');
+    div.style.background = isSelected
+      ? `linear-gradient(135deg, ${item.color}, ${item.color}cc)`
+      : `${item.color}88`;
+    div.onclick = () => { selectPurge(idx); };
+
+    div.innerHTML = `
+      <div class="purge-header">
+        <span class="purge-icon">${item.icon}</span>
+        <span class="purge-category">${item.category}</span>
+        <span class="purge-chevron">›</span>
+      </div>
+      ${isSelected ? `<div class="purge-detail">${item.detail}</div>` : ''}
+    `;
+    container.appendChild(div);
+  });
+}
+
+function selectPurge(idx) {
+  selectedPurge = selectedPurge === idx ? null : idx;
+  buildPurge();
+}
+
+function switchTab(tab) {
+  selectedLevel = null;
+  selectedPurge = null;
+
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+
+  if (tab === 'pyramid') {
+    document.getElementById('tab-pyramid').classList.remove('hidden');
+    document.getElementById('tab-purge').classList.add('hidden');
+    buildPyramid();
+    renderPyramidDetail();
+  } else {
+    document.getElementById('tab-pyramid').classList.add('hidden');
+    document.getElementById('tab-purge').classList.remove('hidden');
+    buildPurge();
+  }
+}
+
+// Initial render
+buildPyramid();
+buildPurge();
+</script>
+</body>
+</html>
