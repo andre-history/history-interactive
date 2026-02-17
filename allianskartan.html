@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Europas allianser inför första världskriget</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #f9fafb; color: #1f2937; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem; }
+  h1 { font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: 0.2rem; }
+  .subtitle { font-size: 0.85rem; color: #6b7280; text-align: center; margin-bottom: 1rem; }
+  .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: #4b5563; font-weight: 500; }
+  .map-wrap { position: relative; width: 100%; max-width: 680px; aspect-ratio: 700/560; }
+  .map-wrap svg { width: 100%; height: 100%; }
+  .detail-panel { margin-top: 0.75rem; max-width: 480px; width: 100%; border-radius: 12px; border: 2px solid #ccc; padding: 1rem; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .detail-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+  .detail-header .name { font-weight: 700; color: #1f2937; }
+  .detail-badge { margin-left: auto; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 99px; }
+  .detail-label { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .detail-text { font-size: 0.85rem; color: #4b5563; line-height: 1.6; }
+  .rel-list { display: flex; flex-direction: column; gap: 0.4rem; }
+  .rel-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: 8px; cursor: pointer; }
+  .rel-item:hover { background: #f3f4f6; }
+  .rel-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .rel-name { font-size: 0.85rem; font-weight: 500; color: #374151; }
+  .rel-badge { font-size: 0.7rem; padding: 0.1rem 0.45rem; border-radius: 99px; font-weight: 600; margin-left: auto; }
+  .footer { font-size: 0.7rem; color: #9ca3af; margin-top: 1.5rem; text-align: center; }
+</style>
+</head>
+<body>
+<h1>Europas allianser inför första världskriget</h1>
+<p class="subtitle">Klicka på ett land eller en linje för att utforska relationerna</p>
+<div class="legend" id="legend"></div>
+<div class="map-wrap"><svg id="map" viewBox="0 0 700 560"></svg></div>
+<div id="panel"></div>
+<p class="footer">Stormakterna inför första världskriget · Allianskartan</p>
+
+<script>
+const COUNTRIES = [
+  { id:"uk", name:"Storbritannien", short:"GBR", x:200, y:140, color:"#1C2C5B", ring:"#C8102E", bloc:"entente" },
+  { id:"fr", name:"Frankrike", short:"FRA", x:120, y:320, color:"#002395", ring:"#ED2939", bloc:"entente" },
+  { id:"ru", name:"Ryssland", short:"RYS", x:360, y:280, color:"#0039A6", ring:"#D52B1E", bloc:"entente" },
+  { id:"de", name:"Tyskland", short:"TYS", x:480, y:140, color:"#2C2C2C", ring:"#DD0000", bloc:"central" },
+  { id:"ah", name:"Österrike-Ungern", short:"Ö-U", x:560, y:320, color:"#1A1A2E", ring:"#B8860B", bloc:"central" },
+  { id:"it", name:"Italien", short:"ITA", x:340, y:470, color:"#008C45", ring:"#CD212A", bloc:"central" },
+  { id:"ot", name:"Osmanska riket", short:"OSM", x:560, y:470, color:"#8B0000", ring:"#E30A17", bloc:"none" },
+];
+
+const RELATIONS = [
+  { from:"uk", to:"fr", type:"ally", label:"Entente cordiale (1904)", detail:"Nära allierade sedan 1904. Delade strategiska intressen mot Tyskland." },
+  { from:"uk", to:"ru", type:"ally", label:"Brittisk-rysk entente (1907)", detail:"Entente sedan 1907. Löste koloniala tvister i Centralasien." },
+  { from:"fr", to:"ru", type:"ally", label:"Fransk-rysk allians (1894)", detail:"Militärallians sedan 1894. Frankrike finansierade Rysslands industrialisering." },
+  { from:"de", to:"ah", type:"ally", label:"Dubbelförbundet (1879)", detail:"Kärnan i Trippelalliansen. Tyskland var Österrike-Ungerns viktigaste stöd." },
+  { from:"de", to:"it", type:"tense_ally", label:"Trippelalliansen (1882)", detail:"Formellt allierade, men Italien var opålitligt och hade hemliga avtal med Frankrike." },
+  { from:"ah", to:"it", type:"tense_ally", label:"Spänd allians", detail:"Formella allierade, men Italien krävde 'oinlösta' områden från Österrike (Trentino, Trieste)." },
+  { from:"fr", to:"de", type:"enemy", label:"Ärkefiender", detail:"Djup fiendskap sedan 1871. Frankrike ville ha revansch och återta Alsace-Lorraine." },
+  { from:"uk", to:"de", type:"rival", label:"Flottkapplöpning", detail:"Rival om sjöherravälde. Tysklands flottupprustning hotade Storbritanniens dominans." },
+  { from:"ru", to:"ah", type:"enemy", label:"Balkanrivaler", detail:"Bittra rivaler om inflytande på Balkan. Rysslands panslavism hotade dubbelmonarkin." },
+  { from:"ru", to:"ot", type:"rival", label:"Sund-frågan", detail:"Ryssland ville kontrollera Bosporen och Dardanellerna för tillgång till Medelhavet." },
+  { from:"de", to:"ot", type:"friendly", label:"Tyskt inflytande", detail:"Tyskland stödde osmansk militär modernisering. Bagdadbanan var ett gemensamt projekt." },
+  { from:"fr", to:"it", type:"friendly", label:"Hemliga avtal", detail:"Trots Italiens plats i Trippelalliansen hade länderna hemliga avtal om neutralitet." },
+];
+
+const TYPES = {
+  ally:       { color:"#22863a", dash:"",    label:"Allierade",         width:3   },
+  tense_ally: { color:"#B8860B", dash:"8,4", label:"Spänd allians",    width:2.5 },
+  enemy:      { color:"#cb2431", dash:"",    label:"Fiender / Rivaler", width:3   },
+  rival:      { color:"#e36209", dash:"6,4", label:"Rivalitet",        width:2.5 },
+  friendly:   { color:"#6f9fd8", dash:"4,4", label:"Vänskapliga band", width:2   },
+};
+
+const NS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("map");
+const panel = document.getElementById("panel");
+let hovered = null, selRel = null, selCountry = null;
+
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k,v] of Object.entries(attrs || {})) {
+    if (k === "textContent") e.textContent = v;
+    else e.setAttribute(k, v);
+  }
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+function getC(id) { return COUNTRIES.find(c => c.id === id); }
+
+// Legend
+const legend = document.getElementById("legend");
+for (const [key, s] of Object.entries(TYPES)) {
+  const item = document.createElement("div"); item.className = "legend-item";
+  const lsvg = document.createElementNS(NS, "svg"); lsvg.setAttribute("width","30"); lsvg.setAttribute("height","10");
+  const ll = document.createElementNS(NS, "line");
+  ll.setAttribute("x1","0"); ll.setAttribute("y1","5"); ll.setAttribute("x2","30"); ll.setAttribute("y2","5");
+  ll.setAttribute("stroke", s.color); ll.setAttribute("stroke-width", s.width);
+  if (s.dash) ll.setAttribute("stroke-dasharray", s.dash);
+  lsvg.appendChild(ll); item.appendChild(lsvg);
+  const sp = document.createElement("span"); sp.textContent = s.label; item.appendChild(sp);
+  legend.appendChild(item);
+}
+
+const lineEls = [], labelEls = [], nodeEls = [], glowEls = [];
+
+// Bloc backgrounds
+el("ellipse", { cx:220, cy:240, rx:195, ry:170, fill:"#22863a", "fill-opacity":"0.05", stroke:"#22863a", "stroke-width":1, "stroke-dasharray":"6,4", "stroke-opacity":"0.3" }, svg);
+el("text", { x:70, y:185, "font-size":11, fill:"#22863a", "font-weight":600, opacity:0.5, textContent:"TRIPPELENTENTEN" }, svg);
+el("ellipse", { cx:520, cy:300, rx:175, ry:200, fill:"#B8860B", "fill-opacity":"0.05", stroke:"#B8860B", "stroke-width":1, "stroke-dasharray":"6,4", "stroke-opacity":"0.3" }, svg);
+el("text", { x:580, y:155, "font-size":11, fill:"#B8860B", "font-weight":600, opacity:0.5, textContent:"TRIPPELALLIANSEN" }, svg);
+
+// Relations
+RELATIONS.forEach((rel, i) => {
+  const f = getC(rel.from), t = getC(rel.to), s = TYPES[rel.type];
+  const g = el("g", {}, svg); g.style.cursor = "pointer";
+  const line = el("line", { x1:f.x, y1:f.y, x2:t.x, y2:t.y, stroke:s.color, "stroke-width":s.width }, g);
+  if (s.dash) line.setAttribute("stroke-dasharray", s.dash);
+  line.style.transition = "opacity 0.3s, stroke-width 0.2s";
+  lineEls.push({ el:line, rel, style:s });
+  el("line", { x1:f.x, y1:f.y, x2:t.x, y2:t.y, stroke:"transparent", "stroke-width":16 }, g);
+  const mx = (f.x+t.x)/2, my = (f.y+t.y)/2;
+  const lg = el("g", {}, g);
+  el("rect", { x:mx-65, y:my-10, width:130, height:18, rx:4, fill:"white", "fill-opacity":"0.92", stroke:s.color, "stroke-width":0.5 }, lg);
+  el("text", { x:mx, y:my+3, "text-anchor":"middle", "font-size":9, fill:s.color, "font-weight":600, textContent:rel.label }, lg);
+  lg.style.display = "none";
+  labelEls.push({ el:lg, rel });
+  g.addEventListener("click", e => { e.stopPropagation(); selRel = rel; selCountry = null; update(); });
+});
+
+// Nodes
+COUNTRIES.forEach(c => {
+  const g = el("g", {}, svg); g.style.cursor = "pointer";
+  const glow = el("circle", { cx:c.x, cy:c.y, r:42, fill:c.ring, "fill-opacity":"0.15" }, g);
+  glow.style.display = "none";
+  glowEls.push({ el:glow, id:c.id });
+  el("circle", { cx:c.x, cy:c.y, r:34, fill:c.ring }, g);
+  el("circle", { cx:c.x, cy:c.y, r:30, fill:c.color }, g);
+  el("text", { x:c.x, y:Number(c.y)+1, "text-anchor":"middle", "dominant-baseline":"middle", "font-size":14, "font-weight":700, fill:"white", "letter-spacing":"0.5", textContent:c.short }, g);
+  el("text", { x:c.x, y:Number(c.y)+50, "text-anchor":"middle", "font-size":11, "font-weight":600, fill:c.color, textContent:c.name }, g);
+  nodeEls.push({ el:g, id:c.id });
+  g.addEventListener("mouseenter", () => { hovered = c.id; update(); });
+  g.addEventListener("mouseleave", () => { hovered = null; update(); });
+  g.addEventListener("click", e => { e.stopPropagation(); selCountry = selCountry === c.id ? null : c.id; selRel = null; update(); });
+});
+
+document.body.addEventListener("click", () => { selRel = null; selCountry = null; update(); });
+
+function update() {
+  lineEls.forEach(({ el, rel, style }) => {
+    let hl = true;
+    if (selCountry) hl = rel.from === selCountry || rel.to === selCountry;
+    else if (selRel) hl = rel === selRel;
+    else if (hovered) hl = rel.from === hovered || rel.to === hovered;
+    el.setAttribute("opacity", hl ? 1 : 0.12);
+    el.setAttribute("stroke-width", selRel === rel ? style.width + 2 : style.width);
+  });
+  labelEls.forEach(({ el, rel }) => {
+    let show = false;
+    if (!selRel && !selCountry) { show = hovered ? (rel.from === hovered || rel.to === hovered) : true; }
+    el.style.display = show ? "" : "none";
+  });
+  nodeEls.forEach(({ el, id }) => {
+    let a = true;
+    if (selRel) a = selRel.from === id || selRel.to === id;
+    else if (selCountry) a = selCountry === id;
+    else if (hovered) a = hovered === id;
+    el.style.opacity = a ? 1 : 0.25;
+    el.style.transition = "opacity 0.3s";
+  });
+  glowEls.forEach(({ el, id }) => { el.style.display = selCountry === id ? "" : "none"; });
+  renderPanel();
+}
+
+function renderPanel() {
+  panel.innerHTML = "";
+  if (selRel) {
+    const s = TYPES[selRel.type], f = getC(selRel.from), t = getC(selRel.to);
+    const d = document.createElement("div"); d.className = "detail-panel"; d.style.borderColor = s.color;
+    d.addEventListener("click", e => e.stopPropagation());
+    const hdr = document.createElement("div"); hdr.className = "detail-header";
+    const n1 = document.createElement("span"); n1.className = "name"; n1.textContent = f.name; hdr.appendChild(n1);
+    const lsvg = document.createElementNS(NS,"svg"); lsvg.setAttribute("width","30"); lsvg.setAttribute("height","10");
+    const ll = document.createElementNS(NS,"line"); ll.setAttribute("x1","0"); ll.setAttribute("y1","5"); ll.setAttribute("x2","30"); ll.setAttribute("y2","5");
+    ll.setAttribute("stroke",s.color); ll.setAttribute("stroke-width","2.5");
+    if (s.dash) ll.setAttribute("stroke-dasharray",s.dash);
+    lsvg.appendChild(ll); hdr.appendChild(lsvg);
+    const n2 = document.createElement("span"); n2.className = "name"; n2.textContent = t.name; hdr.appendChild(n2);
+    const badge = document.createElement("span"); badge.className = "detail-badge";
+    badge.style.backgroundColor = s.color+"18"; badge.style.color = s.color; badge.textContent = s.label; hdr.appendChild(badge);
+    d.appendChild(hdr);
+    const lab = document.createElement("p"); lab.className = "detail-label"; lab.style.color = s.color; lab.textContent = selRel.label; d.appendChild(lab);
+    const txt = document.createElement("p"); txt.className = "detail-text"; txt.textContent = selRel.detail; d.appendChild(txt);
+    panel.appendChild(d);
+  } else if (selCountry) {
+    const c = getC(selCountry);
+    const d = document.createElement("div"); d.className = "detail-panel"; d.style.borderColor = "#d1d5db";
+    d.addEventListener("click", e => e.stopPropagation());
+    const h = document.createElement("h3"); h.style.fontWeight = "700"; h.style.marginBottom = "0.5rem";
+    h.textContent = c.name + " – Relationer"; d.appendChild(h);
+    const list = document.createElement("div"); list.className = "rel-list";
+    RELATIONS.filter(r => r.from === selCountry || r.to === selCountry).forEach(rel => {
+      const other = rel.from === selCountry ? getC(rel.to) : getC(rel.from);
+      const s = TYPES[rel.type];
+      const item = document.createElement("div"); item.className = "rel-item";
+      const dot = document.createElement("div"); dot.className = "rel-dot"; dot.style.backgroundColor = s.color; item.appendChild(dot);
+      const nm = document.createElement("span"); nm.className = "rel-name"; nm.textContent = other.name; item.appendChild(nm);
+      const b = document.createElement("span"); b.className = "rel-badge"; b.style.backgroundColor = s.color+"18"; b.style.color = s.color; b.textContent = s.label; item.appendChild(b);
+      item.addEventListener("click", e => { e.stopPropagation(); selRel = rel; update(); });
+      list.appendChild(item);
+    });
+    d.appendChild(list); panel.appendChild(d);
+  }
+}
+
+update();
+</script>
+</body>
+</html>
