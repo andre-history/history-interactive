@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Den nationalsocialistiska ekonomiska politiken 1933-1939</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+        
+        :root {
+            --primary-color: #2C3E50;
+            --secondary-color: #E67E22;
+            --accent-color: #34495E;
+            --warning-color: #E74C3C;
+            --text-color: #2C3E50;
+            --bg-color: #FEFEFE;
+            --card-bg: #F8F9FA;
+            --border-color: #BDC3C7;
+            --success-color: #27AE60;
+            --error-color: #C0392B;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --academic-gradient: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #fefefe 0%, #f5f7fa 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            background: var(--academic-gradient);
+            color: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 2px,
+                rgba(255,255,255,0.03) 2px,
+                rgba(255,255,255,0.03) 4px
+            );
+        }
+
+        .disclaimer {
+            background: var(--warning-color)15;
+            border: 2px solid var(--warning-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .disclaimer-header {
+            font-weight: 700;
+            color: var(--warning-color);
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-bar {
+            background: var(--border-color);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+
+        .progress-fill {
+            background: var(--academic-gradient);
+            height: 100%;
+            width: 0%;
+            transition: width 0.6s ease;
+        }
+
+        .content-section {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            border-left: 5px solid var(--secondary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: var(--accent-color);
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1.3rem;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
+        .stats-box {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .stat-highlight {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-context {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1.2rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--secondary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin-left: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.3rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, var(--warning-color)15, var(--warning-color)05);
+            border-left: 5px solid var(--warning-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .warning-box h4 {
+            color: var(--warning-color);
+            margin-bottom: 1rem;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .myth-box {
+            background: linear-gradient(135deg, #3498DB15, #3498DB05);
+            border-left: 5px solid #3498DB;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .quiz-container {
+            background: white;
+            border: 3px solid var(--primary-color);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .quiz-header {
+            background: var(--academic-gradient);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .quiz-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .question {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .question h4 {
+            font-size: 1.15rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .option:hover {
+            border-color: var(--primary-color);
+            background: var(--primary-color)08;
+        }
+
+        .option.selected {
+            border-color: var(--primary-color);
+            background: var(--primary-color)15;
+        }
+
+        .option.correct {
+            border-color: var(--success-color);
+            background: var(--success-color)15;
+        }
+
+        .option.incorrect {
+            border-color: var(--error-color);
+            background: var(--error-color)15;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: var(--success-color)15;
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: var(--error-color)15;
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .input-question input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: 'Source Sans Pro', sans-serif;
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            background: var(--academic-gradient);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .conclusion {
+            background: var(--academic-gradient);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .conclusion h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .chart-container {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-container h3 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .chart-wrapper canvas {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .chart-caption {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            font-style: italic;
+            margin-top: 1rem;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 2.2rem; }
+            .timeline { padding-left: 2rem; }
+            .timeline-item { margin-left: 0.5rem; }
+            .chart-wrapper canvas { width: 100% !important; height: 300px !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="disclaimer">
+            <div class="disclaimer-header">📚 Viktig information</div>
+            Vi kommer att studera nazisternas ekonomiska politik från ett historiskt perspektiv. Det betyder att vi analyserar vad som faktiskt hände - inte för att det var bra, utan för att förstå hur saker och ting fungerade och vad konsekvenserna blev. När vi studerar historia ska vi alltid fråga oss: Vad kan vi lära oss av detta för att fatta bättre beslut idag?
+        </div>
+
+        <header>
+            <h1>Den nationalsocialistiska ekonomiska politiken</h1>
+            <div class="subtitle">Myter och verklighet 1933-1939</div>
+        </header>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <section class="content-section">
+            <h2>Bakgrund: Weimarrepublikens kollaps</h2>
+            
+            <p>Tysklands väg mot den nationalsocialistiska ekonomin var djupt präglad av tidigare ekonomiska katastrofer. <strong>Hyperinflationen 1923–1924</strong> hade raserat medelklassens besparingar och skapat grogrund för politisk extremism.</p>
+
+            <div class="stats-box">
+                <span class="stat-highlight">30%</span>
+                <div class="stat-context">Arbetslöshet i Tyskland 1932 - 6 miljoner människor utan arbete</div>
+            </div>
+
+            <p>Även om ekonomin stabiliserades under slutet av 1920-talet tack vare amerikanska lån, blev den stora depressionen 1929 nådastöten för Weimarrepubliken. Arbetslösheten steg dramatiskt från 8,5% år 1929 till cirka 30% år 1932.</p>
+
+            <div class="myth-box">
+                <strong>Vanlig missuppfattning:</strong> Många tror att Tyskland var helt förstört ekonomiskt när Hitler kom till makten. I verkligheten hade återhämtningen redan påbörjats under den förre kanslern Heinrich Brüning och Franz von Papen.
+            </div>
+
+            <div class="chart-container">
+                <h3>📊 Arbetslöshetens dramatiska utveckling 1929-1938</h3>
+                <div class="chart-wrapper">
+                    <canvas id="unemploymentChart" width="800" height="400"></canvas>
+                </div>
+                <p class="chart-caption">Grafen visar hur arbetslösheten utvecklades från den stora depressionen genom den nazistiska "återhämtningen". Notera den redan pågående förbättringen innan 1933.</p>
+            </div>
+        </section>
+
+        <!-- Quiz 1: After 30% -->
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h3>🧠 Kontrollstation: Grundförutsättningar</h3>
+            </div>
+            
+            <div class="question">
+                <h4>1. Vilken av följande påståenden om Tysklands ekonomiska situation när Hitler kom till makten 1933 är mest korrekt?</h4>
+                <div class="options">
+                    <div class="option" data-question="1" data-option="a">Tyskland var i total ekonomisk kollaps utan någon tecken på förbättring</div>
+                    <div class="option" data-question="1" data-option="b">Ekonomisk återhämtning hade redan påbörjats under tidigare regeringar</div>
+                    <div class="option" data-question="1" data-option="c">Tysklands ekonomi var stark men Hitler gjorde den ännu bättre</div>
+                    <div class="option" data-question="1" data-option="d">Arbetslösheten var låg men inflationen var hög</div>
+                </div>
+                <div class="feedback" id="feedback1"></div>
+            </div>
+
+            <div class="question">
+                <h4>2. Hyperinflationen 1923-24 drabbade framförallt vilken samhällsgrupp?</h4>
+                <div class="options">
+                    <div class="option" data-question="2" data-option="a">Industriarbetarna</div>
+                    <div class="option" data-question="2" data-option="b">Medelklassen som förlorade sina besparingar</div>
+                    <div class="option" data-question="2" data-option="c">Godsägarna</div>
+                </div>
+                <div class="feedback" id="feedback2"></div>
+            </div>
+
+            <div class="question input-question">
+                <h4>3. Hur många miljoner tyskar stod utan arbete 1932?</h4>
+                <input type="text" id="input3" placeholder="Skriv endast siffran...">
+                <div class="feedback" id="feedback3"></div>
+                <button class="btn" onclick="checkInput(3, '6', ['sex'])">Kontrollera svar</button>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Metoder för ekonomisk återhämtning</h2>
+            
+            <p>När Hitler tillträdde som rikskansler den 30 januari 1933, var hans främsta prioritet att eliminera arbetslösheten och återställa nationell stolthet.</p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>🛣️ Offentliga arbeten</h3>
+                    <p>Regimen initierade massiva program för offentliga arbeten, inklusive byggandet av motorvägar (Autobahn), broar och järnvägar. Dessa projekt sysselsatte miljontals arbetslösa.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>⚒️ Kontroll av arbetsmarknaden</h3>
+                    <p>För att säkra industriell fred förbjöds fackföreningar och strejker. Arbetare och arbetsgivare tvingades in i "Tyska arbetsfronten" (DAF), lönerna frystes och staten tog kontroll över arbetskraftens rörlighet.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>🔫 Militär upprustning</h3>
+                    <p>En central del av återhämtningen var omfattande militär upprustning. Hitler valde en strategi av upprustning "på bredden" - snabb produktion av materiel för korta anfallskrig snarare än total ekonomisk mobilisering.</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Kostnaderna för "framgången"</h4>
+                <p>Den snabba minskningen av arbetslösheten kom till priset av arbetares rättigheter, demokrati och ekonomisk hållbarhet. Löner frystes medan priserna steg, vilket innebar att levnadsstandarden för många arbetare faktiskt sjönk.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Myten om Hitlers ekonomiska "mirakel"</h2>
+            
+            <p>Hitler har ofta fått äran för att ha räddat Tyskland ur krisen, och år 1936 var arbetslösheten i praktiken eliminerad. Men denna "framgång" hade mörka baksidor:</p>
+
+            <h3>🔥 Överhettning och krigsberoende</h3>
+            <p>Den tyska ekonomin var i slutet av 1930-talet <strong>överhettad</strong>. Hitlers beslut att satsa allt på krigsmateriel innebar att en invasion av grannländer blev en strategisk och ekonomisk nödvändighet för att säkra råvaror och resurser.</p>
+
+            <h3>💰 Plundring och exploatering</h3>
+            <div class="warning-box">
+                <h4>Systematisk stöld</h4>
+                <p>Ekonomin byggde till stor del på systematisk plundring av judisk egendom. Rikedomar konfiskerades och överfördes direkt till statskassan för att finansiera regimens mål. Detta var inte bara moraliskt förkastligt utan också ekonomiskt ohållbart.</p>
+            </div>
+
+            <h3>🌾 Autarki och Lebensraum</h3>
+            <p>Den ekonomiska politiken var intimt kopplad till målet om <strong>autarki</strong> (självförsörjning) och erövringen av <strong>Lebensraum</strong> (livsrum) i öst. Tanken var att förvandla områden som Ukraina till tyska försörjningsbaser genom att förslava lokalbefolkningen.</p>
+
+            <div class="stats-box">
+                <span class="stat-highlight">40%</span>
+                <div class="stat-context">av tysk BNP år 1939 gick till militära ändamål - en ohållbar nivå</div>
+            </div>
+
+            <div class="chart-container">
+                <h3>📈 Tysklands ekonomiska berg- och dalbana 1921-1939</h3>
+                <div class="chart-wrapper">
+                    <canvas id="crisisChart" width="800" height="400"></canvas>
+                </div>
+                <p class="chart-caption">Denna graf visar de extrema ekonomiska svängningarna som präglat Tyskland. Den "nazistiska framgången" var bara det senaste kapitlet i en serie av kriser och tillfälliga återhämtningar.</p>
+            </div>
+        </section>
+
+        <!-- Quiz 2: After 60% -->
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h3>🧠 Fördjupning: Ekonomiska metoder</h3>
+            </div>
+            
+            <div class="question">
+                <h4>4. Vad hände med lönenivåerna för tyska arbetare under den nazistiska "ekonomiska återhämtningen"?</h4>
+                <div class="options">
+                    <div class="option" data-question="4" data-option="a">De steg kraftigt för att motivera arbetarna</div>
+                    <div class="option" data-question="4" data-option="b">De frystes av staten</div>
+                    <div class="option" data-question="4" data-option="c">De följde marknadens naturliga utveckling</div>
+                    <div class="option" data-question="4" data-option="d">De reglerades av fackföreningar</div>
+                </div>
+                <div class="feedback" id="feedback4"></div>
+            </div>
+
+            <div class="question">
+                <h4>5. En elev påstår: "Hitler byggde upp Tysklands ekonomi genom smart planering och hårt arbete." Vad visar att denna förklaring är ofullständig?</h4>
+                <div class="options">
+                    <div class="option" data-question="5" data-option="a">Ekonomin baserades på plundring och tvång</div>
+                    <div class="option" data-question="5" data-option="b">Hitler hade ingen ekonomisk utbildning</div>
+                    <div class="option" data-question="5" data-option="c">Tyskland hade inga naturresurser att arbeta med</div>
+                    <div class="option" data-question="5" data-option="d">Återhämtningen tog för lång tid att genomföra</div>
+                </div>
+                <div class="feedback" id="feedback5"></div>
+            </div>
+
+            <div class="question">
+                <h4>6. Varför blev invasion av grannländer en "ekonomisk nödvändighet" för Nazityskland?</h4>
+                <div class="options">
+                    <div class="option" data-question="6" data-option="a">För att visa tysk militär styrka</div>
+                    <div class="option" data-question="6" data-option="b">Den överhettade krigsekonomi krävde ständig tillgång till nya råvaror och resurser</div>
+                    <div class="option" data-question="6" data-option="c">För att sprida nazistisk ideologi</div>
+                </div>
+                <div class="feedback" id="feedback6"></div>
+            </div>
+        </section>
+
+        <!-- Final Quiz -->
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h3>🎯 Avslutande analys - Helhetsbedömning</h3>
+            </div>
+            
+            <div class="question">
+                <h4>7. Vilket av följande påståenden beskriver bäst den nazistiska ekonomiska politikens verkliga karaktär?</h4>
+                <div class="options">
+                    <div class="option" data-question="7" data-option="a">En hållbar modell för ekonomisk utveckling</div>
+                    <div class="option" data-question="7" data-option="b">En kortsiktig lösning som krävde krig</div>
+                    <div class="option" data-question="7" data-option="c">En vanlig keynesiansk stimulanspolitik</div>
+                    <div class="option" data-question="7" data-option="d">En effektiv fri marknadslösning</div>
+                </div>
+                <div class="feedback" id="feedback7"></div>
+            </div>
+
+            <div class="question">
+                <h4>8. Vad var "Lebensraum" i ekonomiska termer för nazistiska planer?</h4>
+                <div class="options">
+                    <div class="option" data-question="8" data-option="a">Mer mark för tyska familjer att bo på</div>
+                    <div class="option" data-question="8" data-option="b">Områden i öst som skulle bli tyska försörjningsbaser genom förslavning</div>
+                    <div class="option" data-question="8" data-option="c">Expansion av tysk industri till nya marknader</div>
+                    <div class="option" data-question="8" data-option="d">Kolonier i Afrika och Asien</div>
+                </div>
+                <div class="feedback" id="feedback8"></div>
+            </div>
+
+            <div class="question">
+                <h4>9. Vad fanns det gemensamt mellan hyperinflationen 1923 och den nazistiska ekonomin på 1930-talet?</h4>
+                <div class="options">
+                    <div class="option" data-question="9" data-option="a">Båda baserades på för mycket penningtrykning</div>
+                    <div class="option" data-question="9" data-option="b">Båda var ekonomiskt ohållbara och krävde drastiska lösningar</div>
+                    <div class="option" data-question="9" data-option="c">Båda hjälpte medelklassen att återhämta sig</div>
+                    <div class="option" data-question="9" data-option="d">Båda stärkta demokratiska institutioner</div>
+                </div>
+                <div class="feedback" id="feedback9"></div>
+            </div>
+
+            <div class="question">
+                <h4>10. Vad är den viktigaste lärdomen om "ekonomiska mirakel" från denna historiska analys?</h4>
+                <div class="options">
+                    <div class="option" data-question="10" data-option="a">Auktoritära regimer löser kriser effektivare än demokratier</div>
+                    <div class="option" data-question="10" data-option="b">Snabba lösningar kräver ofta uppoffringar</div>
+                    <div class="option" data-question="10" data-option="c">Militär upprustning stimulerar alltid ekonomisk tillväxt</div>
+                    <div class="option" data-question="10" data-option="d">Arbetslöshet elimineras enkelt genom statliga program</div>
+                </div>
+                <div class="feedback" id="feedback10"></div>
+            </div>
+
+            <div class="question input-question">
+                <h4>11. Ungefär vilken procentandel av Tysklands BNP gick till militära ändamål 1939?</h4>
+                <input type="text" id="input11" placeholder="Ange procent utan %-tecken...">
+                <div class="feedback" id="feedback11"></div>
+                <button class="btn" onclick="checkInput(11, '40', ['fyrtio'])">Kontrollera svar</button>
+            </div>
+
+            <div class="question">
+                <h4>12. Varför är det viktigt att förstå att den nazistiska "ekonomiska framgången" inte var hållbar?</h4>
+                <div class="options">
+                    <div class="option" data-question="12" data-option="a">För att undvika att romantisera auktoritära "lösningar" på ekonomiska problem</div>
+                    <div class="option" data-question="12" data-option="b">För att kritisera all form av statlig ekonomisk intervention</div>
+                    <div class="option" data-question="12" data-option="c">För att bevisa att demokrati alltid är ineffektiv</div>
+                    <div class="option" data-question="12" data-option="d">För att visa att Tyskland var ekonomiskt svagt</div>
+                </div>
+                <div class="feedback" id="feedback12"></div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>📚 Källor</h2>
+            <p>Denna interaktiva guide baseras på information från följande akademiska källor:</p>
+            
+            <ul style="line-height: 1.8; font-family: 'Source Sans Pro', sans-serif; font-size: 1rem;">
+                <li><strong>Pavlac, Brian A.</strong> <em>A Concise Survey of Western Civilization</em> (särskilt avsnitten om "Rejections of Democracy" och fascism/nazism)</li>
+                <li><strong>Perry, Marvin.</strong> <em>Western Civilization: A Brief History</em> (kapitlet "An Era of Totalitarianism")</li>
+                <li><strong>Beevor, Antony.</strong> <em>The Second World War</em> (analyser av regimens ekonomiska politik och plundring)</li>
+                <li><strong>Larsson, Olle & Marklund, Andreas.</strong> <em>Svensk historia</em> (innehåller specifika utdrag ur nationalsocialistiska kampanjmaterial)</li>
+                <li><strong>Lyons, Michael J. & Ulbrich, David J.</strong> <em>World War II: A Global History</em> (analys av depressionen och Hitlers ekonomiska strategier)</li>
+            </ul>
+            
+            <p><em>Statistiska data om arbetslöshet, hyperinflation och ekonomisk utveckling hämtade från officiella tyska arkiv och ekonomisk-historisk forskning presenterad i ovan nämnda akademiska verk.</em></p>
+        </div>
+
+        <div class="conclusion">
+            <h3>📊 Slutsats: Historia som varning</h3>
+            <p>Den nationalsocialistiska ekonomiska politiken visar hur kortsiktig "framgång" kan dölja djupa strukturella problem och moralisk förfall. Hitler "byggde inte upp" ekonomin - han exploaterade den för krigsförberedelser som krävde expansion och plundring för att överleva.</p>
+        </div>
+    </div>
+
+    <script>
+        // Question answers targeting specific historical misconceptions
+        const answers = {
+            1: { correct: 'b', feedback: {
+                'a': 'Denna missuppfattning överdrivet Tysklands kollaps. Ekonomisk återhämtning hade faktiskt påbörjats under Brüning och von Papen.',
+                'b': 'Korrekt! Återhämtningen hade redan startat under tidigare regeringar. Hitler drog nytta av redan pågående processer.',
+                'c': 'Detta speglar myten om att Tyskland var starkt 1933. Landet var fortfarande djupt präglat av depressionen.',
+                'd': 'Tvärtom - arbetslösheten var extremt hög (30%) medan inflationen var under kontroll efter 1920-talskrisen.'
+            }},
+            2: { correct: 'b', feedback: {
+                'a': 'Industriarbetare drabbades men hade oftast fasta löner som kunde justeras.',
+                'b': 'Korrekt! Medelklassen förlorade livslånga besparingar över natten och förlorade tron på demokratin.',
+                'c': 'Godsägare hade ofta realvärden (mark) som skyddade dem bättre mot inflation.'
+            }},
+            4: { correct: 'b', feedback: {
+                'a': 'Detta speglar myten om att alla gynnades. Lönerna kontrollerades för att hålla nere kostnaderna.',
+                'b': 'Korrekt! Staten frös lönerna medan priserna steg - levnadsstandarden sjönk för många arbetare.',
+                'c': 'Nazistregimen förtryckte marknadskrafter och kontrollerade ekonomin centralt.',
+                'd': 'Fackföreningar förbjöds 1933. Det fanns inga oberoende arbetarorganisationer.'
+            }},
+            5: { correct: 'a', feedback: {
+                'a': 'Korrekt! "Framgången" baserades på plundring, tvångsarbete och skulder - inte hållbar planering.',
+                'b': 'Hitlers utbildning var inte problemet - systemets moraliska och ekonomiska grund var felet.',
+                'c': 'Tyskland hade resurser men nazisterna planerade att stjäla från andra länder.',
+                'd': 'Hastigheten var inte problemet - metoderna och ohållbarheten var problemen.'
+            }},
+            6: { correct: 'b', feedback: {
+                'a': 'Militär styrka var ett medel, inte den ekonomiska orsaken till expansion.',
+                'b': 'Korrekt! Den överhettade krigsekonomi var helt beroende av konstant tillflöde av råvaror och rikedomar.',
+                'c': 'Ideologisk spridning var sekundärt jämfört med den ekonomiska nödvändigheten.'
+            }},
+            7: { correct: 'b', feedback: {
+                'a': 'Tvärtom - systemet var helt ohållbart utan ständig expansion och plundring.',
+                'b': 'Korrekt! Systemet maskerade problem och krävde krig för att inte kollapsa.',
+                'c': 'Keynesiansk politik använder inte plundring, tvångsarbete och krigsekonomi.',
+                'd': 'Nazistregimen förtryckte marknadsmekanismer och centraliserade kontrollen.'
+            }},
+            8: { correct: 'b', feedback: {
+                'a': 'Detta är en förenklad förklaring som missar den ekonomiska exploateringsdimensionen.',
+                'b': 'Korrekt! Lebensraum var en plan för ekonomisk exploatering genom förslavning av lokalbefolkningar.',
+                'c': 'Detta beskriver vanlig ekonomisk expansion, inte nazisternas planerade förslavning.',
+                'd': 'Nazisterna fokuserade på Europa, särskilt öst, inte på traditionella kolonier.'
+            }},
+            9: { correct: 'b', feedback: {
+                'a': '1930-talets problem var inte penningtrykning utan ohållbara utgifter för militärt.',
+                'b': 'Korrekt! Båda situationerna var ohållbara och krävde drastiska (och skadliga) lösningar.',
+                'c': 'Medelklassen gynnades inte av nazistisk ekonomi - lönerna frystes och rättigheterna förtrycktes.',
+                'd': 'Båda perioderna undergrävde snarare än stärkte demokratiska institutioner.'
+            }},
+            10: { correct: 'b', feedback: {
+                'a': 'Denna missuppfattning är farlig - auktoritära regimer skapar skenbar framgång genom förtryck.',
+                'b': 'Korrekt! "Mirakel" kostar ofta mänskliga rättigheter och skapar ohållbara system.',
+                'c': 'Militär upprustning kan stimulera ekonomin kortsiktigt men är ohållbart och leder till krig.',
+                'd': 'Arbetslöshet kan minskas genom statliga program, men metoderna och kostnaderna är avgörande.'
+            }},
+            12: { correct: 'a', feedback: {
+                'a': 'Korrekt! Förstående för historien skyddar mot att lockas av auktoritära "snabblösningar".',
+                'b': 'Detta är inte poängen - problemet var metoderna, inte statlig intervention i sig.',
+                'c': 'Historien visar varken att demokrati är ineffektiv eller att auktoritarism är överlägset.',
+                'd': 'Tyskland var inte svagt - problemet var att styrkan baserades på ohållbara och omoraliska metoder.'
+            }}
+        };
+
+        // Handle multiple choice questions
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('option')) {
+                const questionNum = e.target.dataset.question;
+                const selectedOption = e.target.dataset.option;
+                
+                // Remove previous selections
+                document.querySelectorAll(`[data-question="${questionNum}"]`).forEach(option => {
+                    option.classList.remove('selected', 'correct', 'incorrect');
+                });
+                
+                // Mark selection
+                e.target.classList.add('selected');
+                
+                // Check answer
+                setTimeout(() => checkAnswer(questionNum, selectedOption), 500);
+            }
+        });
+
+        function checkAnswer(questionNum, selectedOption) {
+            const answer = answers[questionNum];
+            const feedbackElement = document.getElementById(`feedback${questionNum}`);
+            const optionElement = document.querySelector(`[data-question="${questionNum}"][data-option="${selectedOption}"]`);
+            
+            if (selectedOption === answer.correct) {
+                optionElement.classList.add('correct');
+                feedbackElement.textContent = 'Korrekt! ' + answer.feedback[selectedOption];
+                feedbackElement.className = 'feedback correct show';
+            } else {
+                optionElement.classList.add('incorrect');
+                // Also show correct answer
+                const correctOption = document.querySelector(`[data-question="${questionNum}"][data-option="${answer.correct}"]`);
+                correctOption.classList.add('correct');
+                
+                feedbackElement.textContent = answer.feedback[selectedOption];
+                feedbackElement.className = 'feedback incorrect show';
+            }
+            
+            updateProgress();
+        }
+
+        function checkInput(questionNum, correctAnswer, alternatives = []) {
+            const input = document.getElementById(`input${questionNum}`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            const userAnswer = input.value.toLowerCase().trim();
+            
+            const allAcceptable = [correctAnswer, ...alternatives];
+            const isCorrect = allAcceptable.some(acceptable => 
+                userAnswer === acceptable || userAnswer.includes(acceptable)
+            );
+            
+            if (isCorrect) {
+                feedback.textContent = 'Korrekt!';
+                feedback.className = 'feedback correct show';
+                input.style.borderColor = 'var(--success-color)';
+            } else {
+                feedback.textContent = `Fel. Det korrekta svaret är "${correctAnswer}".`;
+                feedback.className = 'feedback incorrect show';
+                input.style.borderColor = 'var(--error-color)';
+            }
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const allQuestions = document.querySelectorAll('.question');
+            const answeredQuestions = document.querySelectorAll('.feedback.show').length;
+            const progressPercent = (answeredQuestions / allQuestions.length) * 100;
+            
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+        }
+
+        // Initialize progress bar
+        updateProgress();
+
+        // Chart drawing functions
+        function drawUnemploymentChart() {
+            const canvas = document.getElementById('unemploymentChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 80;
+            
+            // Clear canvas
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Data points (year, unemployment percentage)
+            const data = [
+                {year: 1929, rate: 8.5, label: '1929'},
+                {year: 1930, rate: 15.3, label: '1930'},
+                {year: 1931, rate: 23.3, label: '1931'},
+                {year: 1932, rate: 30, label: '1932'},
+                {year: 1933, rate: 26, label: '1933'},
+                {year: 1934, rate: 14.9, label: '1934'},
+                {year: 1935, rate: 11.6, label: '1935'},
+                {year: 1936, rate: 8.3, label: '1936'},
+                {year: 1937, rate: 4.6, label: '1937'},
+                {year: 1938, rate: 2.1, label: '1938'}
+            ];
+            
+            // Calculate scales
+            const xMin = 1928;
+            const xMax = 1939;
+            const yMin = 0;
+            const yMax = 35;
+            
+            // Draw axes
+            ctx.strokeStyle = '#34495E';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            // X-axis
+            ctx.moveTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            // Y-axis
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, height - padding);
+            ctx.stroke();
+            
+            // Draw grid lines and labels
+            ctx.strokeStyle = '#BDC3C7';
+            ctx.lineWidth = 1;
+            ctx.font = '14px Source Sans Pro';
+            ctx.fillStyle = '#2C3E50';
+            
+            // Y-axis labels (unemployment %)
+            for (let i = 0; i <= 35; i += 5) {
+                const y = height - padding - (i / yMax) * (height - 2 * padding);
+                ctx.beginPath();
+                ctx.moveTo(padding - 8, y);
+                ctx.lineTo(padding + 8, y);
+                ctx.strokeStyle = '#34495E';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                ctx.font = 'bold 13px Source Sans Pro';
+                ctx.fillText(i + '%', 20, y + 5);
+                
+                if (i > 0) {
+                    ctx.strokeStyle = '#BDC3C7';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(padding, y);
+                    ctx.lineTo(width - padding, y);
+                    ctx.stroke();
+                }
+            }
+            
+            // X-axis labels (years) - larger and clearer
+            ctx.font = 'bold 14px Source Sans Pro';
+            for (let year = 1929; year <= 1938; year++) {
+                const x = padding + ((year - xMin) / (xMax - xMin)) * (width - 2 * padding);
+                ctx.fillText(year.toString(), x - 18, height - padding + 30);
+                
+                // Add small tick marks
+                ctx.strokeStyle = '#34495E';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(x, height - padding - 8);
+                ctx.lineTo(x, height - padding + 8);
+                ctx.stroke();
+            }
+            
+            // Draw the line with gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, '#E67E22');
+            gradient.addColorStop(1, '#D35400');
+            
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            
+            data.forEach((point, index) => {
+                const x = padding + ((point.year - xMin) / (xMax - xMin)) * (width - 2 * padding);
+                const y = height - padding - (point.rate / yMax) * (height - 2 * padding);
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+            
+            // Draw data points with better visibility
+            data.forEach(point => {
+                const x = padding + ((point.year - xMin) / (xMax - xMin)) * (width - 2 * padding);
+                const y = height - padding - (point.rate / yMax) * (height - 2 * padding);
+                
+                // Outer circle
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(x, y, 8, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // Inner circle
+                ctx.fillStyle = point.year === 1933 ? '#E74C3C' : '#E67E22';
+                ctx.beginPath();
+                ctx.arc(x, y, 6, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // Highlight 1933 with special marker
+                if (point.year === 1933) {
+                    ctx.strokeStyle = '#C0392B';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 10, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
+            });
+            
+            // Add clear labels
+            ctx.fillStyle = '#2C3E50';
+            ctx.font = 'bold 16px Source Sans Pro';
+            ctx.fillText('Arbetslöshet (%)', 20, 40);
+            
+            // Add Hitler annotation with better positioning
+            const hitlerX = padding + ((1933 - xMin) / (xMax - xMin)) * (width - 2 * padding);
+            const hitlerY = height - padding - (26 / yMax) * (height - 2 * padding);
+            
+            // Background box for annotation
+            ctx.fillStyle = 'rgba(231, 76, 60, 0.1)';
+            ctx.fillRect(hitlerX - 70, hitlerY - 40, 140, 25);
+            ctx.strokeStyle = '#E74C3C';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(hitlerX - 70, hitlerY - 40, 140, 25);
+            
+            ctx.fillStyle = '#C0392B';
+            ctx.font = 'bold 12px Source Sans Pro';
+            ctx.textAlign = 'center';
+            ctx.fillText('Hitler tar makten', hitlerX, hitlerY - 22);
+            ctx.textAlign = 'start';
+        }
+        
+        function drawCrisisChart() {
+            const canvas = document.getElementById('crisisChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 100;
+            
+            // Clear canvas
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Data points for major economic events
+            const events = [
+                {year: 1921, severity: 6, label: 'Skadeståndskris', detail: '25% av export', color: '#E74C3C'},
+                {year: 1923, severity: 10, label: 'Hyperinflation', detail: 'Potatis: 9 mark → 40 mil.', color: '#C0392B'},
+                {year: 1929, severity: 3, label: 'Återhämtning', detail: 'Produktion över 1913', color: '#27AE60'},
+                {year: 1932, severity: 8, label: 'Depressionsbotten', detail: '30% arbetslöshet', color: '#E74C3C'},
+                {year: 1936, severity: 4, label: 'Nazi "konsolidering"', detail: '~0% arbetslöshet', color: '#F39C12'},
+                {year: 1939, severity: 7, label: 'Krigsekonomi', detail: '40% BNP till militärt', color: '#8E44AD'}
+            ];
+            
+            // Calculate bar positions
+            const barWidth = 60;
+            const totalWidth = width - 2 * padding;
+            const spacing = totalWidth / (events.length - 1);
+            
+            // Draw timeline
+            ctx.strokeStyle = '#34495E';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            ctx.stroke();
+            
+            // Draw events
+            events.forEach((event, index) => {
+                const x = padding + index * spacing;
+                const maxBarHeight = height - 2 * padding - 100; // Leave space for labels
+                const barHeight = (event.severity / 10) * maxBarHeight;
+                const y = height - padding - barHeight;
+                
+                // Draw bar with gradient
+                const gradient = ctx.createLinearGradient(0, y, 0, height - padding);
+                gradient.addColorStop(0, event.color);
+                gradient.addColorStop(1, event.color + '80');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x - barWidth/2, y, barWidth, barHeight);
+                
+                // Draw bar border
+                ctx.strokeStyle = event.color;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x - barWidth/2, y, barWidth, barHeight);
+                
+                // Draw year (larger, bold text)
+                ctx.fillStyle = '#2C3E50';
+                ctx.font = 'bold 16px Source Sans Pro';
+                ctx.textAlign = 'center';
+                ctx.fillText(event.year.toString(), x, height - padding + 25);
+                
+                // Draw event label (horizontal, readable)
+                ctx.font = 'bold 13px Source Sans Pro';
+                ctx.fillStyle = event.color;
+                ctx.fillText(event.label, x, y - 30);
+                
+                // Draw detail (smaller but still readable)
+                ctx.font = '11px Source Sans Pro';
+                ctx.fillStyle = '#34495E';
+                ctx.fillText(event.detail, x, y - 15);
+                
+                // Add severity indicator at top of bar
+                ctx.font = 'bold 14px Source Sans Pro';
+                ctx.fillStyle = 'white';
+                if (barHeight > 40) {
+                    ctx.fillText(event.severity + '/10', x, y + 25);
+                }
+            });
+            
+            // Add title and legend
+            ctx.fillStyle = '#2C3E50';
+            ctx.font = 'bold 16px Source Sans Pro';
+            ctx.textAlign = 'left';
+            ctx.fillText('Krisintensitet (0-10 skala)', padding, 40);
+            ctx.font = '12px Source Sans Pro';
+            ctx.fillText('Högre stapel = värre ekonomisk kris', padding, 60);
+            
+            // Add arrow pointing to timeline
+            ctx.strokeStyle = '#34495E';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding - 20, height - padding);
+            ctx.lineTo(padding - 10, height - padding - 5);
+            ctx.moveTo(padding - 20, height - padding);
+            ctx.lineTo(padding - 10, height - padding + 5);
+            ctx.stroke();
+            
+            ctx.font = '12px Source Sans Pro';
+            ctx.fillStyle = '#34495E';
+            ctx.textAlign = 'right';
+            ctx.fillText('Tidslinje', padding - 25, height - padding + 5);
+            
+            // Reset text alignment
+            ctx.textAlign = 'start';
+        }
+        
+        // Initialize charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            drawUnemploymentChart();
+            drawCrisisChart();
+        });
+    </script>
+</body>
+</html>
