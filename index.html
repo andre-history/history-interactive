@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktiv Historia - Utforska historiens komplexitet</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap');
+        
+        :root {
+            --primary: #1a365d;
+            --secondary: #2d5f87;
+            --accent: #e67e22;
+            --warm: #f39c12;
+            --success: #27ae60;
+            --text: #2c3e50;
+            --light-text: #5a6c7d;
+            --bg: #fefefe;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 10px 25px rgba(26, 54, 93, 0.1);
+            --shadow-hover: 0 15px 35px rgba(26, 54, 93, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-family: 'Spectral', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero .description {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-title {
+            font-family: 'Spectral', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .material-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .material-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--warm));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .material-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .material-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--warm));
+        }
+
+        .imperialism { background: linear-gradient(135deg, #8B2635, #D4AF37); }
+        .perspective { background: linear-gradient(135deg, #2C5530, #1B4A57); }
+        .economics { background: linear-gradient(135deg, #2C3E50, #34495E); }
+        .alliances { background: linear-gradient(135deg, #8E44AD, #9B59B6); }
+        .colonialism { background: linear-gradient(135deg, #27AE60, #229954); }
+        .source-criticism { background: linear-gradient(135deg, #E67E22, #F39C12); }
+
+        .card-title {
+            font-family: 'Spectral', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .card-description {
+            color: var(--light-text);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .card-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .card-features li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        .card-features li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: bold;
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .card-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 54, 93, 0.3);
+        }
+
+        .card-link::after {
+            content: '→';
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .card-link:hover::after {
+            transform: translateX(4px);
+        }
+
+        .stats-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin: 4rem 0;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-family: 'Spectral', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .about-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin: 4rem 0;
+        }
+
+        .about-section h2 {
+            font-family: 'Spectral', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text {
+            color: var(--light-text);
+            line-height: 1.7;
+        }
+
+        .features-list {
+            list-style: none;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            color: var(--light-text);
+        }
+
+        .features-list li::before {
+            content: '🎯';
+            margin-right: 0.8rem;
+            margin-top: 0.1rem;
+        }
+
+        .footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer p {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .materials-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .container {
+                padding: 2rem 1rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Interaktiv Historia</h1>
+            <div class="subtitle">Utforska historiens komplexitet</div>
+            <div class="description">
+                Välkommen till en samling interaktiva historiska guider designade för gymnasieelever. 
+                Varje material innehåller diagnostiska frågor, visualiseringar och kritiska analyser.
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">Tillgängliga Interaktiva Material</h2>
+        
+        <div class="materials-grid">
+            <div class="material-card">
+                <div class="card-icon imperialism">🏛️</div>
+                <h3 class="card-title">Imperialismen</h3>
+                <p class="card-description">
+                    Grundlig genomgång av europeisk expansion 1870-1914. Analyserar drivkrafter, 
+                    metoder och konsekvenser av det imperialistiska systemet.
+                </p>
+                <ul class="card-features">
+                    <li>12 diagnostiska frågor (Barton-stil)</li>
+                    <li>Kontrolltyper: Formell, informell, direkt styre</li>
+                    <li>Teknologi och ekonomiska motiv</li>
+                    <li>Motstånd och långsiktiga konsekvenser</li>
+                </ul>
+                <a href="imperialismen-interaktiv.html" class="card-link">Utforska Imperialismen</a>
+            </div>
+
+            <div class="material-card">
+                <div class="card-icon perspective">🌍</div>
+                <h3 class="card-title">Det utomeuropeiska perspektivet</h3>
+                <p class="card-description">
+                    Upptäck hur koloniserade folk reagerade på imperialism genom motstånd, 
+                    anpassning och vägen mot självständighet.
+                </p>
+                <ul class="card-features">
+                    <li>Brittiska Indien ("The Raj")</li>
+                    <li>Kinas ojämlika fördrag och Boxarupproret</li>
+                    <li>Japans unika modernisering</li>
+                    <li>Afrikanskt motstånd och pan-afrikanism</li>
+                </ul>
+                <a href="utomeuropeiska-perspektivet-interaktiv.html" class="card-link">Se andra sidan</a>
+            </div>
+
+            <div class="material-card">
+                <div class="card-icon economics">📊</div>
+                <h3 class="card-title">Nazistisk ekonomisk politik 1933-1939</h3>
+                <p class="card-description">
+                    Kritisk analys av den nationalsocialistiska ekonomin. Avslöjar myter 
+                    och visar den verkliga kostnaden för "ekonomiska mirakel".
+                </p>
+                <ul class="card-features">
+                    <li>Interaktiva grafer över arbetslöshet</li>
+                    <li>Ekonomiska kriser 1921-1939</li>
+                    <li>Myten om Hitlers "uppbyggnad"</li>
+                    <li>Krigsekonomi och ohållbarhet</li>
+                </ul>
+                <a href="nazistisk-ekonomi-interaktiv.html" class="card-link">Analysera ekonomin</a>
+            </div>
+
+            <div class="material-card">
+                <div class="card-icon alliances">⚔️</div>
+                <h3 class="card-title">Allianskartan</h3>
+                <p class="card-description">
+                    Interaktiv guide till de komplexa allianserna som ledde till första världskriget. 
+                    Förstå maktbalansen i Europa.
+                </p>
+                <ul class="card-features">
+                    <li>Trippelalliansen vs Trippelententen</li>
+                    <li>Balkankrisen och österrikisk expansion</li>
+                    <li>Diplomatiska spänningar</li>
+                    <li>Vägen till 1914</li>
+                </ul>
+                <a href="allianskartan.html" class="card-link">Kartlägg allianserna</a>
+            </div>
+
+            <div class="material-card">
+                <div class="card-icon colonialism">🌿</div>
+                <h3 class="card-title">Kolonialismen</h3>
+                <p class="card-description">
+                    Djupgående analys av koloniala system, ekonomisk exploatering och 
+                    kulturell påverkan på både kolonisatörer och koloniserade.
+                </p>
+                <ul class="card-features">
+                    <li>Olika koloniala system</li>
+                    <li>Ekonomisk exploatering</li>
+                    <li>Kulturell imperialism</li>
+                    <li>Avkoloniseringsprocesser</li>
+                </ul>
+                <a href="kolonialismen.html" class="card-link">Förstå kolonialismen</a>
+            </div>
+
+            <div class="material-card">
+                <div class="card-icon source-criticism">🔍</div>
+                <h3 class="card-title">Källkritik</h3>
+                <p class="card-description">
+                    Lär dig att kritiskt granska historiska källor. Utveckla färdigheter 
+                    för att skilja mellan fakta, tolkning och propaganda.
+                </p>
+                <ul class="card-features">
+                    <li>Äkthet, tidssamband, oberoende</li>
+                    <li>Tendenskriterier och källvärdering</li>
+                    <li>Praktiska exempel och övningar</li>
+                    <li>Tillämpning på olika källtyper</li>
+                </ul>
+                <a href="kallkritik.html" class="card-link">Utveckla källkritik</a>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 class="section-title">Lärande i siffror</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">70+</span>
+                    <div class="stat-label">Diagnostiska frågor</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">6</span>
+                    <div class="stat-label">Interaktiva moduler</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <div class="stat-label">Craig Barton-metodik</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">Mobile</span>
+                    <div class="stat-label">Responsiv design</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2>Om dessa interaktiva material</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Dessa interaktiva historiska guider är designade enligt Craig Bartons pedagogiska principer för diagnostiska frågor. Varje fråga är noggrant utformad för att avslöja specifika missuppfattningar och hjälpa elever utveckla djupare historisk förståelse.</p>
+                    
+                    <p>Materialen kombinerar traditionell historisk kunskap med modern pedagogik och interaktiv teknik för att skapa engagerande lärandeupplevelser som fungerar på alla enheter.</p>
+                </div>
+                
+                <div>
+                    <ul class="features-list">
+                        <li>Diagnostiska frågor som avslöjar missuppfattningar</li>
+                        <li>Interaktiva visualiseringar och grafer</li>
+                        <li>Omedelbar feedback med pedagogiska förklaringar</li>
+                        <li>Responsiv design för mobil, tablet och dator</li>
+                        <li>Källkritiskt perspektiv genomgående</li>
+                        <li>Anpassat för svenska gymnasieelever</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 Interaktiv Historia - Utbildningsmaterial för kritiskt tänkande</p>
+        <p style="margin-top: 1rem; opacity: 0.7; font-size: 0.9rem;">
+            Skapad av André Lundberg (gymnasielärare) med hjälp av NotebookLM och claude.ai
+        </p>
+    </footer>
+
+    <script>
+        // Add smooth scroll behavior for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add hover effects for cards
+        const cards = document.querySelectorAll('.material-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Animate stats on scroll
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe stat items
+        document.querySelectorAll('.stat-item').forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            item.style.transition = 'all 0.6s ease';
+            observer.observe(item);
+        });
+    </script>
+</body>
+</html>
