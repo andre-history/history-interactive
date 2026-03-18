@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Svarta veckan – Vägen till första världskriget</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0a0f;
+    --bg-card: #13131a;
+    --bg-card-hover: #1a1a24;
+    --border-subtle: #2a2a3a;
+    --border-accent: #8b7355;
+    --text-primary: #e8e0d4;
+    --text-secondary: #a09888;
+    --text-muted: #6a6258;
+    --accent-gold: #c9a84c;
+    --accent-gold-dim: #8b7a3a;
+    --accent-red: #9b3b3b;
+    --accent-red-bright: #c45050;
+    --timeline-line: #3a3428;
+    --dot-inactive: #4a4030;
+    --sepia-overlay: rgba(139, 115, 85, 0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: 'Source Serif 4', Georgia, serif;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === NOISE TEXTURE OVERLAY === */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* === HERO SECTION === */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 40%, rgba(155, 59, 59, 0.08), transparent),
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(10, 10, 15, 1), transparent 70%);
+    z-index: 0;
+  }
+
+  .hero-date {
+    position: relative;
+    z-index: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent-gold-dim);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s ease forwards;
+  }
+
+  .hero h1 {
+    position: relative;
+    z-index: 1;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    line-height: 1.05;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.5s ease forwards;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent-red-bright);
+    display: block;
+    font-size: 0.55em;
+    letter-spacing: 0.06em;
+    margin-top: 0.3em;
+    font-weight: 400;
+  }
+
+  .hero-subtitle {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    color: var(--text-secondary);
+    font-weight: 300;
+    line-height: 1.8;
+    opacity: 0;
+    animation: fadeUp 1s 0.7s ease forwards;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 1.2s ease forwards;
+  }
+
+  .scroll-indicator span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .scroll-indicator .arrow {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--accent-gold-dim), transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* === CONTEXT SECTION === */
+  .context-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 5rem 2rem 4rem;
+    opacity: 0;
+    animation: fadeIn 0.8s 0.2s ease forwards;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent-gold-dim);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle);
+  }
+
+  .context-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    line-height: 1.25;
+  }
+
+  .context-section p {
+    color: var(--text-secondary);
+    font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+    margin-bottom: 1.2rem;
+  }
+
+  .context-section p strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* === TIMELINE === */
+  .timeline-wrapper {
+    position: relative;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  .timeline-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .timeline-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  /* The vertical line */
+  .timeline {
+    position: relative;
+    padding-left: 3rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--timeline-line) 5%,
+      var(--accent-gold-dim) 50%,
+      var(--accent-red) 85%,
+      transparent
+    );
+  }
+
+  /* === TIMELINE EVENT === */
+  .event {
+    position: relative;
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .event.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Dot on timeline */
+  .event::before {
+    content: '';
+    position: absolute;
+    left: -3rem;
+    top: 0.55rem;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--bg-deep);
+    border: 2px solid var(--dot-inactive);
+    transition: border-color 0.4s, box-shadow 0.4s;
+    z-index: 2;
+  }
+
+  .event.visible::before {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 14px rgba(201, 168, 76, 0.3);
+  }
+
+  .event.war::before {
+    border-color: var(--accent-red-bright);
+    box-shadow: 0 0 16px rgba(196, 80, 80, 0.4);
+  }
+
+  .event-date {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.7rem;
+    flex-wrap: wrap;
+  }
+
+  .event-date .weekday {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.3rem, 2vw, 1.6rem);
+    font-weight: 700;
+    color: var(--accent-gold);
+    line-height: 1;
+  }
+
+  .event-date .full-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+  }
+
+  .event.war .event-date .weekday {
+    color: var(--accent-red-bright);
+  }
+
+  .event.war .event-date .full-date {
+    color: rgba(196, 80, 80, 0.6);
+  }
+
+  .event-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    padding: 1.5rem 1.8rem;
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .event-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-accent);
+  }
+
+  .event.war .event-card {
+    border-left: 2px solid var(--accent-red);
+  }
+
+  .event-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  .event-card p {
+    color: var(--text-secondary);
+    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    line-height: 1.75;
+  }
+
+  .event-card .tag {
+    display: inline-block;
+    margin-top: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 2px;
+    background: rgba(201, 168, 76, 0.1);
+    color: var(--accent-gold-dim);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+  }
+
+  .event.war .event-card .tag {
+    background: rgba(155, 59, 59, 0.12);
+    color: var(--accent-red-bright);
+    border-color: rgba(155, 59, 59, 0.2);
+  }
+
+  /* Day gap indicator between events */
+  .day-gap {
+    position: relative;
+    padding-left: 3rem;
+    margin-bottom: 3.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .day-gap::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--border-subtle);
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  .day-gap-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle);
+  }
+
+  .day-gap span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* === COUNTRY PILLS === */
+  .countries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .country-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    padding: 0.22rem 0.55rem;
+    border-radius: 3px;
+    border: 1px solid;
+    transition: transform 0.2s;
+  }
+
+  .country-pill .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .country-pill.new {
+    animation: pillPop 0.4s ease;
+    font-weight: 700;
+    position: relative;
+  }
+
+  .country-pill.new::after {
+    content: 'NY';
+    font-size: 0.45rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0.1rem 0.25rem;
+    border-radius: 2px;
+    background: var(--accent-gold);
+    color: var(--bg-deep);
+    margin-left: 0.2rem;
+  }
+
+  /* Country colors */
+  .pill-aut    { background: rgba(168, 50, 50, 0.1);  border-color: rgba(168, 50, 50, 0.25);  color: #d4736e; }
+  .pill-aut .dot    { background: #c0504d; }
+  .pill-ser    { background: rgba(90, 90, 160, 0.1);   border-color: rgba(90, 90, 160, 0.25);  color: #8e8ec8; }
+  .pill-ser .dot    { background: #7070b8; }
+  .pill-rus    { background: rgba(60, 130, 80, 0.1);   border-color: rgba(60, 130, 80, 0.25);  color: #6ab87a; }
+  .pill-rus .dot    { background: #4a9e5c; }
+  .pill-tys    { background: rgba(140, 140, 140, 0.1); border-color: rgba(140, 140, 140, 0.25); color: #aaa; }
+  .pill-tys .dot    { background: #8c8c8c; }
+  .pill-fra    { background: rgba(70, 100, 170, 0.1);  border-color: rgba(70, 100, 170, 0.25); color: #7a9ad4; }
+  .pill-fra .dot    { background: #4a6aaa; }
+  .pill-bel    { background: rgba(190, 160, 50, 0.1);  border-color: rgba(190, 160, 50, 0.25); color: #d4c060; }
+  .pill-bel .dot    { background: #bea032; }
+  .pill-gbr    { background: rgba(50, 120, 140, 0.1);  border-color: rgba(50, 120, 140, 0.25); color: #5cb8cc; }
+  .pill-gbr .dot    { background: #32788c; }
+
+  /* Legend */
+  .country-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.2rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+  }
+
+  .country-legend .legend-title {
+    width: 100%;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--text-secondary);
+  }
+
+  .legend-item .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  @keyframes pillPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.08); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* === FACTORS SECTION === */
+  .factors-section {
+    max-width: 860px;
+    margin: 2rem auto 0;
+    padding: 3rem 2rem 4rem;
+  }
+
+  .factors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .factor-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    padding: 1.8rem;
+    transition: border-color 0.3s, transform 0.3s;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s;
+  }
+
+  .factor-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .factor-card:hover {
+    border-color: var(--border-accent);
+  }
+
+  .factor-icon {
+    font-size: 1.6rem;
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .factor-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    color: var(--text-primary);
+  }
+
+  .factor-card p {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+
+  /* === SOURCES === */
+  .sources-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .sources-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+  }
+
+  .sources-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .sources-list li {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    padding-left: 1.2rem;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .sources-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+  }
+
+  .sources-list li em {
+    color: var(--text-primary);
+    font-style: italic;
+  }
+
+  /* === KEYFRAMES === */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* === QUIZ COMPONENTS === */
+  .quiz-break {
+    position: relative;
+    margin: 2.5rem 0 3.5rem;
+    padding: 2rem 1.8rem;
+    background: linear-gradient(135deg, rgba(201, 168, 76, 0.04), rgba(139, 115, 85, 0.06));
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    border-radius: 6px;
+  }
+
+  .quiz-break .quiz-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent-gold-dim);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .quiz-break .quiz-label::before {
+    content: '✦';
+    font-size: 0.7rem;
+  }
+
+  .quiz-break h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  /* Multiple choice */
+  .mc-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .mc-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.25s, background 0.25s;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .mc-option:hover {
+    border-color: var(--border-accent);
+    background: var(--bg-card-hover);
+  }
+
+  .mc-option .letter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--accent-gold-dim);
+    min-width: 1.2rem;
+    padding-top: 0.1rem;
+  }
+
+  .mc-option.selected.correct {
+    border-color: #4a9e5c;
+    background: rgba(60, 130, 80, 0.1);
+  }
+
+  .mc-option.selected.correct .letter {
+    color: #6ab87a;
+  }
+
+  .mc-option.selected.wrong {
+    border-color: var(--accent-red);
+    background: rgba(155, 59, 59, 0.08);
+  }
+
+  .mc-option.selected.wrong .letter {
+    color: var(--accent-red-bright);
+  }
+
+  .mc-option.reveal-correct {
+    border-color: rgba(74, 158, 92, 0.4);
+    background: rgba(60, 130, 80, 0.06);
+  }
+
+  .mc-option.locked {
+    pointer-events: none;
+    opacity: 0.55;
+  }
+
+  .mc-option.locked.selected,
+  .mc-option.locked.reveal-correct {
+    opacity: 1;
+  }
+
+  .quiz-feedback {
+    margin-top: 0.8rem;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    display: none;
+  }
+
+  .quiz-feedback.show {
+    display: block;
+  }
+
+  .quiz-feedback.correct {
+    background: rgba(60, 130, 80, 0.08);
+    border-left: 2px solid #4a9e5c;
+  }
+
+  .quiz-feedback.wrong {
+    background: rgba(155, 59, 59, 0.08);
+    border-left: 2px solid var(--accent-red);
+  }
+
+  /* Matching */
+  .match-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.5rem 0.8rem;
+    align-items: center;
+  }
+
+  .match-left {
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    padding: 0.6rem 0.8rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    text-align: right;
+  }
+
+  .match-arrow {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  .match-select {
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.85rem;
+    padding: 0.55rem 0.7rem;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236a6258' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.6rem center;
+    padding-right: 2rem;
+  }
+
+  .match-select:focus {
+    outline: none;
+    border-color: var(--accent-gold-dim);
+  }
+
+  .match-select.correct {
+    border-color: #4a9e5c;
+    background-color: rgba(60, 130, 80, 0.08);
+  }
+
+  .match-select.wrong {
+    border-color: var(--accent-red);
+    background-color: rgba(155, 59, 59, 0.08);
+  }
+
+  .match-check-btn {
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-top: 0.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.5rem 1.5rem;
+    background: transparent;
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold-dim);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .match-check-btn:hover {
+    background: rgba(201, 168, 76, 0.1);
+  }
+
+  /* Flashcard */
+  .flashcard {
+    cursor: pointer;
+  }
+
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+  }
+
+  .flashcard-front,
+  .flashcard-back {
+    padding: 1.5rem 1.2rem;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.35s ease;
+  }
+
+  .flashcard-front {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    text-align: center;
+  }
+
+  .flashcard.flipped .flashcard-front {
+    display: none;
+  }
+
+  .flashcard-front p {
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .flashcard-front .flip-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    margin-top: 0.7rem;
+    text-transform: uppercase;
+  }
+
+  .flashcard-back {
+    background: rgba(60, 130, 80, 0.06);
+    border: 1px solid rgba(74, 158, 92, 0.25);
+    display: none;
+  }
+
+  .flashcard.flipped .flashcard-back {
+    display: flex;
+  }
+
+  .flashcard-back p {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 600px) {
+    .timeline { padding-left: 2.2rem; }
+    .event::before { left: -2.2rem; }
+    .day-gap { padding-left: 2.2rem; }
+    .day-gap::before { left: -2px; }
+    .event-card { padding: 1.2rem 1.3rem; }
+    .factors-grid { grid-template-columns: 1fr; }
+    .hero { min-height: 90vh; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <p class="hero-date">23 juli – 4 augusti 1914</p>
+  <h1>Svarta veckan <em>Vägen till första världskrigets utbrott</em></h1>
+  <p class="hero-subtitle">Ett attentat i Sarajevo den 28 juni utlöste en diplomatisk kris. Under knappt två veckor i juli–augusti 1914 förvandlades den till ett världskrig. Följ eskaleringen dag för dag.</p>
+  <div class="scroll-indicator">
+    <span>Scrolla</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- ═══════════ BAKGRUND ═══════════ -->
+<section class="context-section">
+  <div class="section-label">Bakgrund</div>
+  <h2>Skotten i Sarajevo</h2>
+  <p>Krisen tog sin början den <strong>28 juni 1914</strong> då den serbiske studenten <strong>Gavrilo Princip</strong>, medlem i den nationalistiska organisationen <strong>Svarta handen</strong>, mördade den österrikiske tronföljaren <strong>ärkehertig Franz Ferdinand</strong> och hans fru Sophie i Sarajevo.</p>
+  <p>Österrike-Ungern såg attentatet som ett tillfälle att en gång för alla krossa den serbiska nationalismen – ett upplevt existentiellt hot mot det multietniska habsburgska riket. Tyskland gav tidigt sitt villkorslösa stöd, en så kallad <strong>"blankocheck"</strong>, vilket stärkte den österrikiska beslutsamheten att agera.</p>
+</section>
+
+<!-- ═══════════ TIDSLINJE ═══════════ -->
+<section class="timeline-wrapper">
+  <div class="timeline-header">
+    <div class="section-label" style="justify-content: center;">Kronologi</div>
+    <h2>Den svarta veckans eskalering</h2>
+  </div>
+
+  <div class="country-legend">
+    <span class="legend-title">Inblandade stormakter — färgkodning</span>
+    <span class="legend-item"><span class="dot" style="background:#c0504d"></span>Österrike-Ungern</span>
+    <span class="legend-item"><span class="dot" style="background:#7070b8"></span>Serbien</span>
+    <span class="legend-item"><span class="dot" style="background:#4a9e5c"></span>Ryssland</span>
+    <span class="legend-item"><span class="dot" style="background:#8c8c8c"></span>Tyskland</span>
+    <span class="legend-item"><span class="dot" style="background:#4a6aaa"></span>Frankrike</span>
+    <span class="legend-item"><span class="dot" style="background:#bea032"></span>Belgien</span>
+    <span class="legend-item"><span class="dot" style="background:#32788c"></span>Storbritannien</span>
+  </div>
+
+  <div class="timeline">
+
+    <div class="event">
+      <div class="event-date">
+        <span class="weekday">Torsdag</span>
+        <span class="full-date">23 juli 1914</span>
+      </div>
+      <div class="event-card">
+        <h3>Ultimatumet till Serbien</h3>
+        <p>Österrike-Ungern överlämnar ett ultimatum till Serbien med krav som var avsiktligt formulerade för att vara oacceptabla för en suverän stat. Tidfristen sattes till <strong>48 timmar</strong>.</p>
+        <span class="tag">Diplomati</span>
+        <div class="countries">
+          <span class="country-pill pill-aut new"><span class="dot"></span>Österrike-Ungern</span>
+          <span class="country-pill pill-ser new"><span class="dot"></span>Serbien</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-gap"><div class="day-gap-line"></div><span>2 dagar</span><div class="day-gap-line"></div></div>
+
+    <div class="event">
+      <div class="event-date">
+        <span class="weekday">Lördag</span>
+        <span class="full-date">25 juli 1914</span>
+      </div>
+      <div class="event-card">
+        <h3>Serbiens svar</h3>
+        <p>Serbien svarar strax före tidsfristens utgång. Svaret var oväntat tillmötesgående men avvisade kravet att österrikiska tjänstemän skulle delta i utredningen på serbisk mark. Österrike-Ungern bröt omedelbart de diplomatiska förbindelserna.</p>
+        <span class="tag">Diplomatiskt brott</span>
+        <div class="countries">
+          <span class="country-pill pill-aut"><span class="dot"></span>Österrike-Ungern</span>
+          <span class="country-pill pill-ser"><span class="dot"></span>Serbien</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-gap"><div class="day-gap-line"></div><span>3 dagar</span><div class="day-gap-line"></div></div>
+
+    <div class="event war">
+      <div class="event-date">
+        <span class="weekday">Tisdag</span>
+        <span class="full-date">28 juli 1914</span>
+      </div>
+      <div class="event-card">
+        <h3>Krigsförklaring: Österrike-Ungern mot Serbien</h3>
+        <p>Österrike-Ungern förklarar krig mot Serbien. Ryssland, som såg sig som beskyddare av de slaviska folken på Balkan, inleder en <strong>delvis mobilisering</strong> som en varning till Wien.</p>
+        <span class="tag">Krig</span>
+        <div class="countries">
+          <span class="country-pill pill-aut"><span class="dot"></span>Österrike-Ungern</span>
+          <span class="country-pill pill-ser"><span class="dot"></span>Serbien</span>
+          <span class="country-pill pill-rus new"><span class="dot"></span>Ryssland</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ KONTROLLSTATION 1 ═══ -->
+    <div class="quiz-break" style="margin-left: 0;">
+      <div class="quiz-label">Kontrollfråga 1 · Flerval</div>
+      <h4>Varför gav Österrike-Ungern Serbien ett ultimatum med avsiktligt oacceptabla krav?</h4>
+      <div class="mc-options" data-correct="2">
+        <div class="mc-option" data-index="0" onclick="handleMC(this)">
+          <span class="letter">A</span>
+          <span>De ville tvinga Serbien att erkänna Gavrilo Princip som ensam gärningsman</span>
+        </div>
+        <div class="mc-option" data-index="1" onclick="handleMC(this)">
+          <span class="letter">B</span>
+          <span>De hoppades att Serbien skulle acceptera och bli en lydstat under Wien</span>
+        </div>
+        <div class="mc-option" data-index="2" onclick="handleMC(this)">
+          <span class="letter">C</span>
+          <span>De ville skapa en förevändning för krig mot Serbien och krossa den serbiska nationalismen</span>
+        </div>
+        <div class="mc-option" data-index="3" onclick="handleMC(this)">
+          <span class="letter">D</span>
+          <span>De agerade på order från Tyskland som ville starta ett europeiskt storkrig</span>
+        </div>
+      </div>
+      <div class="quiz-feedback" data-correct-text="Rätt! Kraven var medvetet utformade för att Serbien inte skulle kunna acceptera dem – målet var krig, inte diplomati." data-wrong-text="Inte riktigt. A: Princip var känd – det handlade inte om erkännande. B: En lydstat var inte målet – man ville slå militärt. D: Tyskland gav stöd ('blankochecken'), men initiativet var Wiens eget."></div>
+    </div>
+
+    <div class="quiz-break" style="margin-left: 0;">
+      <div class="quiz-label">Kontrollfråga 2 · Flashcard</div>
+      <h4>Vad innebar den tyska "blankochecken"?</h4>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>Klicka för att se svaret</p>
+            <span class="flip-hint">Vänd kortet</span>
+          </div>
+          <div class="flashcard-back">
+            <p>Tysklands <strong>villkorslösa löfte</strong> att stödja Österrike-Ungern oavsett konsekvenserna. Det stärkte Wiens beslutsamhet att gå till krig mot Serbien – utan blankochecken hade de troligen inte vågat.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-break" style="margin-left: 0;">
+      <div class="quiz-label">Kontrollfråga 3 · Flerval</div>
+      <h4>Varför inledde Ryssland en mobilisering efter att Österrike-Ungern förklarat krig mot Serbien?</h4>
+      <div class="mc-options" data-correct="1">
+        <div class="mc-option" data-index="0" onclick="handleMC(this)">
+          <span class="letter">A</span>
+          <span>Ryssland hade en formell allians med Serbien som krävde omedelbar mobilisering</span>
+        </div>
+        <div class="mc-option" data-index="1" onclick="handleMC(this)">
+          <span class="letter">B</span>
+          <span>Ryssland såg sig som beskyddare av de slaviska folken på Balkan och ville varna Wien</span>
+        </div>
+        <div class="mc-option" data-index="2" onclick="handleMC(this)">
+          <span class="letter">C</span>
+          <span>Ryssland ville erövra de österrikiska Balkan-territorierna medan Wien var upptaget</span>
+        </div>
+        <div class="mc-option" data-index="3" onclick="handleMC(this)">
+          <span class="letter">D</span>
+          <span>Frankrike bad Ryssland att mobilisera för att avleda Tyskland på östfronten</span>
+        </div>
+      </div>
+      <div class="quiz-feedback" data-correct-text="Rätt! Ryssland betraktade sig som de slaviska folkens beskyddare – panslavismen var en central drivkraft, och mobiliseringen var tänkt som en varningssignal." data-wrong-text="Inte riktigt. A: Ryssland hade inget formellt försvarsavtal med Serbien – det var mer en 'beskyddarroll'. C: Erövring av Balkan-territorier var inte det omedelbara målet. D: Frankrike var inte initiativtagare till mobiliseringen."></div>
+    </div>
+    <!-- ═══ SLUT KONTROLLSTATION 1 ═══ -->
+
+    <div class="day-gap"><div class="day-gap-line"></div><span>2 dagar</span><div class="day-gap-line"></div></div>
+
+    <div class="event">
+      <div class="event-date">
+        <span class="weekday">Torsdag</span>
+        <span class="full-date">30 juli 1914</span>
+      </div>
+      <div class="event-card">
+        <h3>Rysk allmän mobilisering</h3>
+        <p>Under press från sin generalstab ändrar tsar Nikolaus II den delvisa mobiliseringen till en <strong>allmän mobilisering</strong> längs hela gränsen mot Tyskland och Österrike. Klockan hade börjat ticka.</p>
+        <span class="tag">Mobilisering</span>
+        <div class="countries">
+          <span class="country-pill pill-rus"><span class="dot"></span>Ryssland</span>
+          <span class="country-pill pill-tys new"><span class="dot"></span>Tyskland</span>
+          <span class="country-pill pill-aut"><span class="dot"></span>Österrike-Ungern</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-gap"><div class="day-gap-line"></div><span>1 dag</span><div class="day-gap-line"></div></div>
+
+    <div class="event">
+      <div class="event-date">
+        <span class="weekday">Fredag</span>
+        <span class="full-date">31 juli 1914</span>
+      </div>
+      <div class="event-card">
+        <h3>Tyska ultimatum</h3>
+        <p>Tyskland utfärdar ett ultimatum till Ryssland att avbryta sin mobilisering, samt ett separat ultimatum till Frankrike att förklara sig neutralt vid ett eventuellt krig mellan Tyskland och Ryssland.</p>
+        <span class="tag">Ultimatum</span>
+        <div class="countries">
+          <span class="country-pill pill-tys"><span class="dot"></span>Tyskland</span>
+          <span class="country-pill pill-rus"><span class="dot"></span>Ryssland</span>
+          <span class="country-pill pill-fra new"><span class="dot"></span>Frankrike</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-gap"><div class="day-gap-line"></div><span>1 dag</span><div class="day-gap-line"></div></div>
+
+    <div class="event war">
+      <div class="event-date">
+        <span class="weekday">Lördag</span>
+        <span class="full-date">1 augusti 1914</span>
+      </div>
+      <div class="event-card">
+        <h3>Tyskland förklarar krig mot Ryssland</h3>
+        <p>Ultimatumet löper ut utan svar. Tyskland förklarar krig mot Ryssland. Frankrike inleder sin allmänna mobilisering för att stödja sin allierade.</p>
+        <span class="tag">Krig</span>
+        <div class="countries">
+          <span class="country-pill pill-tys"><span class="dot"></span>Tyskland</span>
+          <span class="country-pill pill-rus"><span class="dot"></span>Ryssland</span>
+          <span class="country-pill pill-fra"><span class="dot"></span>Frankrike</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-gap"><div class="day-gap-line"></div><span>2 dagar</span><div class="day-gap-line"></div></div>
+
+    <div class="event war">
+      <div class="event-date">
+        <span class="weekday">Måndag</span>
+        <span class="full-date">3 augusti 1914</span>
+      </div>
+      <div class="event-card">
+        <h3>Tyskland förklarar krig mot Frankrike</h3>
+        <p>Tyskland förklarar krig mot Frankrike. Tyska trupper har redan gått in i Luxemburg och krävt fri passage genom Belgien – i enlighet med <strong>Schlieffenplanen</strong>.</p>
+        <span class="tag">Krig · Schlieffenplanen</span>
+        <div class="countries">
+          <span class="country-pill pill-tys"><span class="dot"></span>Tyskland</span>
+          <span class="country-pill pill-fra"><span class="dot"></span>Frankrike</span>
+          <span class="country-pill pill-bel new"><span class="dot"></span>Belgien</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-gap"><div class="day-gap-line"></div><span>1 dag</span><div class="day-gap-line"></div></div>
+
+    <div class="event war">
+      <div class="event-date">
+        <span class="weekday">Tisdag</span>
+        <span class="full-date">4 augusti 1914</span>
+      </div>
+      <div class="event-card">
+        <h3>Invasion av Belgien – Storbritannien in i kriget</h3>
+        <p>Tyska trupper invaderar det neutrala Belgien. Som garant för Belgiens neutralitet och för att bevara maktbalansen i Europa förklarar <strong>Storbritannien krig mot Tyskland</strong> vid midnatt. Världskriget är ett faktum.</p>
+        <span class="tag">Världskrig</span>
+        <div class="countries">
+          <span class="country-pill pill-tys"><span class="dot"></span>Tyskland</span>
+          <span class="country-pill pill-bel"><span class="dot"></span>Belgien</span>
+          <span class="country-pill pill-gbr new"><span class="dot"></span>Storbritannien</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ KONTROLLSTATION 2 ═══ -->
+    <div class="quiz-break" style="margin-left: 0;">
+      <div class="quiz-label">Kontrollfråga 4 · Flerval</div>
+      <h4>Vad var den direkta orsaken till att Storbritannien gick med i kriget?</h4>
+      <div class="mc-options" data-correct="2">
+        <div class="mc-option" data-index="0" onclick="handleMC(this)">
+          <span class="letter">A</span>
+          <span>Storbritannien hade en försvarsallians med Frankrike som tvingade dem att ingripa</span>
+        </div>
+        <div class="mc-option" data-index="1" onclick="handleMC(this)">
+          <span class="letter">B</span>
+          <span>Tyskland anföll brittiska fartyg i Nordsjön</span>
+        </div>
+        <div class="mc-option" data-index="2" onclick="handleMC(this)">
+          <span class="letter">C</span>
+          <span>Tyskland invaderade det neutrala Belgien, vars neutralitet Storbritannien garanterat</span>
+        </div>
+        <div class="mc-option" data-index="3" onclick="handleMC(this)">
+          <span class="letter">D</span>
+          <span>Ryssland bad Storbritannien om militärt stöd mot Österrike-Ungern</span>
+        </div>
+      </div>
+      <div class="quiz-feedback" data-correct-text="Rätt! Storbritannien var garant för Belgiens neutralitet sedan 1839. Schlieffenplanens invasion av Belgien blev den direkta anledningen." data-wrong-text="Inte riktigt. A: Ententen var ingen formell försvarsallians med automatisk krigsplikt. B: Inget sjöanfall hade skett. D: Det var Belgien, inte Ryssland, som utlöste den brittiska reaktionen."></div>
+    </div>
+
+    <div class="quiz-break" style="margin-left: 0;">
+      <div class="quiz-label">Kontrollfråga 5 · Matcha</div>
+      <h4>Matcha varje begrepp med rätt förklaring:</h4>
+      <div class="match-container" id="matchQuiz">
+        <span class="match-left">Blankochecken</span>
+        <span class="match-arrow">→</span>
+        <select class="match-select" data-correct="tyskt">
+          <option value="">Välj…</option>
+          <option value="snabb">Snabb seger i väst, sedan östfronten</option>
+          <option value="tyskt">Tyskt villkorslöst stöd till Österrike</option>
+          <option value="auto">Ömsesidiga försvarsavtal drog in alla</option>
+        </select>
+
+        <span class="match-left">Schlieffenplanen</span>
+        <span class="match-arrow">→</span>
+        <select class="match-select" data-correct="snabb">
+          <option value="">Välj…</option>
+          <option value="snabb">Snabb seger i väst, sedan östfronten</option>
+          <option value="tyskt">Tyskt villkorslöst stöd till Österrike</option>
+          <option value="auto">Ömsesidiga försvarsavtal drog in alla</option>
+        </select>
+
+        <span class="match-left">Allianssystemet</span>
+        <span class="match-arrow">→</span>
+        <select class="match-select" data-correct="auto">
+          <option value="">Välj…</option>
+          <option value="snabb">Snabb seger i väst, sedan östfronten</option>
+          <option value="tyskt">Tyskt villkorslöst stöd till Österrike</option>
+          <option value="auto">Ömsesidiga försvarsavtal drog in alla</option>
+        </select>
+
+        <button class="match-check-btn" onclick="checkMatch()">Kontrollera</button>
+      </div>
+      <div class="quiz-feedback" id="matchFeedback"></div>
+    </div>
+
+    <div class="quiz-break" style="margin-left: 0;">
+      <div class="quiz-label">Kontrollfråga 6 · Flashcard</div>
+      <h4>Vad menas med "missräkningarnas tragedi"?</h4>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>Klicka för att se svaret</p>
+            <span class="flip-hint">Vänd kortet</span>
+          </div>
+          <div class="flashcard-back">
+            <p>Europas ledare <strong>underskattade riskerna</strong> med sina beslut. Varje land trodde att kriget skulle bli kort och begränsat. Ingen räknade med att allianssystemet och de militära tidtabellerna skulle skapa en kedjereaktion som drog in hela kontinenten i ett utdraget förintelsekrig.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ═══ SLUT KONTROLLSTATION 2 ═══ -->
+
+  </div>
+</section>
+<section class="factors-section">
+  <div class="section-label">Analys</div>
+  <h2 style="font-family:'Playfair Display',serif; font-size:clamp(1.5rem,2.5vw,2rem); font-weight:700; color:var(--text-primary); margin-bottom:0.5rem;">Varför kunde krisen inte stoppas?</h2>
+  <p style="color:var(--text-secondary); font-size:1rem; margin-bottom:1rem;">Källorna pekar på flera avgörande faktorer bakom eskaleringen:</p>
+
+  <div class="factors-grid">
+    <div class="factor-card">
+      <span class="factor-icon">⚙️</span>
+      <h3>Militära tidtabeller</h3>
+      <p>Generalstabernas mobiliseringsplaner var mekaniska och stela. När en stormakt väl började mobilisera kände sig grannarna tvingade att göra detsamma – för att inte hamna i militärt underläge.</p>
+    </div>
+    <div class="factor-card">
+      <span class="factor-icon">🔗</span>
+      <h3>Allianssystemet</h3>
+      <p>De ömsesidiga försvarsavtalen – Trippelalliansen och Trippelententen – skapade en automatik där en lokal balkankris oundvikligen drog in alla Europas stormakter.</p>
+    </div>
+    <div class="factor-card">
+      <span class="factor-icon">🗺️</span>
+      <h3>Schlieffenplanen</h3>
+      <p>Den tyska strategin krävde en snabb seger i väst genom invasion av det neutrala Belgien innan Ryssland hann mobilisera fullt ut – den direkta orsaken till att Storbritannien drogs in.</p>
+    </div>
+    <div class="factor-card">
+      <span class="factor-icon">💥</span>
+      <h3>Nationalism och missräkningar</h3>
+      <p>Krisen präglades av en "missräkningarnas tragedi" där Europas ledare underskattade riskerna och trodde att man kunde föra ett begränsat krig.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ KÄLLOR ═══════════ -->
+<section class="sources-section">
+  <div class="section-label">Referenser</div>
+  <h2>Källor</h2>
+  <ul class="sources-list">
+    <li>Pavlac, Brian A. – <em>A Concise Survey of Western Civilization</em></li>
+    <li>Larsson, Olle & Marklund, Andreas – <em>Svensk historia</em></li>
+    <li>Keegan, John – <em>The First World War</em></li>
+    <li>Strachan, Hew (red.) – <em>The Oxford Illustrated History of the First World War</em></li>
+    <li>Perry, Marvin – <em>Western Civilization: A Brief History</em></li>
+    <li>Coffin, Judith m.fl. – <em>Western Civilizations: Their History &amp; Their Culture</em></li>
+    <li>Lyons, Michael J. & Ulbrich, David J. – <em>World War II: A Global History</em></li>
+  </ul>
+</section>
+
+<!-- ═══════════ SCROLL ANIMATIONS ═══════════ -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const elements = document.querySelectorAll('.event, .factor-card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 60);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    elements.forEach(el => observer.observe(el));
+  });
+
+  /* === MULTIPLE CHOICE === */
+  function handleMC(el) {
+    const container = el.closest('.mc-options');
+    if (container.classList.contains('locked')) return;
+
+    const correct = parseInt(container.dataset.correct);
+    const selected = parseInt(el.dataset.index);
+    const feedback = container.nextElementSibling;
+    const options = container.querySelectorAll('.mc-option');
+
+    container.classList.add('locked');
+    options.forEach(o => o.classList.add('locked'));
+
+    el.classList.add('selected');
+
+    if (selected === correct) {
+      el.classList.add('correct');
+      feedback.textContent = feedback.dataset.correctText;
+      feedback.className = 'quiz-feedback show correct';
+    } else {
+      el.classList.add('wrong');
+      options[correct].classList.add('reveal-correct');
+      feedback.textContent = feedback.dataset.wrongText;
+      feedback.className = 'quiz-feedback show wrong';
+    }
+  }
+
+  /* === MATCHING === */
+  function checkMatch() {
+    const selects = document.querySelectorAll('#matchQuiz .match-select');
+    const feedback = document.getElementById('matchFeedback');
+    let allCorrect = true;
+    let allFilled = true;
+
+    selects.forEach(sel => {
+      if (!sel.value) { allFilled = false; return; }
+      if (sel.value === sel.dataset.correct) {
+        sel.classList.remove('wrong');
+        sel.classList.add('correct');
+      } else {
+        sel.classList.remove('correct');
+        sel.classList.add('wrong');
+        allCorrect = false;
+      }
+    });
+
+    if (!allFilled) {
+      feedback.textContent = 'Välj ett svar för varje begrepp innan du kontrollerar.';
+      feedback.className = 'quiz-feedback show wrong';
+      return;
+    }
+
+    if (allCorrect) {
+      feedback.textContent = 'Helt rätt! Blankochecken var Tysklands stöd, Schlieffenplanen handlade om snabb seger i väst, och allianssystemet drog in alla stormakter.';
+      feedback.className = 'quiz-feedback show correct';
+    } else {
+      feedback.textContent = 'Inte helt rätt — titta på de rödmarkerade och försök igen!';
+      feedback.className = 'quiz-feedback show wrong';
+    }
+  }
+</script>
+
+</body>
+</html>
