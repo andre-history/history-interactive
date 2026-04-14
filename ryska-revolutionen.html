@@ -1,0 +1,3085 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Den ryska revolutionen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #CC1A1A;
+    --dark-red: #8B0000;
+    --cream: #F2E8D5;
+    --black: #111111;
+    --charcoal: #2A2A2A;
+    --gold: #C8922A;
+    --light-cream: #FAF5EC;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--black);
+    color: var(--cream);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* SLIDE SYSTEM */
+  .slides-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* NAV */
+  .nav {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    z-index: 100;
+    background: rgba(17,17,17,0.85);
+    padding: 0.7rem 1.4rem;
+    border: 1px solid rgba(200,146,42,0.3);
+  }
+
+  .nav button {
+    background: none;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav button:hover { background: var(--gold); color: var(--black); }
+  .nav button:disabled { opacity: 0.2; cursor: default; background: none; color: var(--gold); }
+
+  #slide-counter {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--cream);
+    letter-spacing: 0.15em;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  .dot-nav {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(200,146,42,0.3);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .dot.active { background: var(--gold); }
+
+  /* ================================
+     SLIDE 1 - TITLE
+  ================================ */
+  #slide-1 {
+    background: var(--black);
+  }
+
+  .s1-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .s1-diagonal {
+    position: absolute;
+    top: -10%;
+    right: -5%;
+    width: 55%;
+    height: 120%;
+    background: var(--red);
+    transform: skewX(-6deg);
+  }
+
+  .s1-stripe {
+    position: absolute;
+    bottom: 30%;
+    left: 0;
+    width: 60%;
+    height: 4px;
+    background: var(--gold);
+  }
+
+  .s1-circle {
+    position: absolute;
+    bottom: -8rem;
+    right: 5%;
+    width: 22rem;
+    height: 22rem;
+    border-radius: 50%;
+    border: 3px solid rgba(200,146,42,0.15);
+  }
+
+  .s1-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: 4rem 6rem;
+  }
+
+  .s1-eyebrow {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  .s1-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 8vw, 7.5rem);
+    line-height: 0.92;
+    color: var(--cream);
+    text-transform: uppercase;
+  }
+
+  .s1-title span { color: var(--gold); }
+
+  .s1-subtitle {
+    margin-top: 1.8rem;
+    font-size: 1.1rem;
+    color: rgba(242,232,213,0.7);
+    font-weight: 300;
+    max-width: 420px;
+    line-height: 1.6;
+  }
+
+  .s1-years {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 2rem;
+  }
+
+  .s1-year-block {
+    text-align: center;
+  }
+
+  .s1-year-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: var(--red);
+    display: block;
+  }
+
+  .s1-year-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: rgba(242,232,213,0.5);
+    text-transform: uppercase;
+  }
+
+  .s1-divider {
+    font-size: 2rem;
+    color: rgba(200,146,42,0.3);
+    line-height: 2.8rem;
+  }
+
+  /* star decorations on red */
+  .s1-stars {
+    position: absolute;
+    right: 8%;
+    top: 15%;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .star {
+    color: var(--cream);
+    font-size: 2.5rem;
+    opacity: 0.15;
+  }
+
+  /* ================================
+     SLIDE 2 - BAKGRUND / WWI
+  ================================ */
+  #slide-2 {
+    background: var(--charcoal);
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
+
+  .slide-header {
+    background: var(--red);
+    padding: 1.5rem 4rem;
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+  }
+
+  .slide-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: rgba(255,255,255,0.15);
+    line-height: 1;
+  }
+
+  .slide-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 0.05em;
+    color: var(--cream);
+  }
+
+  .slide-body {
+    padding: 2.5rem 4rem;
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    width: 100%;
+  }
+
+  .stat-card {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(200,146,42,0.2);
+    border-top: 3px solid var(--red);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02));
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+  }
+
+  .stat-unit {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    color: var(--red);
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: rgba(242,232,213,0.65);
+    margin-top: 0.5rem;
+    line-height: 1.4;
+  }
+
+  .context-box {
+    background: rgba(204,26,26,0.1);
+    border-left: 3px solid var(--red);
+    padding: 1.2rem 1.5rem;
+    margin-top: 1.5rem;
+    grid-column: 1 / -1;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: rgba(242,232,213,0.85);
+  }
+
+  .context-box strong { color: var(--gold); }
+
+  /* ================================
+     SLIDE 3 - FEBRUARI
+  ================================ */
+  #slide-3 { background: #1a1408; }
+
+  .timeline-slide {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+  }
+
+  .timeline-body {
+    padding: 2.5rem 4rem;
+    display: flex;
+    gap: 3rem;
+  }
+
+  .timeline-line {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex: 1;
+  }
+
+  .timeline-line::before {
+    content: '';
+    position: absolute;
+    left: 1.1rem;
+    top: 0.8rem;
+    bottom: 0.8rem;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--gold), var(--red));
+  }
+
+  .t-event {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 1rem 0;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .t-event:hover .t-content { transform: translateX(4px); }
+
+  .t-dot {
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    background: var(--red);
+    border: 2px solid var(--gold);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    color: var(--cream);
+    position: relative;
+    z-index: 1;
+  }
+
+  .t-content { transition: transform 0.2s; }
+
+  .t-date {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+  }
+
+  .t-text {
+    font-size: 0.95rem;
+    color: var(--cream);
+    line-height: 1.5;
+    margin-top: 0.2rem;
+  }
+
+  .t-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    color: var(--red);
+  }
+
+  .info-panel {
+    width: 45%;
+    flex-shrink: 0;
+  }
+
+  .info-box {
+    background: rgba(200,146,42,0.08);
+    border: 1px solid rgba(200,146,42,0.25);
+    padding: 2rem;
+    height: 100%;
+  }
+
+  .info-box h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  .info-box p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(242,232,213,0.8);
+    margin-bottom: 0.8rem;
+  }
+
+  .highlight-stat {
+    background: rgba(204,26,26,0.15);
+    border-left: 3px solid var(--red);
+    padding: 0.8rem 1rem;
+    margin-top: 1.2rem;
+  }
+
+  .highlight-stat .big { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--red); display: block; }
+  .highlight-stat small { font-size: 0.8rem; color: rgba(242,232,213,0.6); }
+
+  /* ================================
+     SLIDE 4 - OKTOBER
+  ================================ */
+  #slide-4 { background: #0f0f0f; }
+
+  .split-slide {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+  }
+
+  .split-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100%;
+  }
+
+  .split-left {
+    padding: 1.8rem 2.5rem;
+    background: rgba(204,26,26,0.06);
+    border-right: 1px solid rgba(200,146,42,0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow-y: auto;
+  }
+
+  .split-right {
+    padding: 3rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .fact-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(200,146,42,0.1);
+    transition: border-color 0.2s;
+  }
+
+  .fact-item:hover { border-color: rgba(200,146,42,0.4); }
+
+  .fact-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  .fact-text h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+
+  .fact-text p {
+    font-size: 0.85rem;
+    color: rgba(242,232,213,0.7);
+    line-height: 1.5;
+  }
+
+  /* Vote chart */
+  .vote-chart {
+    position: relative;
+  }
+
+  .vote-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+
+  .vote-bar-wrap {
+    margin-bottom: 1rem;
+  }
+
+  .vote-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: rgba(242,232,213,0.7);
+    margin-bottom: 0.4rem;
+  }
+
+  .vote-pct { font-weight: 600; color: var(--cream); }
+
+  .vote-bar-bg {
+    height: 28px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .vote-bar-fill {
+    height: 100%;
+    transition: width 1.5s ease;
+  }
+
+  .bar-bolsjevik { background: var(--red); }
+  .bar-sr { background: #4a7c59; }
+  .bar-mensjevik { background: #3a6b8a; }
+  .bar-other { background: #6a5a3a; }
+
+  .vote-note {
+    font-size: 0.78rem;
+    color: rgba(242,232,213,0.45);
+    font-style: italic;
+    margin-top: 1rem;
+    line-height: 1.5;
+  }
+
+  /* ================================
+     SLIDE 5 - BREST-LITOVSK
+  ================================ */
+  #slide-5 { background: #0d1117; }
+
+  .map-slide-body {
+    padding: 2rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+
+  .loss-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .loss-item {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .loss-label-text {
+    font-size: 0.85rem;
+    color: rgba(242,232,213,0.7);
+    width: 180px;
+    flex-shrink: 0;
+  }
+
+  .loss-bar-wrap {
+    flex: 1;
+    height: 24px;
+    background: rgba(255,255,255,0.05);
+    position: relative;
+  }
+
+  .loss-bar {
+    height: 100%;
+    background: var(--red);
+    transition: width 1.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 0.5rem;
+  }
+
+  .loss-pct {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.9rem;
+    color: var(--cream);
+  }
+
+  .territory-visual {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .terr-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+  }
+
+  .terr-scene {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.2rem;
+  }
+
+  .terr-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .terr-sq {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  .terr-sq.germany {
+    width: 72px;
+    height: 72px;
+    background: rgba(200,146,42,0.3);
+    border: 1px solid var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.62rem;
+    color: rgba(200,146,42,0.85);
+    text-align: center;
+    letter-spacing: 0.05em;
+    line-height: 1.4;
+    padding: 0.3rem;
+  }
+
+  .terr-sq.lost {
+    width: 144px;
+    height: 144px;
+    background: rgba(204,26,26,0.5);
+    border: 1px solid var(--red);
+  }
+
+  .terr-sq-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.04em;
+  }
+
+  .terr-sq-icon {
+    font-size: 2.2rem;
+    color: rgba(255,255,255,0.18);
+    line-height: 1;
+  }
+
+  .terr-floor-label {
+    font-size: 0.7rem;
+    color: rgba(242,232,213,0.5);
+    text-align: center;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  /* padding-bottom aligns ×3 visually with the center of the smaller square:
+     floor-label ≈ 28px + col-gap 7px + half of 72px square = 71px ≈ 4.4rem from scene bottom */
+  .terr-mult {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+    padding-bottom: 3.3rem;
+    line-height: 1;
+  }
+
+  /* ================================
+     SLIDE 6 - INBÖRDESKRIGET
+  ================================ */
+  #slide-6 { background: #110808; }
+
+  .war-body {
+    padding: 2.5rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .side-card {
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .side-card.rod {
+    background: rgba(204,26,26,0.1);
+    border: 1px solid rgba(204,26,26,0.4);
+  }
+
+  .side-card.vit {
+    background: rgba(242,232,213,0.04);
+    border: 1px solid rgba(242,232,213,0.2);
+  }
+
+  .side-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  .rod .side-title { color: var(--red); }
+  .vit .side-title { color: var(--cream); }
+
+  .side-facts { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+
+  .side-facts li {
+    font-size: 0.88rem;
+    color: rgba(242,232,213,0.75);
+    padding-left: 1.2rem;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .side-facts li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 0.7rem;
+  }
+
+  .intervention-box {
+    grid-column: 1 / -1;
+    background: rgba(200,146,42,0.06);
+    border: 1px solid rgba(200,146,42,0.2);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .intervention-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .int-flags {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .int-flag {
+    text-align: center;
+    font-size: 0.78rem;
+    color: rgba(242,232,213,0.6);
+  }
+
+  .int-flag strong {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    color: var(--cream);
+  }
+
+  /* ================================
+     SLIDE 7 - MÄNSKLIGA KOSTNADER (v2)
+  ================================ */
+  #slide-7 { background: #0a0a0a; }
+
+  .cost-body {
+    padding: 1.2rem 2.5rem 3.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .cost-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .cost-card {
+    background: rgba(255,255,255,0.03);
+    border-left: 3px solid var(--red);
+    padding: 0.75rem 1rem;
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+  }
+
+  .cost-card.terror { border-color: #8B0000; }
+  .cost-card.famine { border-color: var(--gold); }
+  .cost-card.pogrom { border-color: #5a3a1a; }
+
+  .cost-icon { font-size: 1.6rem; flex-shrink: 0; padding-top: 0.1rem; }
+
+  .cost-main { flex: 1; }
+
+  .cost-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    color: var(--red);
+    display: block;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cost-card.terror .cost-num { color: #cc4444; }
+  .cost-card.famine .cost-num { color: var(--gold); }
+  .cost-card.pogrom .cost-num { color: #8a6030; }
+
+  .cost-desc {
+    font-size: 0.78rem;
+    color: rgba(242,232,213,0.65);
+    margin-top: 0.25rem;
+    line-height: 1.4;
+  }
+
+  .persp-btn {
+    margin-top: 0.45rem;
+    background: none;
+    border: 1px solid rgba(200,146,42,0.22);
+    color: rgba(200,146,42,0.55);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    padding: 0.15rem 0.55rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+
+  .persp-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .persp-note {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.3s ease, padding 0.3s ease;
+    font-size: 0.75rem;
+    color: rgba(200,146,42,0.8);
+    line-height: 1.5;
+    background: rgba(200,146,42,0.05);
+    border-left: 2px solid rgba(200,146,42,0.3);
+    padding: 0 0.7rem;
+    margin-top: 0;
+  }
+
+  .persp-note.open {
+    max-height: 80px;
+    opacity: 1;
+    padding: 0.45rem 0.7rem;
+    margin-top: 0.4rem;
+  }
+
+  .total-box {
+    background: rgba(204,26,26,0.12);
+    border: 2px solid var(--red);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .total-left h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+
+  .total-left p { font-size: 0.75rem; color: rgba(242,232,213,0.6); margin-top: 0.2rem; }
+
+  .total-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--red);
+    line-height: 1;
+  }
+
+  .total-unit { font-size: 0.78rem; color: rgba(242,232,213,0.5); text-align: right; }
+
+  .comp-label {
+    font-size: 0.72rem;
+    color: rgba(242,232,213,0.5);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .comp-bars { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .comp-bar-row { display: flex; align-items: center; gap: 0.8rem; }
+
+  .comp-name {
+    width: 160px;
+    font-size: 0.75rem;
+    color: rgba(242,232,213,0.65);
+    flex-shrink: 0;
+  }
+
+  .comp-bar-bg {
+    flex: 1;
+    height: 20px;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .comp-bar-fill {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 0.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* ================================
+     SLIDE 8 v2 - FLIPKORT + VÄGVALSTIDSLINJE
+  ================================ */
+  #slide-8 { background: #0d1117; }
+
+  .s8-body {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 1.5rem;
+    padding: 0.5rem 2rem 3.8rem;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .s8-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-height: 0;
+  }
+
+  .s8-eyebrow {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: rgba(200,146,42,0.45);
+    flex-shrink: 0;
+  }
+
+  .s8-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+    align-content: start;
+  }
+
+  .s8-flip-card {
+    perspective: 900px;
+    cursor: pointer;
+    height: 154px;
+  }
+
+  .s8-flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  .s8-flip-card.flipped .s8-flip-inner { transform: rotateY(180deg); }
+  .s8-flip-card.flipped .s8-flip-front { opacity: 0.4; }
+
+  .s8-flip-front, .s8-flip-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    overflow: hidden;
+    padding: 0.65rem 0.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .s8-flip-front {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(200,146,42,0.2);
+    border-top: 2px solid rgba(200,146,42,0.6);
+  }
+
+  .s8-flip-back {
+    background: rgba(204,26,26,0.1);
+    border: 1px solid rgba(204,26,26,0.3);
+    border-top: 2px solid var(--red);
+    transform: rotateY(180deg);
+  }
+
+  .s8-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+
+  .s8-card-icon { font-size: 1.1rem; line-height: 1; }
+
+  .s8-card-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: rgba(242,232,213,0.3);
+  }
+
+  .s8-card-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    color: rgba(200,146,42,0.7);
+    line-height: 1.2;
+  }
+
+  .s8-card-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.7rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .s8-flip-back .s8-card-value { color: var(--red); }
+
+  .s8-card-change {
+    font-size: 0.72rem;
+    color: var(--red);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .s8-card-note {
+    font-size: 0.68rem;
+    color: rgba(242,232,213,0.55);
+    line-height: 1.35;
+  }
+
+  .s8-flip-hint {
+    font-size: 0.6rem;
+    color: rgba(200,146,42,0.22);
+    text-align: right;
+    font-style: italic;
+  }
+
+  /* Slide 8 SVG draw animation */
+  .s8-path-stem, .s8-path-left, .s8-path-right {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  #slide-8.s8-drawn .s8-path-stem {
+    animation: s8DrawPath 1s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+  }
+
+  #slide-8.s8-drawn .s8-path-left {
+    animation: s8DrawPath 0.7s cubic-bezier(0.4, 0, 0.2, 1) 1.1s forwards;
+  }
+
+  #slide-8.s8-drawn .s8-path-right {
+    animation: s8DrawPath 0.7s cubic-bezier(0.4, 0, 0.2, 1) 1.5s forwards;
+  }
+
+  @keyframes s8DrawPath {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Right: fork diagram */
+  .s8-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .s8-fork-svg {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+  }
+
+  /* ================================
+     SLIDE 9 - SAMMANFATTNING / QUIZ
+  ================================ */
+  #slide-9 { background: var(--black); }
+
+  .quiz-body {
+    padding: 2.5rem 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .quiz-intro {
+    font-size: 0.9rem;
+    color: rgba(242,232,213,0.6);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .quiz-question {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--cream);
+    line-height: 1.4;
+  }
+
+  .quiz-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+
+  .quiz-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(200,146,42,0.2);
+    color: rgba(242,232,213,0.8);
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+
+  .quiz-btn:hover { border-color: var(--gold); color: var(--cream); background: rgba(200,146,42,0.07); }
+  .quiz-btn.correct { background: rgba(74,124,89,0.3); border-color: #4a7c59; color: #a8d5b0; }
+  .quiz-btn.wrong { background: rgba(204,26,26,0.2); border-color: var(--red); color: #e88; }
+
+  .quiz-feedback {
+    min-height: 3rem;
+    padding: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .quiz-feedback.show { opacity: 1; }
+  .quiz-feedback.ok { background: rgba(74,124,89,0.15); border-left: 3px solid #4a7c59; color: #a8d5b0; }
+  .quiz-feedback.bad { background: rgba(204,26,26,0.1); border-left: 3px solid var(--red); color: #e88; }
+
+  .quiz-nav {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .quiz-nav button {
+    background: none;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+
+  .quiz-nav button:hover { background: var(--gold); color: var(--black); }
+  .quiz-nav button:disabled { opacity: 0.2; cursor: default; }
+
+  .q-progress { font-size: 0.8rem; color: rgba(242,232,213,0.4); }
+
+  /* Slide 4 accordion fact items */
+  .fact-acc {
+    border: 1px solid rgba(200,146,42,0.15);
+    background: rgba(255,255,255,0.03);
+    margin-bottom: 0.6rem;
+    transition: border-color 0.2s;
+  }
+
+  .fact-acc.open { border-color: rgba(200,146,42,0.4); }
+
+  .fact-acc-header {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+
+  .fact-acc-header:hover { background: rgba(200,146,42,0.06); }
+
+  .fact-acc-icon { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
+
+  .fact-acc-titles { flex: 1; }
+
+  .fact-acc-date {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 0.1rem;
+  }
+
+  .fact-acc-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+
+  .fact-acc-chevron {
+    font-size: 0.65rem;
+    color: rgba(200,146,42,0.4);
+    transition: transform 0.3s, color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .fact-acc.open .fact-acc-chevron { transform: rotate(180deg); color: var(--gold); }
+
+  .fact-acc-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  .fact-acc.open .fact-acc-body {
+    max-height: 400px;
+    opacity: 1;
+  }
+
+  .fact-acc-inner {
+    padding: 0 1rem 1rem 1rem;
+    font-size: 0.82rem;
+    color: rgba(242,232,213,0.75);
+    line-height: 1.65;
+    border-top: 1px solid rgba(200,146,42,0.12);
+    padding-top: 0.75rem;
+  }
+
+  .fact-acc-inner p { margin-bottom: 0.5rem; }
+  .fact-acc-inner p:last-child { margin-bottom: 0; }
+  .fact-acc-inner strong { color: var(--gold); font-weight: 600; }
+
+  /* ================================
+     SLIDE 6 v2 - JÄMFÖRELSETABELL + CITATSPEL
+  ================================ */
+  #slide-6 { background: #110808; }
+
+  .s6-body {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 1.5rem;
+    padding: 0.7rem 2.5rem 3.8rem;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .s6-left {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .s6-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(200,146,42,0.2);
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .s6-thead {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    background: rgba(0,0,0,0.5);
+    border-bottom: 1px solid rgba(200,146,42,0.25);
+    flex-shrink: 0;
+  }
+
+  .s6-th {
+    padding: 0.35rem 0.7rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+  }
+
+  .s6-th.factor { color: var(--gold); }
+  .s6-th.red { color: #e08080; border-left: 1px solid rgba(204,26,26,0.3); }
+  .s6-th.white { color: rgba(242,232,213,0.55); border-left: 1px solid rgba(242,232,213,0.1); }
+
+  .s6-row {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    border-bottom: 1px solid rgba(200,146,42,0.1);
+    cursor: pointer;
+    transition: background 0.2s;
+    min-height: 3.5rem;
+  }
+
+  .s6-row:last-child { border-bottom: none; }
+  .s6-row:hover { background: rgba(200,146,42,0.04); }
+  .s6-row.revealed { cursor: default; background: transparent; }
+  .s6-row.revealed:hover { background: transparent; }
+
+  .s6-factor-cell {
+    padding: 0.25rem 0.7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.1rem;
+  }
+
+  .s6-factor-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+  }
+
+  .s6-reveal-hint {
+    font-size: 0.58rem;
+    color: rgba(200,146,42,0.35);
+    font-style: italic;
+    transition: opacity 0.3s;
+  }
+
+  .s6-row.revealed .s6-reveal-hint { opacity: 0; }
+
+  .s6-cell {
+    padding: 0.25rem 0.6rem;
+    border-left: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.73rem;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .s6-cell::before {
+    content: '?';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: rgba(200,146,42,0.15);
+    transition: opacity 0.25s;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .s6-cell-text {
+    opacity: 0;
+    transition: opacity 0.4s 0.15s;
+  }
+
+  .s6-row.revealed .s6-cell::before { opacity: 0; }
+  .s6-row.revealed .s6-cell-text { opacity: 1; }
+  .s6-row.revealed .s6-cell.red-cell { color: rgba(240,160,160,0.9); background: rgba(204,26,26,0.07); }
+  .s6-row.revealed .s6-cell.white-cell { color: rgba(242,232,213,0.72); }
+
+  #slide-6 .slide-header {
+    padding: 0.6rem 2.5rem;
+  }
+
+  #slide-6 .slide-num {
+    font-size: 2.2rem;
+  }
+
+  #slide-6 .slide-title {
+    font-size: 1.6rem;
+  }
+
+  /* RIGHT: Quote game */
+  .s6-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .s6-game-eyebrow {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: rgba(200,146,42,0.5);
+  }
+
+  .s6-quote-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(200,146,42,0.2);
+    border-left: 3px solid var(--gold);
+    padding: 1rem 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .s6-quote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.65;
+  }
+
+  .s6-quote-context {
+    font-size: 0.7rem;
+    color: rgba(200,146,42,0.5);
+    margin-top: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+
+  .s6-attr-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: rgba(242,232,213,0.3);
+    flex-shrink: 0;
+  }
+
+  .s6-attr-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .s6-attr-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(200,146,42,0.15);
+    color: rgba(242,232,213,0.75);
+    padding: 0.55rem 0.9rem;
+    text-align: left;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    line-height: 1.3;
+  }
+
+  .s6-attr-btn:hover:not(:disabled) { border-color: var(--gold); background: rgba(200,146,42,0.07); color: var(--cream); }
+  .s6-attr-btn:disabled { cursor: default; }
+  .s6-attr-btn.s6-correct { border-color: #4a7c59; background: rgba(74,124,89,0.2); color: #b8ddbf; }
+  .s6-attr-btn.s6-wrong { border-color: rgba(204,26,26,0.5); background: rgba(204,26,26,0.1); color: #e0a0a0; opacity: 0.6; }
+
+  .s6-btn-icon { font-size: 1rem; flex-shrink: 0; }
+
+  .s6-feedback {
+    font-size: 0.76rem;
+    line-height: 1.55;
+    color: rgba(242,232,213,0.7);
+    flex: 1;
+    overflow-y: auto;
+    min-height: 2rem;
+  }
+
+  .s6-feedback strong { color: var(--gold); }
+
+  .s6-quote-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .s6-next-btn {
+    background: none;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    font-size: 0.82rem;
+    padding: 0.38rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .s6-next-btn:hover:not(:disabled) { background: var(--gold); color: var(--black); }
+  .s6-next-btn:disabled { opacity: 0.22; cursor: default; }
+
+  .s6-pdots { display: flex; gap: 0.45rem; align-items: center; }
+
+  .s6-pdot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(200,146,42,0.18);
+    transition: background 0.3s;
+  }
+
+  .s6-pdot.done { background: var(--gold); }
+  .s6-pdot.current { background: rgba(200,146,42,0.5); border: 1px solid var(--gold); }
+
+  /* ================================
+     SLIDE 3 v2 - INTERAKTIV FEBRUARI
+  ================================ */
+  .s3-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding: 1.2rem 3rem 1rem;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* LEFT: accordion timeline */
+  .s3-left {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+  }
+
+  .s3-left::before {
+    content: '';
+    position: absolute;
+    left: 1.05rem;
+    top: 1.5rem;
+    bottom: 1rem;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--gold), var(--red));
+    z-index: 0;
+  }
+
+  .s3-item {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 0.15rem;
+  }
+
+  .s3-item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    cursor: pointer;
+    padding: 0.45rem 0.5rem 0.45rem 0;
+    transition: opacity 0.2s;
+    user-select: none;
+  }
+
+  .s3-item-header:hover { opacity: 0.85; }
+
+  .s3-dot {
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 50%;
+    background: var(--red);
+    border: 2px solid var(--gold);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.62rem;
+    color: var(--cream);
+    transition: background 0.25s, transform 0.25s, color 0.25s;
+  }
+
+  .s3-item.open .s3-dot {
+    background: var(--gold);
+    color: var(--black);
+    transform: scale(1.12);
+  }
+
+  .s3-item-title { flex: 1; }
+
+  .s3-item-date {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    display: block;
+  }
+
+  .s3-item-name {
+    font-size: 0.88rem;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+
+  .s3-chevron {
+    font-size: 0.65rem;
+    color: rgba(200,146,42,0.4);
+    transition: transform 0.3s, color 0.2s;
+    flex-shrink: 0;
+    margin-right: 0.3rem;
+  }
+
+  .s3-item.open .s3-chevron { transform: rotate(180deg); color: var(--gold); }
+
+  .s3-item-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    opacity: 0;
+    padding-left: 3rem;
+  }
+
+  .s3-item.open .s3-item-body {
+    max-height: 220px;
+    opacity: 1;
+  }
+
+  .s3-item-detail {
+    font-size: 0.8rem;
+    color: rgba(242,232,213,0.78);
+    line-height: 1.55;
+    margin-bottom: 0.55rem;
+    padding-top: 0.35rem;
+  }
+
+  .s3-quote {
+    background: rgba(200,146,42,0.07);
+    border-left: 2px solid var(--gold);
+    padding: 0.45rem 0.75rem;
+    font-size: 0.76rem;
+    font-style: italic;
+    color: rgba(242,232,213,0.62);
+    line-height: 1.45;
+    margin-bottom: 0.45rem;
+  }
+
+  .s3-quote cite {
+    display: block;
+    font-style: normal;
+    font-size: 0.7rem;
+    color: rgba(200,146,42,0.55);
+    margin-top: 0.25rem;
+  }
+
+  .s3-whatif {
+    font-size: 0.74rem;
+    color: rgba(200,146,42,0.65);
+    font-style: italic;
+    padding-bottom: 0.5rem;
+  }
+
+  .s3-whatif::before { content: '💭 '; }
+
+  /* RIGHT COLUMN */
+  .s3-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* Why box */
+  .s3-why {
+    border: 1px solid rgba(200,146,42,0.25);
+    background: rgba(200,146,42,0.04);
+    flex-shrink: 0;
+  }
+
+  .s3-why-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.1rem;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    transition: background 0.2s;
+    user-select: none;
+  }
+
+  .s3-why-header:hover { background: rgba(200,146,42,0.09); }
+
+  .s3-why-arrow { transition: transform 0.3s; font-size: 0.75rem; }
+  .s3-why.open .s3-why-arrow { transform: rotate(180deg); }
+
+  .s3-why-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.35s;
+    opacity: 0;
+    padding: 0 1.1rem;
+  }
+
+  .s3-why.open .s3-why-body {
+    max-height: 200px;
+    opacity: 1;
+    padding: 0 1.1rem 0.9rem;
+  }
+
+  .s3-why-body p {
+    font-size: 0.82rem;
+    color: rgba(242,232,213,0.75);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+
+  .s3-why-stats {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.4rem;
+  }
+
+  .s3-why-stat { text-align: center; }
+  .s3-why-stat .big { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; color: var(--red); display: block; line-height: 1; }
+  .s3-why-stat small { font-size: 0.7rem; color: rgba(242,232,213,0.48); }
+
+  /* Decision game */
+  .s3-game {
+    flex: 1;
+    border: 1px solid rgba(204,26,26,0.35);
+    background: rgba(204,26,26,0.04);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .s3-game-header {
+    background: rgba(100,0,0,0.5);
+    padding: 0.55rem 1.1rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    color: var(--cream);
+    flex-shrink: 0;
+  }
+
+  .s3-game-scenario {
+    padding: 0.7rem 1.1rem 0.5rem;
+    font-size: 0.8rem;
+    color: rgba(242,232,213,0.82);
+    line-height: 1.55;
+    flex-shrink: 0;
+  }
+
+  .s3-game-scenario strong { color: var(--gold); }
+
+  .s3-game-choices {
+    padding: 0 1.1rem 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .s3-choice-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(200,146,42,0.18);
+    color: rgba(242,232,213,0.8);
+    padding: 0.5rem 0.85rem;
+    text-align: left;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1.35;
+  }
+
+  .s3-choice-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--cream); background: rgba(200,146,42,0.08); }
+  .s3-choice-btn:disabled { opacity: 0.45; cursor: default; }
+  .s3-choice-btn.chosen-actual { border-color: var(--red); background: rgba(204,26,26,0.18); color: #f0a0a0; }
+  .s3-choice-btn.chosen-alt { border-color: rgba(200,146,42,0.6); background: rgba(200,146,42,0.1); color: rgba(242,232,213,0.8); }
+
+  .s3-game-result {
+    padding: 0 1.1rem;
+    font-size: 0.77rem;
+    line-height: 1.5;
+    color: rgba(242,232,213,0.8);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.35s;
+    flex-shrink: 0;
+  }
+
+  .s3-game-result.show {
+    max-height: 180px;
+    opacity: 1;
+    padding: 0 1.1rem 0.5rem;
+  }
+
+  .s3-res-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+
+  .s3-res-label.actual { color: var(--red); }
+  .s3-res-label.alt { color: var(--gold); }
+
+  .s3-game-reset {
+    margin: 0 1.1rem 0.7rem;
+    background: none;
+    border: 1px solid rgba(200,146,42,0.25);
+    color: rgba(200,146,42,0.65);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    font-size: 0.78rem;
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    align-self: flex-start;
+    flex-shrink: 0;
+    display: none;
+  }
+
+  .s3-game-reset:hover { background: rgba(200,146,42,0.1); color: var(--gold); }
+
+  /* ================================
+     ANIMATIONS
+  ================================ */
+  .slide.active .stat-num,
+  .slide.active .total-num { animation: countup 1s ease forwards; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .slide.active .stat-card {
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .slide.active .stat-card:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .stat-card:nth-child(2) { animation-delay: 0.2s; }
+  .slide.active .stat-card:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .stat-card:nth-child(4) { animation-delay: 0.15s; }
+  .slide.active .stat-card:nth-child(5) { animation-delay: 0.25s; }
+
+  .slide.active .comp-bar-fill {
+    animation: barGrow 1.5s ease forwards;
+  }
+
+  @keyframes barGrow {
+    from { width: 0 !important; }
+  }
+
+  .slide-in-left {
+    animation: slideInLeft 0.6s ease forwards;
+  }
+
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="slides-wrapper">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide active" id="slide-1">
+    <div class="s1-bg">
+      <div class="s1-diagonal"></div>
+      <div class="s1-stripe"></div>
+      <div class="s1-circle"></div>
+    </div>
+    <div class="s1-stars">
+      <div class="star">★</div>
+      <div class="star" style="opacity:0.08">★</div>
+      <div class="star" style="opacity:0.05">★</div>
+    </div>
+    <div class="s1-content">
+      <div class="s1-eyebrow">Historia &bull; Gymnasiet</div>
+      <h1 class="s1-title">Den ryska<br><span>revolutionen</span><br>&amp; inbördes-<br>kriget</h1>
+      <p class="s1-subtitle">Från tsarens fall till bolsjevikernas makt &mdash; ett imperium i upplösning</p>
+      <div class="s1-years">
+        <div class="s1-year-block">
+          <span class="s1-year-num">1917</span>
+          <span class="s1-year-label">Revolutionen</span>
+        </div>
+        <div class="s1-divider">&mdash;</div>
+        <div class="s1-year-block">
+          <span class="s1-year-num">1922</span>
+          <span class="s1-year-label">Inbördeskrigets slut</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: BAKGRUND -->
+  <div class="slide" id="slide-2">
+    <div class="slide-header">
+      <div class="slide-num">01</div>
+      <div class="slide-title">Bakgrund &mdash; Första världskrigets belastning</div>
+    </div>
+    <div class="slide-body" style="flex-direction:column;">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <span class="stat-num">12</span>
+          <span class="stat-unit">miljoner</span>
+          <div class="stat-label">Soldater mobiliserade av Ryssland under hela kriget &mdash; Europas absolut största armé</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">1/3</span>
+          <span class="stat-unit">av soldaterna</span>
+          <div class="stat-label">Saknade gevär vid krigets inledning &mdash; de uppmanades ta vapen från stupade kamrater</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">1,8</span>
+          <span class="stat-unit">miljoner</span>
+          <div class="stat-label">Förluster (döda, sårade, saknade) vid slutet av 1915 &mdash; bara under det första halvtannat krigsåret</div>
+        </div>
+      </div>
+      <div class="context-box">
+        <strong>Varför kollapsade Ryssland?</strong> Kombinationen av massiva militära förluster, brist på utrustning och livsmedel samt ett politiskt ledarskap som förlorat folkets förtroende skapade ett explosivt läge. Tsar Nikolaj II:s beslut att ta personligt befäl över armén 1915 innebar att han också tog personligt ansvar för varje ny förlust &mdash; en katastrofal politisk felbedömning. Kriget var inte orsaken till revolutionen, men det var <strong>katalysatorn</strong> som tände lågan.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: FEBRUARI -->
+  <div class="slide timeline-slide" id="slide-3">
+    <div class="slide-header" style="background:#8B4000;">
+      <div class="slide-num">02</div>
+      <div class="slide-title">Februarirevolutionen &mdash; Mars 1917</div>
+    </div>
+    <div class="s3-body">
+
+      <!-- LEFT: Accordion timeline -->
+      <div class="s3-left">
+
+        <div class="s3-item" id="s3-e1">
+          <div class="s3-item-header" onclick="toggleS3Item('s3-e1')">
+            <div class="s3-dot">8/3</div>
+            <div class="s3-item-title">
+              <span class="s3-item-date">8 MARS 1917 &bull; Internationella Kvinnodagen</span>
+              <span class="s3-item-name">Textilarbetarna lämnar sina maskiner</span>
+            </div>
+            <span class="s3-chevron">▼</span>
+          </div>
+          <div class="s3-item-body">
+            <div class="s3-item-detail">Kvinnliga textilarbetare vid Petrogradsfabrikerna stannar hemma och går ut på gatorna. Brödbrist och krigets fasor har brutit tålamodet. Ingen parti hade planerat detta &mdash; det var ett spontant folkligt uppror som ingen kontrollerade.</div>
+            <div class="s3-quote">"Överallt folk på gatorna, i kölden, skrikande 'Bröd! Bröd!' Ingen verkade veta vart det bar hän."<cite>&mdash; Okänt vittne, Petrograd, 8 mars 1917</cite></div>
+            <div class="s3-whatif">Vad hade hänt om strejken brutit ut i sommarhettan, när bönderna hade bröd?</div>
+          </div>
+        </div>
+
+        <div class="s3-item" id="s3-e2">
+          <div class="s3-item-header" onclick="toggleS3Item('s3-e2')">
+            <div class="s3-dot" style="background:#b84000;">10/3</div>
+            <div class="s3-item-title">
+              <span class="s3-item-date">10 MARS &bull; Strejken exploderar</span>
+              <span class="s3-item-name">300 000 på gatorna &mdash; Petrograd lamslås</span>
+            </div>
+            <span class="s3-chevron">▼</span>
+          </div>
+          <div class="s3-item-body">
+            <div class="s3-item-detail">Strejken sveper över hela staden. 300 000 demonstrerar. Tsaren befinner sig 1 300 km bort vid fronten och beordrar militären att "återställa ordningen med alla till buds stående medel."</div>
+            <div class="s3-quote">"Ordern kom. Vi läste den. Och lade den åt sidan."<cite>&mdash; Soldat, Volynskij-regementet, 10 mars 1917</cite></div>
+            <div class="s3-whatif">Vad hade hänt om tsaren befunnit sig i Petrograd den dagen?</div>
+          </div>
+        </div>
+
+        <div class="s3-item" id="s3-e3">
+          <div class="s3-item-header" onclick="toggleS3Item('s3-e3')">
+            <div class="s3-dot" style="background:#7a2800;">12/3</div>
+            <div class="s3-item-title">
+              <span class="s3-item-date">12 MARS &bull; Den avgörande vändningen</span>
+              <span class="s3-item-name">180 000 soldater byter sida</span>
+            </div>
+            <span class="s3-chevron">▼</span>
+          </div>
+          <div class="s3-item-body">
+            <div class="s3-item-detail">Volynskij-regementet mördar sin befälhavare som försöker tvinga dem lyda. Uppviglet sprider sig som eld &mdash; 180 000 soldater ansluter sig till revolutionärerna. Tsaren förlorar våldsmonopolet.</div>
+            <div class="s3-quote">"Vi kan inte skjuta mot hungrande kvinnor. Vi är ju också hungrande."<cite>&mdash; Befäl, Petrogradsgarnisonen, 12 mars 1917</cite></div>
+            <div class="s3-whatif">Vad hade hänt om bara ett enda regemente valt att lyda tsarens order?</div>
+          </div>
+        </div>
+
+        <div class="s3-item" id="s3-e4">
+          <div class="s3-item-header" onclick="toggleS3Item('s3-e4')">
+            <div class="s3-dot" style="background:#4a2010;">15/3</div>
+            <div class="s3-item-title">
+              <span class="s3-item-date">15 MARS &bull; Dynastins sista dag</span>
+              <span class="s3-item-name">Nikolaj II abdikerar på ett tåg</span>
+            </div>
+            <span class="s3-chevron">▼</span>
+          </div>
+          <div class="s3-item-body">
+            <div class="s3-item-detail">Nikolaj fick abdikationshandlingarna på ett tåg utanför Pskov. Övergiven av sina generaler, av Duman, av alla. Romanovernas 300-åriga dynasti tog slut på några timmar.</div>
+            <div class="s3-quote">"Runt mig syns förräderi, feghet och svek."<cite>&mdash; Nikolaj II:s dagbok, 15 mars 1917</cite></div>
+            <div class="s3-whatif">Vad hade hänt om Nikolaj abdikerat till förmån för ett konstitutionellt monarki redan 1905?</div>
+          </div>
+        </div>
+
+      </div><!-- /s3-left -->
+
+      <!-- RIGHT: Why-box + Decision game -->
+      <div class="s3-right">
+
+        <!-- Collapsible: Varför segrade revolutionen? -->
+        <div class="s3-why" id="s3-why">
+          <div class="s3-why-header" onclick="toggleWhy()">
+            <span>Varfor segrade revolutionen?</span>
+            <span class="s3-why-arrow" id="why-arrow">▼</span>
+          </div>
+          <div class="s3-why-body" id="why-body">
+            <p>Februarirevolutionen var ingen planerad aktion av något parti &mdash; den uppstod spontant ur folklig desperation. Tre faktorer samverkade: brödbristen, krigets fasor och ett ledarskap som förlorat sin trovärdighet.</p>
+            <p>Det avgörande ögonblicket var militärens vägran att lyda. Utan soldaterna hade tsaren inget tvångsmedel kvar.</p>
+            <div class="s3-why-stats">
+              <div class="s3-why-stat"><span class="big">7 dagar</span><small>Från strejk till abdikation</small></div>
+              <div class="s3-why-stat"><span class="big">300 år</span><small>Romanov-dynastin &mdash; avslutad på en vecka</small></div>
+              <div class="s3-why-stat"><span class="big">0</span><small>Partier som planerade revolutionen</small></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decision simulation -->
+        <div class="s3-game">
+          <div class="s3-game-header">★ Du är tsaren &mdash; 10 mars 1917</div>
+          <div class="s3-game-scenario">
+            <strong>Scenario:</strong> 300 000 strejkar i Petrograd. Trupperna väntar på order. Du befinner dig 1 300 km bort vid fronten. Militärledningen rapporterar att situationen är "allvarlig men kontrollerbar." Vad beordrar du?
+          </div>
+          <div class="s3-game-choices" id="s3-choices">
+            <button class="s3-choice-btn" onclick="s3Choose(0)">A) Beordra militären att skjuta &mdash; återställ ordningen med kraft</button>
+            <button class="s3-choice-btn" onclick="s3Choose(1)">B) Erbjud omedelbar dialog om bröd och bättre levnadsvillkor</button>
+            <button class="s3-choice-btn" onclick="s3Choose(2)">C) Överlämna makten till Duman och inrätta ett konstitutionellt styre</button>
+          </div>
+          <div class="s3-game-result" id="s3-result"></div>
+          <button class="s3-game-reset" id="s3-reset" onclick="s3Reset()">Försök igen ↺</button>
+        </div>
+
+      </div><!-- /s3-right -->
+    </div><!-- /s3-body -->
+  </div>
+
+  <!-- SLIDE 4: OKTOBER -->
+  <div class="slide split-slide" id="slide-4">
+    <div class="slide-header" style="background:#1a1a3a;">
+      <div class="slide-num">03</div>
+      <div class="slide-title">Oktoberrevolutionen &mdash; November 1917</div>
+    </div>
+    <div class="split-body">
+      <div class="split-left">
+
+        <div class="fact-acc" id="fa-1">
+          <div class="fact-acc-header" onclick="toggleFact('fa-1')">
+            <div class="fact-acc-icon">⚡</div>
+            <div class="fact-acc-titles">
+              <span class="fact-acc-date">6&ndash;7 NOVEMBER 1917</span>
+              <span class="fact-acc-name">Kuppen</span>
+            </div>
+            <span class="fact-acc-chevron">▼</span>
+          </div>
+          <div class="fact-acc-body">
+            <div class="fact-acc-inner">
+              <p>Bolsjevikerna under Lenins och Trotskijs ledning genomförde en noggrant planerad aktion natten till den 7 november. Röda gardet och lojalister inom flottan ockuperade stadens nyckelplatser: järnvägsstationer, telegrafkontor, broar och statsbanken.</p>
+              <p>Aktionen var nästan <strong>helt oblodig</strong>. Motståndarna var antingen oförberedda eller demoraliserade efter månaders politisk kris. Den provisoriska regeringen, vid makten sedan mars, hade förlorat sitt folkliga stöd och saknade vilja att försvara sig.</p>
+              <p>Bolsjevikerna kallade aktionen "Oktoberrevolutionen" eftersom den enligt den gamla ryska julianska kalendern ägde rum i oktober.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="fact-acc" id="fa-2">
+          <div class="fact-acc-header" onclick="toggleFact('fa-2')">
+            <div class="fact-acc-icon">🏛️</div>
+            <div class="fact-acc-titles">
+              <span class="fact-acc-date">7 NOVEMBER 1917</span>
+              <span class="fact-acc-name">Vinterpalatset stormas</span>
+            </div>
+            <span class="fact-acc-chevron">▼</span>
+          </div>
+          <div class="fact-acc-body">
+            <div class="fact-acc-inner">
+              <p>Det dramatiska "stormandet" av Vinterpalatset har mytologiserats kraftigt, inte minst genom Eisensteins storslagna spelfilm från 1928. I verkligheten var det hela tämligen odramatiskt.</p>
+              <p>Palatset försvarades av ungefär 300 personer: ett fåtal kadetter och en kvinnobataljon. Ingen visade nämnvärt motstånd. Ministrarna satt inlåsta och väntade. De greps utan blodsutgjutelse.</p>
+              <p><strong>Lenin</strong>, som hållits gömd under hela aktionen av säkerhetsskäl, dök upp först när det var över.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="fact-acc" id="fa-3">
+          <div class="fact-acc-header" onclick="toggleFact('fa-3')">
+            <div class="fact-acc-icon">📜</div>
+            <div class="fact-acc-titles">
+              <span class="fact-acc-date">19 JANUARI 1918</span>
+              <span class="fact-acc-name">Konstituerande församlingen upplöses</span>
+            </div>
+            <span class="fact-acc-chevron">▼</span>
+          </div>
+          <div class="fact-acc-body">
+            <div class="fact-acc-inner">
+              <p>I november 1917 hölls fria val till en konstituerande församling, något revolutionärer av alla partier krävt i decennier. Resultatet var tydligt: bolsjevikerna fick <strong>24%</strong>, klart under socialrevolutionärernas 38%.</p>
+              <p>Församlingen fick mötas en enda gång, den 18 januari 1918. Nästa dag lät bolsjevikerna Röda gardet blockera ingången. En sjöman meddelade ordföranden att "vakten är trött" och beordrade alla att gå hem.</p>
+              <p>Parlamentet öppnade aldrig igen. Det folkliga mandatet som bolsjevikerna aldrig fått i val, tog de med vapenmakt.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="split-right">
+        <div class="vote-chart">
+          <div class="vote-title">Val till konstituerande församlingen, jan 1918</div>
+          <div class="vote-bar-wrap">
+            <div class="vote-label"><span>Socialrevolutionärerna (SR)</span><span class="vote-pct">38%</span></div>
+            <div class="vote-bar-bg"><div class="vote-bar-fill bar-sr" style="width:0" data-target="38%"></div></div>
+          </div>
+          <div class="vote-bar-wrap">
+            <div class="vote-label"><span>Bolsjevikerna</span><span class="vote-pct">24%</span></div>
+            <div class="vote-bar-bg"><div class="vote-bar-fill bar-bolsjevik" style="width:0" data-target="24%"></div></div>
+          </div>
+          <div class="vote-bar-wrap">
+            <div class="vote-label"><span>Mensjevikerna</span><span class="vote-pct">3%</span></div>
+            <div class="vote-bar-bg"><div class="vote-bar-fill bar-mensjevik" style="width:0" data-target="3%"></div></div>
+          </div>
+          <div class="vote-bar-wrap">
+            <div class="vote-label"><span>Övriga</span><span class="vote-pct">35%</span></div>
+            <div class="vote-bar-bg"><div class="vote-bar-fill bar-other" style="width:0" data-target="35%"></div></div>
+          </div>
+          <div class="vote-note">Bolsjevikerna fick aldrig folkets mandat i fria val. Parlamentet upplöstes med vapenmakt den 19 januari 1918 &mdash; ett av revolutionens mest omdiskuterade beslut.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: BREST-LITOVSK -->
+  <div class="slide" id="slide-5">
+    <div class="slide-header" style="background:#1a2800;">
+      <div class="slide-num">04</div>
+      <div class="slide-title">Freden i Brest-Litovsk &mdash; Mars 1918</div>
+    </div>
+    <div class="map-slide-body">
+      <div>
+        <p style="font-size:0.88rem;color:rgba(242,232,213,0.7);margin-bottom:1.2rem;line-height:1.6;">För att överleva som regim var bolsjevikerna tvungna att kapitulera för Tyskland. Freden kostade enormt, men Lenin ansåg att bolsjevikerna annars skulle falla:</p>
+        <div class="loss-list">
+          <div class="loss-item">
+            <div class="loss-label-text">Befolkning</div>
+            <div class="loss-bar-wrap"><div class="loss-bar" style="width:0" data-target="33%"><span class="loss-pct">33%</span></div></div>
+          </div>
+          <div class="loss-item">
+            <div class="loss-label-text">Jordbruksmark</div>
+            <div class="loss-bar-wrap"><div class="loss-bar" style="width:0" data-target="32%"><span class="loss-pct">32%</span></div></div>
+          </div>
+          <div class="loss-item">
+            <div class="loss-label-text">Industriföretag</div>
+            <div class="loss-bar-wrap"><div class="loss-bar" style="width:0" data-target="54%"><span class="loss-pct">54%</span></div></div>
+          </div>
+          <div class="loss-item">
+            <div class="loss-label-text">Kolgruvor</div>
+            <div class="loss-bar-wrap"><div class="loss-bar" style="width:0" data-target="89%"><span class="loss-pct">89%</span></div></div>
+          </div>
+        </div>
+        <div class="context-box" style="margin-top:1.2rem;">
+          <strong>Lenins kalkyl:</strong> "En oanständig fred är bättre än ett anständigt krig." Bolsjevikerna behövde andrum för att konsolidera sin makt. Freden gav dem det, men till ett enormt pris. Avträdelserna annullerades i november 1918, när Tyskland förlorade världskriget.
+        </div>
+        <div class="context-box" style="margin-top:0.7rem;border-left-color:var(--gold);background:rgba(200,146,42,0.07);">
+          <strong style="color:var(--gold);">Tänk på detta:</strong> Ryssland är världens till ytan största land — det sträcker sig över elva tidszoner. Ändå låg 89% av landets kolgruvor koncentrerade i de gränsområden som nu avträddes. Vad avslöjar det om hur och var Ryssland hade industrialiserats?
+        </div>
+      </div>
+      <div class="territory-visual">
+        <div class="terr-header">750 000 km² avträddes</div>
+        <div class="terr-scene">
+          <div class="terr-col">
+            <div class="terr-sq germany">TYSKLAND<br>250 000 km²</div>
+            <div class="terr-floor-label">Tysklands<br>storlek</div>
+          </div>
+          <div class="terr-mult">&times;3</div>
+          <div class="terr-col">
+            <div class="terr-sq lost">
+              <span class="terr-sq-num">750 000 km²</span>
+              <span class="terr-sq-icon">☭</span>
+            </div>
+            <div class="terr-floor-label">Avträtt<br>territorium</div>
+          </div>
+        </div>
+        <p style="font-size:0.82rem;color:rgba(242,232,213,0.55);line-height:1.5;margin-top:0.3rem;">Områdena inkluderade Finland, de baltiska staterna, Polen och Ukraina, tidigare hjärtat av det ryska imperiet.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: INBÖRDESKRIGET -->
+  <div class="slide" id="slide-6">
+    <div class="slide-header" style="background:#2a0a0a;">
+      <div class="slide-num">05</div>
+      <div class="slide-title">Det ryska inbördeskriget 1918&ndash;1922</div>
+    </div>
+    <div class="s6-body">
+
+      <!-- LEFT: Comparison table -->
+      <div class="s6-left">
+        <div class="s6-table">
+          <div class="s6-thead">
+            <div class="s6-th factor">Faktor</div>
+            <div class="s6-th red">★ Röda armén</div>
+            <div class="s6-th white">◈ Vita armén</div>
+          </div>
+
+          <div class="s6-row" id="s6r1" onclick="revealRow('s6r1')">
+            <div class="s6-factor-cell">
+              <span class="s6-factor-name">Ledarskap</span>
+              <span class="s6-reveal-hint">klicka för att avslöja</span>
+            </div>
+            <div class="s6-cell red-cell"><span class="s6-cell-text">Trotskij: ett centraliserat befäl med järndisciplin och militärt geni</span></div>
+            <div class="s6-cell white-cell"><span class="s6-cell-text">Denikin, Koltjak och Wrangel opererade helt oberoende, utan gemensam strategi</span></div>
+          </div>
+
+          <div class="s6-row" id="s6r2" onclick="revealRow('s6r2')">
+            <div class="s6-factor-cell">
+              <span class="s6-factor-name">Geografi</span>
+              <span class="s6-reveal-hint">klicka för att avslöja</span>
+            </div>
+            <div class="s6-cell red-cell"><span class="s6-cell-text">Kontrollerade centrum och järnvägsnätet, kunde flytta trupper snabbt åt alla håll</span></div>
+            <div class="s6-cell white-cell"><span class="s6-cell-text">Anfoll från periferin i flera riktningar, aldrig koordinerat, aldrig avgörande</span></div>
+          </div>
+
+          <div class="s6-row" id="s6r3" onclick="revealRow('s6r3')">
+            <div class="s6-factor-cell">
+              <span class="s6-factor-name">Politisk vision</span>
+              <span class="s6-reveal-hint">klicka för att avslöja</span>
+            </div>
+            <div class="s6-cell red-cell"><span class="s6-cell-text">Tydligt program: jord till bönderna, fred, socialism mot det gamla privilegiesamhället</span></div>
+            <div class="s6-cell white-cell"><span class="s6-cell-text">Ingen gemensam agenda. Monarkister, liberaler och socialister i samma läger</span></div>
+          </div>
+
+          <div class="s6-row" id="s6r4" onclick="revealRow('s6r4')">
+            <div class="s6-factor-cell">
+              <span class="s6-factor-name">Folkligt stöd</span>
+              <span class="s6-reveal-hint">klicka för att avslöja</span>
+            </div>
+            <div class="s6-cell red-cell"><span class="s6-cell-text">Bönderna föredrog bolsjevikerna trots rekvireringar. De hotade åtminstone inte återinföra godsen</span></div>
+            <div class="s6-cell white-cell"><span class="s6-cell-text">Misstroddes av bönderna, som fruktade att gamla landägare skulle återfå den mark de just vunnit</span></div>
+          </div>
+
+          <div class="s6-row" id="s6r5" onclick="revealRow('s6r5')">
+            <div class="s6-factor-cell">
+              <span class="s6-factor-name">Utländsk hjälp</span>
+              <span class="s6-reveal-hint">klicka för att avslöja</span>
+            </div>
+            <div class="s6-cell red-cell"><span class="s6-cell-text">Inget utländskt stöd, men det spelade liten roll när Vita inte kunde samordna sin fördel</span></div>
+            <div class="s6-cell white-cell"><span class="s6-cell-text">Brittiska, franska, amerikanska och japanska trupper, men samordningen var obefintlig</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Quote attribution game -->
+      <div class="s6-right">
+        <div class="s6-game-eyebrow">Vem sa vad? &mdash; Identifiera talaren</div>
+
+        <div class="s6-quote-box">
+          <div class="s6-quote-text" id="s6-quote-text"></div>
+          <div class="s6-quote-context" id="s6-quote-context"></div>
+        </div>
+
+        <div class="s6-attr-label">Vem tror du sa detta?</div>
+
+        <div class="s6-attr-btns" id="s6-attr-btns"></div>
+
+        <div class="s6-feedback" id="s6-feedback"></div>
+
+        <div class="s6-quote-nav">
+          <div class="s6-pdots">
+            <div class="s6-pdot current" id="s6pd0"></div>
+            <div class="s6-pdot" id="s6pd1"></div>
+            <div class="s6-pdot" id="s6pd2"></div>
+          </div>
+          <button class="s6-next-btn" id="s6-next" disabled onclick="s6Next()">Nästa citat ➜</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SLIDE 7: MÄNSKLIGA KOSTNADER -->
+  <div class="slide" id="slide-7">
+    <div class="slide-header" style="background:#1a0000;">
+      <div class="slide-num">06</div>
+      <div class="slide-title">De mänskliga kostnaderna</div>
+    </div>
+    <div class="cost-body">
+      <div class="cost-row">
+
+        <div class="cost-card">
+          <div class="cost-icon">⚔️</div>
+          <div class="cost-main">
+            <span class="cost-num" data-target-num="1200000" data-final-text="1,2 milj.">0</span>
+            <div class="cost-desc">Kombattanter stupade i strid under inbördeskriget</div>
+            <button class="persp-btn" onclick="togglePersp('p1')">↗ Sätt i perspektiv</button>
+            <div class="persp-note" id="p1">Ungefär lika många som hela befolkningen i Stockholm och Göteborg tillsammans — varje man, kvinna och barn borta.</div>
+          </div>
+        </div>
+
+        <div class="cost-card terror">
+          <div class="cost-icon">🔴</div>
+          <div class="cost-main">
+            <span class="cost-num" style="color:#cc4444" data-target-num="1300000" data-final-text="upp till 1,3 milj.">0</span>
+            <div class="cost-desc">Döda till följd av bolsjevikisk repression och röd terror</div>
+            <button class="persp-btn" onclick="togglePersp('p2')">↗ Sätt i perspektiv</button>
+            <div class="persp-note" id="p2">Fler än hela Estlands befolkning idag — ett helt lands invånarantal utplånat av politisk repression på fyra år.</div>
+          </div>
+        </div>
+
+        <div class="cost-card terror" style="border-color:#888;">
+          <div class="cost-icon">⬜</div>
+          <div class="cost-main">
+            <span class="cost-num" style="color:#aaa" data-target-num="100000" data-final-text="~100 000">0</span>
+            <div class="cost-desc">Döda till följd av vit terror från Vita arméns styrkor</div>
+            <button class="persp-btn" onclick="togglePersp('p3')">↗ Sätt i perspektiv</button>
+            <div class="persp-note" id="p3">Ungefär lika många som hela befolkningen i Sundsvall — en hel mellanstor stad dödad av den sida som påstod sig kämpa för ordning och lag.</div>
+          </div>
+        </div>
+
+        <div class="cost-card pogrom">
+          <div class="cost-icon">✡️</div>
+          <div class="cost-main">
+            <span class="cost-num" style="color:#8a6030" data-target-num="100000" data-final-text="~100 000">0</span>
+            <div class="cost-desc">Judar mördade i pogromer, huvudsakligen utförda av vita styrkor</div>
+            <button class="persp-btn" onclick="togglePersp('p4')">↗ Sätt i perspektiv</button>
+            <div class="persp-note" id="p4">Det värsta antisemitiska massvåldet i historien fram till förintelsen — och ändå knappt omnämnt i de flesta läroböcker om inbördeskriget.</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="cost-row">
+
+        <div class="cost-card famine">
+          <div class="cost-icon">🌾</div>
+          <div class="cost-main">
+            <span class="cost-num" style="color:var(--gold)" data-target-num="5000000" data-final-text="5 milj.">0</span>
+            <div class="cost-desc">Döda i den stora svälten 1921–1922. Mellan 22–30 miljoner drabbades av katastrofen orsakad av krigskommunism och missväxt.</div>
+            <button class="persp-btn" onclick="togglePersp('p5')">↗ Sätt i perspektiv</button>
+            <div class="persp-note" id="p5">Fler döda än hela Danmarks och Norges befolkning tillsammans — svält ihjäl på ett enda år, till följd av en politisk strategi.</div>
+          </div>
+        </div>
+
+        <div class="total-box">
+          <div class="total-left">
+            <h3>Total dödssiffra</h3>
+            <p>Under hela inbördeskrigets period<br>inkl. svält och terror</p>
+          </div>
+          <div style="text-align:right;">
+            <div class="total-num">7–10</div>
+            <div class="total-unit">miljoner döda</div>
+          </div>
+        </div>
+
+        <div style="margin-top:0.3rem;">
+          <div class="comp-label">Jämförelse: ryska dödsfall</div>
+          <div class="comp-bars">
+            <div class="comp-bar-row">
+              <div class="comp-name">WWI (ryskt front)</div>
+              <div class="comp-bar-bg">
+                <div class="comp-bar-fill" style="width:0;background:#3a5a8a;" data-target="17%">~1,7 milj.</div>
+              </div>
+            </div>
+            <div class="comp-bar-row">
+              <div class="comp-name">Inbördeskriget</div>
+              <div class="comp-bar-bg">
+                <div class="comp-bar-fill" style="width:0;background:var(--red);" data-target="85%">7–10 milj.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: SAMHÄLLSFÖRÄNDRING -->
+  <div class="slide" id="slide-8">
+    <div class="slide-header" style="background:#0a1a2a;">
+      <div class="slide-num">07</div>
+      <div class="slide-title">Samhällelig förändring &mdash; Efterdyningarna</div>
+    </div>
+    <div class="s8-body">
+
+      <!-- LEFT: Flip cards -->
+      <div class="s8-left">
+        <div class="s8-eyebrow">Före (1913) &rarr; klicka &rarr; Efter (1920&ndash;21)</div>
+        <div class="s8-card-grid">
+
+          <div class="s8-flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="s8-flip-inner">
+              <div class="s8-flip-front">
+                <div class="s8-card-top"><span class="s8-card-icon">🏙️</span><span class="s8-card-year">1917</span></div>
+                <div class="s8-card-label">Moskvas befolkning</div>
+                <div class="s8-card-value">2,0 milj.</div>
+                <div class="s8-flip-hint">klicka ↩</div>
+              </div>
+              <div class="s8-flip-back">
+                <div class="s8-card-top"><span class="s8-card-icon">🏙️</span><span class="s8-card-year">1920</span></div>
+                <div class="s8-card-label">Moskvas befolkning</div>
+                <div class="s8-card-value">1,0 milj.</div>
+                <div class="s8-card-change">&#9660; 50%</div>
+                <div class="s8-card-note">Stadsborna flydde till landsbygden för att undkomma svälten</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="s8-flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="s8-flip-inner">
+              <div class="s8-flip-front">
+                <div class="s8-card-top"><span class="s8-card-icon">🏭</span><span class="s8-card-year">1913</span></div>
+                <div class="s8-card-label">Industriproduktion</div>
+                <div class="s8-card-value">100%</div>
+                <div class="s8-flip-hint">klicka ↩</div>
+              </div>
+              <div class="s8-flip-back">
+                <div class="s8-card-top"><span class="s8-card-icon">🏭</span><span class="s8-card-year">1920</span></div>
+                <div class="s8-card-label">Industriproduktion</div>
+                <div class="s8-card-value">20%</div>
+                <div class="s8-card-change">&#9660; 80%</div>
+                <div class="s8-card-note">Fabrikerna stod tomma. Nationaliseringar och kaos hade slagit ut kapaciteten</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="s8-flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="s8-flip-inner">
+              <div class="s8-flip-front">
+                <div class="s8-card-top"><span class="s8-card-icon">🚂</span><span class="s8-card-year">1913</span></div>
+                <div class="s8-card-label">Järnvägstrafik</div>
+                <div class="s8-card-value">100%</div>
+                <div class="s8-flip-hint">klicka ↩</div>
+              </div>
+              <div class="s8-flip-back">
+                <div class="s8-card-top"><span class="s8-card-icon">🚂</span><span class="s8-card-year">1920</span></div>
+                <div class="s8-card-label">Järnvägstrafik</div>
+                <div class="s8-card-value">26%</div>
+                <div class="s8-card-change">&#9660; 74%</div>
+                <div class="s8-card-note">Råvaror och livsmedel nådde inte dit de behövdes — vilket förvärrade svälten</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="s8-flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="s8-flip-inner">
+              <div class="s8-flip-front">
+                <div class="s8-card-top"><span class="s8-card-icon">💰</span><span class="s8-card-year">1913</span></div>
+                <div class="s8-card-label">Reallöner</div>
+                <div class="s8-card-value">100%</div>
+                <div class="s8-flip-hint">klicka ↩</div>
+              </div>
+              <div class="s8-flip-back">
+                <div class="s8-card-top"><span class="s8-card-icon">💰</span><span class="s8-card-year">1920</span></div>
+                <div class="s8-card-label">Reallöner</div>
+                <div class="s8-card-value">30%</div>
+                <div class="s8-card-change">&#9660; 70%</div>
+                <div class="s8-card-note">Hyperinflation raserade köpkraften. Lön betalades ofta ut i naturalier</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="s8-flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="s8-flip-inner">
+              <div class="s8-flip-front">
+                <div class="s8-card-top"><span class="s8-card-icon">🌾</span><span class="s8-card-year">1913</span></div>
+                <div class="s8-card-label">Spannmålsskörd</div>
+                <div class="s8-card-value">100%</div>
+                <div class="s8-flip-hint">klicka ↩</div>
+              </div>
+              <div class="s8-flip-back">
+                <div class="s8-card-top"><span class="s8-card-icon">🌾</span><span class="s8-card-year">1921</span></div>
+                <div class="s8-card-label">Spannmålsskörd</div>
+                <div class="s8-card-value">57%</div>
+                <div class="s8-card-change">&#9660; 43%</div>
+                <div class="s8-card-note">Tvångsinsamlingen av skördar slog ut böndernas vilja att odla</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="s8-flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="s8-flip-inner">
+              <div class="s8-flip-front">
+                <div class="s8-card-top"><span class="s8-card-icon">📉</span><span class="s8-card-year">1917</span></div>
+                <div class="s8-card-label">Rubeln köpkraft</div>
+                <div class="s8-card-value">100%</div>
+                <div class="s8-flip-hint">klicka ↩</div>
+              </div>
+              <div class="s8-flip-back">
+                <div class="s8-card-top"><span class="s8-card-icon">📉</span><span class="s8-card-year">1921</span></div>
+                <div class="s8-card-label">Rubeln köpkraft</div>
+                <div class="s8-card-value">4%</div>
+                <div class="s8-card-change">&#9660; 96%</div>
+                <div class="s8-card-note">Pengar var i praktiken värdelösa. 90% av handeln skedde via byteshandel</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT: Fork timeline SVG -->
+      <div class="s8-right">
+        <div class="s8-eyebrow">Historiens vägval &mdash; NEP och vad som kom efter</div>
+        <svg class="s8-fork-svg" viewBox="0 0 300 440" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="stemGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#C8922A"/>
+              <stop offset="100%" stop-color="#CC1A1A"/>
+            </linearGradient>
+            <linearGradient id="nepGrad" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0%" stop-color="#C8922A"/>
+              <stop offset="100%" stop-color="#4a7c59"/>
+            </linearGradient>
+            <linearGradient id="stalGrad" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0%" stop-color="#C8922A"/>
+              <stop offset="100%" stop-color="#8B0000"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Main stem: animated red, bottom to fork (outside → 1917 → 1918 → 1921) -->
+          <path class="s8-path-stem" d="M 150 440 L 150 240"
+            stroke="#CC1A1A" stroke-width="3" fill="none"
+            pathLength="1"/>
+
+          <!-- Fork left: NEP branch -->
+          <path class="s8-path-left" d="M 150 240 L 72 90"
+            stroke="url(#nepGrad)" stroke-width="2" fill="none"
+            pathLength="1"/>
+
+          <!-- Fork right: Stalin branch -->
+          <path class="s8-path-right" d="M 150 240 L 228 90"
+            stroke="url(#stalGrad)" stroke-width="2" fill="none"
+            pathLength="1"/>
+
+          <!-- Dotted continuation of NEP into Stalin era -->
+          <line x1="72" y1="90" x2="72" y2="40" stroke="rgba(74,124,89,0.3)" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+          <!-- NODE: 1917 -->
+          <circle cx="150" cy="420" r="6" fill="#CC1A1A" stroke="#C8922A" stroke-width="1.5"/>
+          <text x="163" y="424" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#CC1A1A" letter-spacing="1">1917</text>
+          <text x="163" y="436" font-family="sans-serif" font-size="8.5" fill="rgba(242,232,213,0.5)">Revolutionen. Imperiet faller.</text>
+
+          <!-- NODE: 1918 -->
+          <circle cx="150" cy="370" r="5" fill="#CC1A1A" stroke="#C8922A" stroke-width="1.5"/>
+          <text x="163" y="374" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#CC1A1A" letter-spacing="1">1918–22</text>
+          <text x="163" y="386" font-family="sans-serif" font-size="8.5" fill="rgba(242,232,213,0.5)">Inbördeskriget. Terror. Svält.</text>
+
+          <!-- NODE: FORK 1921 -->
+          <circle cx="150" cy="240" r="9" fill="#C8922A" stroke="#F2E8D5" stroke-width="1.5"/>
+          <text x="150" y="244" font-family="'Bebas Neue', sans-serif" font-size="9.5" fill="#111" text-anchor="middle" letter-spacing="0.5">1921</text>
+
+          <!-- Fork label -->
+          <text x="150" y="265" font-family="'Bebas Neue', sans-serif" font-size="9" fill="rgba(200,146,42,0.7)" text-anchor="middle" letter-spacing="1">VÄGVALET</text>
+
+          <!-- NODE: NEP branch -->
+          <circle cx="72" cy="90" r="7" fill="#4a7c59" stroke="#a8d5b0" stroke-width="1.5"/>
+          <text x="72" y="94" font-family="'Bebas Neue', sans-serif" font-size="9" fill="#F2E8D5" text-anchor="middle">NEP</text>
+
+          <!-- NEP label block -->
+          <rect x="4" y="100" width="136" height="68" fill="rgba(74,124,89,0.08)" stroke="rgba(74,124,89,0.25)" stroke-width="1" rx="2"/>
+          <text x="12" y="114" font-family="'Bebas Neue', sans-serif" font-size="9.5" fill="#a8d5b0" letter-spacing="0.5">1921–1928: NEP-vägen</text>
+          <text x="12" y="127" font-family="sans-serif" font-size="8" fill="rgba(242,232,213,0.6)">Begränsad marknadsekonomi.</text>
+          <text x="12" y="138" font-family="sans-serif" font-size="8" fill="rgba(242,232,213,0.6)">Bönderna säljer fritt. Ekonomin</text>
+          <text x="12" y="149" font-family="sans-serif" font-size="8" fill="rgba(242,232,213,0.6)">återhämtar sig gradvis.</text>
+          <text x="12" y="161" font-family="sans-serif" font-size="7.5" fill="rgba(74,124,89,0.7)" font-style="italic">Vad hade hänt om NEP fortsatt?</text>
+
+          <!-- NODE: Stalin branch -->
+          <circle cx="228" cy="90" r="7" fill="#8B0000" stroke="#e08080" stroke-width="1.5"/>
+          <text x="228" y="94" font-family="'Bebas Neue', sans-serif" font-size="8" fill="#F2E8D5" text-anchor="middle">STALIN</text>
+
+          <!-- Stalin label block -->
+          <rect x="160" y="100" width="136" height="68" fill="rgba(139,0,0,0.1)" stroke="rgba(204,26,26,0.3)" stroke-width="1" rx="2"/>
+          <text x="168" y="114" font-family="'Bebas Neue', sans-serif" font-size="9.5" fill="#e08080" letter-spacing="0.5">1928+: Stalins väg</text>
+          <text x="168" y="127" font-family="sans-serif" font-size="8" fill="rgba(242,232,213,0.6)">NEP avvecklas. Kollektivi-</text>
+          <text x="168" y="138" font-family="sans-serif" font-size="8" fill="rgba(242,232,213,0.6)">sering. Femårsplaner.</text>
+          <text x="168" y="149" font-family="sans-serif" font-size="8" fill="rgba(242,232,213,0.6)">Miljoner dör i ny svält.</text>
+          <text x="168" y="161" font-family="sans-serif" font-size="7.5" fill="rgba(204,26,26,0.55)" font-style="italic">Det historiska utfallet.</text>
+
+          <!-- Top fade hint for NEP continuation -->
+          <text x="72" y="35" font-family="sans-serif" font-size="7.5" fill="rgba(74,124,89,0.4)" text-anchor="middle" font-style="italic">alternativ framtid?</text>
+
+          <!-- Fork arrow hints -->
+          <text x="100" y="195" font-family="'Bebas Neue', sans-serif" font-size="8" fill="rgba(74,124,89,0.5)" letter-spacing="0.5">&#9664; NEP</text>
+          <text x="165" y="195" font-family="'Bebas Neue', sans-serif" font-size="8" fill="rgba(204,26,26,0.5)" letter-spacing="0.5">STALIN &#9654;</text>
+        </svg>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SLIDE 9: QUIZ -->
+  <div class="slide" id="slide-9">
+    <div class="slide-header" style="background:#1a1a00;">
+      <div class="slide-num">08</div>
+      <div class="slide-title">Kontrollera dina kunskaper &mdash; Quiz</div>
+    </div>
+    <div class="quiz-body">
+      <div class="quiz-intro">Fråga <span id="q-num">1</span> av <span id="q-total">5</span></div>
+      <div class="quiz-question" id="q-text"></div>
+      <div class="quiz-options" id="q-options"></div>
+      <div class="quiz-feedback" id="q-feedback"></div>
+      <div class="quiz-nav">
+        <button id="q-next" disabled>Nästa fråga ➜</button>
+        <span class="q-progress" id="q-score"></span>
+      </div>
+      <div style="margin-top:auto;padding-top:1rem;border-top:1px solid rgba(200,146,42,0.1);">
+        <p style="font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(242,232,213,0.25);margin-bottom:0.45rem;font-family:'Bebas Neue',sans-serif;">Källor</p>
+        <p style="font-size:0.68rem;color:rgba(242,232,213,0.28);line-height:1.7;font-style:italic;">
+          Perry, Marvin. <span style="font-style:normal;">Western Civilization: A Brief History.</span> &nbsp;&middot;&nbsp;
+          Coffin, Stacey, Cole &amp; Symes. <span style="font-style:normal;">Western Civilizations: Their History &amp; Their Culture.</span> &nbsp;&middot;&nbsp;
+          Keegan, John. <span style="font-style:normal;">The First World War.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /slides-wrapper -->
+
+<!-- NAVIGATION -->
+<div class="nav">
+  <button id="prev-btn" disabled>◀ Föregående</button>
+  <div class="dot-nav" id="dot-nav"></div>
+  <span id="slide-counter">1 / 9</span>
+  <button id="next-btn">Nästa ▶</button>
+</div>
+
+<script>
+const TOTAL = 9;
+let current = 1;
+
+function goTo(n) {
+  document.getElementById('slide-' + current).classList.remove('active');
+  current = n;
+  document.getElementById('slide-' + current).classList.add('active');
+  document.getElementById('prev-btn').disabled = current === 1;
+  document.getElementById('next-btn').disabled = current === TOTAL;
+  document.getElementById('slide-counter').textContent = current + ' / ' + TOTAL;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current - 1));
+  if (current === 6) s6Init();
+  if (current === 4) animateVoteBars();
+  if (current === 5) animateLossBars();
+  if (current === 8) {
+    const s8 = document.getElementById('slide-8');
+    s8.classList.remove('s8-drawn');
+    void s8.offsetWidth;
+    s8.classList.add('s8-drawn');
+  }
+  if (current === 7) animateCostCounters();
+  if (current === 7) animateBars('.comp-bar-fill');
+  if (current === 9) initQuiz();
+}
+
+function animateVoteBars() {
+  const bars = document.querySelectorAll('.vote-bar-fill');
+  bars.forEach(bar => { bar.style.transition = 'none'; bar.style.width = '0'; });
+  bars.forEach((bar, i) => {
+    setTimeout(() => {
+      bar.style.transition = 'width 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      bar.style.width = bar.dataset.target;
+    }, 120 + i * 270);
+  });
+}
+
+function animateLossBars() {
+  const bars = document.querySelectorAll('.loss-bar');
+  bars.forEach(bar => { bar.style.transition = 'none'; bar.style.width = '0'; });
+  bars.forEach((bar, i) => {
+    setTimeout(() => {
+      bar.style.transition = 'width 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      bar.style.width = bar.dataset.target;
+    }, 120 + i * 270);
+  });
+}
+
+function animateBars(sel) {
+  document.querySelectorAll(sel).forEach(bar => {
+    const target = bar.dataset.target || bar.style.width;
+    bar.style.transition = 'none';
+    bar.style.width = '0';
+    setTimeout(() => {
+      bar.style.transition = 'width 1.2s cubic-bezier(0.34, 1.3, 0.64, 1)';
+      bar.style.width = target;
+    }, 80);
+  });
+}
+
+// Dots
+const dotNav = document.getElementById('dot-nav');
+for (let i = 1; i <= TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 1 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotNav.appendChild(d);
+}
+
+document.getElementById('prev-btn').onclick = () => { if (current > 1) goTo(current - 1); };
+document.getElementById('next-btn').onclick = () => { if (current < TOTAL) goTo(current + 1); };
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { if (current < TOTAL) goTo(current + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { if (current > 1) goTo(current - 1); }
+});
+
+// SLIDE 7: COST COUNTERS
+function animateCostCounters() {
+  document.querySelectorAll('.cost-num[data-target-num]').forEach((el, i) => {
+    const target = parseInt(el.dataset.targetNum);
+    const finalText = el.dataset.finalText;
+    const duration = 1500;
+    const delay = 150 + i * 180;
+
+    el.textContent = '0';
+
+    setTimeout(() => {
+      const start = performance.now();
+      function tick(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+        const val = Math.round(eased * target);
+
+        if (target >= 1000000) {
+          const m = val / 1000000;
+          el.textContent = (Number.isInteger(m) ? m : m.toFixed(1)).toString().replace('.', ',') + ' milj.';
+        } else {
+          // format as "XX 000"
+          el.textContent = val.toLocaleString('sv-SE').replace(/\u00a0/g, '\u00a0');
+        }
+
+        if (progress < 1) requestAnimationFrame(tick);
+        else el.textContent = finalText;
+      }
+      requestAnimationFrame(tick);
+    }, delay);
+  });
+}
+
+// Perspective notes
+function togglePersp(id) {
+  const note = document.getElementById(id);
+  const isOpen = note.classList.contains('open');
+  // close all others first
+  document.querySelectorAll('.persp-note.open').forEach(n => n.classList.remove('open'));
+  if (!isOpen) note.classList.add('open');
+}
+
+// SLIDE 6: COMPARISON TABLE
+function revealRow(id) {
+  document.getElementById(id).classList.add('revealed');
+}
+
+// SLIDE 6: QUOTE GAME
+const s6Quotes = [
+  {
+    text: "En armé som inte är beredd att skjuta sina egna desertörer är ingen armé. Den är en beväpnad mobb.",
+    context: "Rysk befälhavare om arméns disciplin, 1918",
+    options: [
+      { label: "Leon Trotskij", desc: "Röda arméns befälhavare", icon: "★", correct: true },
+      { label: "Anton Denikin", desc: "Vita arméns överbefälhavare i söder", icon: "◈", correct: false },
+      { label: "Winston Churchill", desc: "Brittisk krigsminister 1919", icon: "🇬🇧", correct: false }
+    ],
+    feedback: "Trotskij var känd för sin hänsynslösa disciplin. Han återinförde dödsstraffet för desertion och placerade politiska kommissarier i varje enhet. Det var denna metod som förvandlade ett desperat kaos av värnpliktiga till en slagkraftig armé på fem miljoner man."
+  },
+  {
+    text: "Bolsjevismen är en pestilens som sprider sig västerut. Den måste krossas i Ryssland, innan den når Europa.",
+    context: "Västerländsk statsman om interventionens syfte, 1919",
+    options: [
+      { label: "Leon Trotskij", desc: "Röda arméns befälhavare", icon: "★", correct: false },
+      { label: "Anton Denikin", desc: "Vita arméns överbefälhavare i söder", icon: "◈", correct: false },
+      { label: "Winston Churchill", desc: "Brittisk krigsminister 1919", icon: "🇬🇧", correct: true }
+    ],
+    feedback: "Churchill var den mest högljudda förespråkaren för utländsk intervention. Han drev aktivt på för brittiskt militärt stöd till Vita armén och talade öppet om att 'strypa bolsjevismen i vaggan'. Hans kampanj var kontroversiell även inom det brittiska kabinettet."
+  },
+  {
+    text: "Vi kämpar inte för att återinföra det gamla. Vi kämpar för ett enat Ryssland, befriat från klasshat och tyranni.",
+    context: "Vit general om rörelsens syfte, 1919",
+    options: [
+      { label: "Leon Trotskij", desc: "Röda arméns befälhavare", icon: "★", correct: false },
+      { label: "Anton Denikin", desc: "Vita arméns överbefälhavare i söder", icon: "◈", correct: true },
+      { label: "Winston Churchill", desc: "Brittisk krigsminister 1919", icon: "🇬🇧", correct: false }
+    ],
+    feedback: "Denikin försökte framställa Vita armén som en modern, reformvänlig kraft snarare än en monarkistisk reaktion. Det var ett svårt budskap att sälja: många av hans officerare längtade öppet efter det gamla regimen, och hans trupper begick allvarliga våldsbrott mot civila under tåget."
+  }
+];
+
+let s6qIdx = 0;
+let s6answered = false;
+let s6score = 0;
+let s6started = false;
+
+function s6Init() {
+  if (s6started) return;
+  s6started = true;
+  s6qIdx = 0; s6answered = false; s6score = 0;
+  s6ShowQuote();
+}
+
+function s6ShowQuote() {
+  const q = s6Quotes[s6qIdx];
+  document.getElementById('s6-quote-text').textContent = q.text;
+  document.getElementById('s6-quote-context').textContent = q.context;
+  document.getElementById('s6-feedback').innerHTML = '';
+  document.getElementById('s6-next').disabled = true;
+  document.getElementById('s6-next').textContent = 'Nästa citat ➜';
+  s6answered = false;
+
+  const btns = document.getElementById('s6-attr-btns');
+  btns.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 's6-attr-btn';
+    btn.innerHTML = `<span class="s6-btn-icon">${opt.icon}</span><span><strong>${opt.label}</strong> &mdash; ${opt.desc}</span>`;
+    btn.dataset.correct = opt.correct;
+    btn.dataset.label = opt.label;
+    btn.onclick = () => s6Answer(opt.correct, opt.label, q.feedback);
+    btns.appendChild(btn);
+  });
+
+  [0,1,2].forEach(i => {
+    const d = document.getElementById('s6pd' + i);
+    if (d) d.className = 's6-pdot' + (i < s6qIdx ? ' done' : i === s6qIdx ? ' current' : '');
+  });
+}
+
+function s6Answer(correct, clickedLabel, feedback) {
+  if (s6answered) return;
+  s6answered = true;
+  if (correct) s6score++;
+
+  document.querySelectorAll('.s6-attr-btn').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') btn.classList.add('s6-correct');
+    else if (btn.dataset.label === clickedLabel) btn.classList.add('s6-wrong');
+  });
+
+  const fb = document.getElementById('s6-feedback');
+  fb.innerHTML = (correct ? '<strong>Rätt!</strong> ' : '<strong>Fel.</strong> ') + feedback;
+
+  const next = document.getElementById('s6-next');
+  next.disabled = false;
+  if (s6qIdx >= s6Quotes.length - 1) {
+    next.textContent = `Klar! ${s6score}/${s6Quotes.length} rätt ★`;
+  }
+}
+
+function s6Next() {
+  if (s6qIdx >= s6Quotes.length - 1) return;
+  document.getElementById('s6pd' + s6qIdx).className = 's6-pdot done';
+  s6qIdx++;
+  s6ShowQuote();
+}
+
+// SLIDE 4 ACCORDION FACTS
+function toggleFact(id) {
+  const item = document.getElementById(id);
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.fact-acc').forEach(f => f.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// SLIDE 3 INTERACTIVITY
+function toggleS3Item(id) {
+  const item = document.getElementById(id);
+  const wasOpen = item.classList.contains('open');
+  // close all
+  document.querySelectorAll('.s3-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+function toggleWhy() {
+  const box = document.getElementById('s3-why');
+  box.classList.toggle('open');
+}
+
+const s3Outcomes = [
+  {
+    cls: 'chosen-actual',
+    labelCls: 'actual',
+    label: 'HISTORISKT UTFALL',
+    text: 'Detta är vad Nikolaj faktiskt beordrade. Soldaterna vägrade. Volynskij-regementet mördade sin befälhavare och bytte sida. Fem dagar senare abdikerade tsaren på ett tåg. Ordern om att skjuta mot folket accelererade den kris den var tänkt att lösa.'
+  },
+  {
+    cls: 'chosen-alt',
+    labelCls: 'alt',
+    label: 'ALTERNATIVT SCENARIO',
+    text: 'En möjlig väg — men tsaren hade förlorat all trovärdighet 1917. Duman och befolkningen trodde inte längre på hans löften. Erfarenheten från 1905 visade att han gick tillbaka på sina ord när krisen lagt sig. Sannolikt för lite, för sent.'
+  },
+  {
+    cls: 'chosen-alt',
+    labelCls: 'alt',
+    label: 'KONTRAFAKTISKT SCENARIO',
+    text: 'En lugn övergång till konstitutionell demokrati var teoretiskt möjlig — länder som Sverige och Danmark lyckades med detta. Men att Nikolaj frivilligt skulle avhända sig makten var i praktiken otänkbart; det stred mot hans djupaste övertygelse om det gudomliga enväldet.'
+  }
+];
+
+function s3Choose(idx) {
+  const btns = document.querySelectorAll('.s3-choice-btn');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === idx) b.classList.add(s3Outcomes[idx].cls);
+  });
+  const result = document.getElementById('s3-result');
+  const o = s3Outcomes[idx];
+  result.innerHTML = `<span class="s3-res-label ${o.labelCls}">${o.label}</span>${o.text}`;
+  result.classList.add('show');
+  document.getElementById('s3-reset').style.display = 'block';
+}
+
+function s3Reset() {
+  document.querySelectorAll('.s3-choice-btn').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('chosen-actual', 'chosen-alt');
+  });
+  const result = document.getElementById('s3-result');
+  result.classList.remove('show');
+  document.getElementById('s3-reset').style.display = 'none';
+}
+
+// QUIZ
+const questions = [
+  {
+    q: "Varför var det avgörande att Petrogradsgarnisonen vägrade att skjuta mot demonstranterna i mars 1917?",
+    options: [
+      "Soldaterna hade slut på ammunition och kunde inte fysiskt lyda tsarens order",
+      "Tsaren förlorade våldsmonopolet och saknade nu medel att slå ner revolten",
+      "Soldaterna tillhörde hemliga bolsjevikiska celler som väntade på rätt tillfälle",
+      "Militärledningen hade i hemlighet beslutat att inte ingripa mot folkmassan"
+    ],
+    correct: 1,
+    feedback: "Rätt! En regim överlever bara så länge den kontrollerar våldsmedlen. När 180 000 soldater bytte sida förlorade tsaren sin enda möjlighet att krossa revolutionen med kraft. Soldaterna var inte hemliga bolsjeviker — de var trötta och desperata krigsveteraner."
+  },
+  {
+    q: "Bolsjevikerna fick 24% i januari 1918 års val. Vad säger detta om deras legitimitet som regering?",
+    options: [
+      "Att de som störst enskilt parti ändå hade ett tillräckligt demokratiskt mandat",
+      "Att resultatet var ogiltigt eftersom valsystemet missgynnade stadsarbetarna",
+      "Att de styrde utan folkligt mandat och representerade bara en minoritet av väljarna",
+      "Att deras stöd bland industriarbetarna var starkare än vad röstsiffrorna visade"
+    ],
+    correct: 2,
+    feedback: "Rätt! Att upplösa ett parlament med vapenmakt när man fått under en fjärdedel av rösterna är svårt att försvara demokratiskt. Det lade grunden för ett envälde utan folklig förankring — en sårbarhet bolsjevikerna kompenserade med terror och kontroll."
+  },
+  {
+    q: "Vad var den huvudsakliga orsaken till den stora svälten 1921-1922?",
+    options: [
+      "En ovanligt lång och kall vinter hade slagit ut skördarna i hela södra Ryssland",
+      "Inbördeskriget hade förstört järnvägsnätet så att livsmedel inte nådde fram till städerna",
+      "Bolsjevikernas tvångsinsamling av bondens skördar hade slagit ut viljan att odla",
+      "En snabb urbanisering hade ökat efterfrågan på livsmedel snabbare än produktionen"
+    ],
+    correct: 2,
+    feedback: "Rätt! Krigskommunismens obligatoriska leveranser av all bondeproduktion förstörde incitamenten att odla. Varför så hårt om staten tar allt? Kombinerat med missväxt drabbade svälten 22–30 miljoner människor. NEP 1921 var det direkta svaret på denna katastrof."
+  },
+  {
+    q: "Varför var Vita armén trots utländskt stöd inte i stånd att besegra bolsjevikerna?",
+    options: [
+      "Röda armén hade numerärt övertag och kunde slå tillbaka angrepp längs alla fronter",
+      "Vita armén var politiskt splittrad och saknade en gemensam vision om Rysslands framtid",
+      "Det utländska stödet till Vita armén var alltför begränsat och upphörde dessutom tidigt",
+      "Bolsjevikerna kontrollerade industristäderna och hade tillgång till mer vapen och resurser"
+    ],
+    correct: 1,
+    feedback: "Rätt! Vita armén var en lös allians av monarkister, liberaler och socialister — enade bara av motståndet mot bolsjevikerna, inte av en gemensam framtidsvision. Trotskij utnyttjade denna splittring skickligt genom att hålla initiativet med en centralt ledd armé."
+  },
+  {
+    q: "Ryssland är världens till ytan största land. Ändå förlorade det 89% av sina kolgruvor i Brest-Litovsk. Vad förklarar detta?",
+    options: [
+      "Kolgruvorna var jämnt fördelade men de flesta låg nära fronten och ockuperades under kriget",
+      "Industrin hade byggts upp i väst och syd nära järnväg och marknader, inte i landets inre",
+      "Tyskland krävde specifikt kolgruvorna som krigsskadestånd i fredsförhandlingarna",
+      "Tsarryssland hade medvetet koncentrerat industrin till gränszonerna för att skydda det inre"
+    ],
+    correct: 1,
+    feedback: "Rätt! Rysslands industrialisering på 1800-talet drevs av utländskt kapital och byggdes ut längs järnvägarna i de västra och södra delarna — nära europeiska marknader och hamnar. Det enorma inlandet förblev i stort sett oindustrialiserat. Brest-Litovsk avslöjade hur geografiskt sårbar denna struktur var."
+  }
+];
+
+let qIdx = 0;
+let answered = 0;
+let correct = 0;
+let quizStarted = false;
+
+function initQuiz() {
+  if (quizStarted) return;
+  quizStarted = true;
+  qIdx = 0; answered = 0; correct = 0;
+  document.getElementById('q-total').textContent = questions.length;
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = questions[qIdx];
+  document.getElementById('q-num').textContent = qIdx + 1;
+  document.getElementById('q-text').textContent = q.q;
+  const opts = document.getElementById('q-options');
+  opts.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-btn';
+    btn.textContent = String.fromCharCode(65 + i) + ') ' + opt;
+    btn.onclick = () => answer(i, btn);
+    opts.appendChild(btn);
+  });
+  const fb = document.getElementById('q-feedback');
+  fb.textContent = '';
+  fb.className = 'quiz-feedback';
+  document.getElementById('q-next').disabled = true;
+  document.getElementById('q-score').textContent = '';
+}
+
+function answer(i, btn) {
+  const q = questions[qIdx];
+  const allBtns = document.querySelectorAll('.quiz-btn');
+  allBtns.forEach(b => b.style.pointerEvents = 'none');
+  const fb = document.getElementById('q-feedback');
+  if (i === q.correct) {
+    btn.classList.add('correct');
+    fb.textContent = '✓ ' + q.feedback;
+    fb.className = 'quiz-feedback show ok';
+    correct++;
+  } else {
+    btn.classList.add('wrong');
+    allBtns[q.correct].classList.add('correct');
+    fb.textContent = '✗ Det rätta svaret var: ' + q.options[q.correct] + '. ' + q.feedback;
+    fb.className = 'quiz-feedback show bad';
+  }
+  answered++;
+  const nextBtn = document.getElementById('q-next');
+  if (qIdx < questions.length - 1) {
+    nextBtn.disabled = false;
+    nextBtn.textContent = 'Nästa fråga ➜';
+  } else {
+    nextBtn.disabled = false;
+    nextBtn.textContent = 'Se resultat ★';
+  }
+}
+
+document.getElementById('q-next').onclick = () => {
+  if (qIdx < questions.length - 1) {
+    qIdx++;
+    showQuestion();
+  } else {
+    // Show result
+    document.getElementById('q-text').innerHTML = '<strong>Quiz avslutat!</strong>';
+    document.getElementById('q-options').innerHTML = '';
+    const pct = Math.round((correct / questions.length) * 100);
+    let grade = pct >= 80 ? '🏆 Utmärkt!' : pct >= 60 ? '👍 Bra jobbat!' : '📚 Repetera gärna materialet igen.';
+    document.getElementById('q-feedback').className = 'quiz-feedback show ok';
+    document.getElementById('q-feedback').innerHTML = `Du svarade rätt på <strong>${correct} av ${questions.length}</strong> frågor (${pct}%). ${grade}`;
+    document.getElementById('q-next').disabled = true;
+    document.getElementById('q-score').textContent = '';
+    document.getElementById('q-num').textContent = questions.length;
+  }
+};
+</script>
+</body>
+</html>
