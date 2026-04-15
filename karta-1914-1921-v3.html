@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Europas gränser 1914–1921</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#12131f;--surface:#1c1e30;--surface2:#252840;
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.18);
+  --text:#e8e6dc;--text2:#9896a0;--text3:#6b6978;
+  --gold:#d4aa50;--gold2:#a07830;
+}
+body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+#loading{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#loading.hidden{display:none}
+#loading-spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading p{font-size:13px;color:var(--text2)}
+#loading-error{display:none;font-size:13px;color:#E24B4A;text-align:center;max-width:400px;line-height:1.6}
+#header{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 18px;flex-shrink:0;display:flex;align-items:flex-start;gap:20px}
+#header h1{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;white-space:nowrap;padding-top:2px}
+#step-desc{font-size:12.5px;color:var(--text2);line-height:1.5;flex:1;border-left:2px solid var(--gold2);padding-left:12px;min-height:32px}
+#timeline{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:stretch;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+#timeline::-webkit-scrollbar{display:none}
+.step-btn{background:none;border:none;border-bottom:3px solid transparent;color:var(--text3);padding:8px 18px;cursor:pointer;font-family:'Source Sans 3',sans-serif;text-align:left;white-space:nowrap;transition:color .15s,border-color .15s,background .15s}
+.step-btn:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+.step-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.step-btn .yr{display:block;font-size:13px;font-weight:600}
+.step-btn .lbl{display:block;font-size:10px;margin-top:1px;opacity:.75}
+#map-wrap{flex:1;position:relative;min-height:0}
+#map{width:100%;height:100%}
+#legend{position:absolute;bottom:30px;left:14px;background:rgba(18,19,31,0.93);border:1px solid var(--border2);border-radius:8px;padding:10px 13px;z-index:1000;backdrop-filter:blur(6px);min-width:185px;pointer-events:none}
+#legend-title{font-size:9px;font-weight:600;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.legend-item{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:11px;color:var(--text2)}
+.legend-swatch{width:12px;height:12px;border-radius:2px;flex-shrink:0;border:1px solid rgba(255,255,255,0.15)}
+#info-panel{position:absolute;top:14px;right:14px;width:295px;background:rgba(18,19,31,0.96);border:1px solid var(--border2);border-radius:10px;padding:16px;z-index:1000;backdrop-filter:blur(8px);transform:translateX(325px);transition:transform .28s cubic-bezier(.4,0,.2,1);pointer-events:none}
+#info-panel.visible{transform:translateX(0);pointer-events:all}
+#info-close{position:absolute;top:9px;right:9px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;padding:3px 6px;border-radius:4px;transition:background .1s,color .1s}
+#info-close:hover{background:var(--surface2);color:var(--text)}
+#info-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text);padding-right:22px;margin-bottom:8px}
+#info-badge{display:inline-block;font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:20px;margin-bottom:10px;color:#fff}
+#info-text{font-size:12px;color:var(--text2);line-height:1.65}
+#nav-row{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:1000}
+.nav-btn{background:rgba(18,19,31,0.92);border:1px solid var(--border2);color:var(--text2);padding:7px 16px;border-radius:20px;cursor:pointer;font-size:12px;font-family:'Source Sans 3',sans-serif;backdrop-filter:blur(6px);transition:all .15s;white-space:nowrap}
+.nav-btn:hover:not(:disabled){background:var(--surface2);border-color:var(--gold2);color:var(--gold)}
+.nav-btn:disabled{opacity:.25;cursor:not-allowed}
+.leaflet-tooltip{background:rgba(18,19,31,0.93)!important;border:1px solid rgba(255,255,255,0.18)!important;color:#e8e6dc!important;font-family:'Source Sans 3',sans-serif!important;font-size:12px!important;border-radius:5px!important;padding:4px 10px!important;box-shadow:none!important}
+.leaflet-bar a{background:rgba(18,19,31,0.92)!important;color:#e8e6dc!important;border-color:rgba(255,255,255,0.18)!important}
+.leaflet-bar a:hover{background:#252840!important}
+.leaflet-control-attribution{font-size:9px!important;background:rgba(18,19,31,0.7)!important;color:#6b6978!important}
+.leaflet-control-attribution a{color:#9896a0!important}
+</style>
+</head>
+<body>
+<div id="loading">
+  <div id="loading-spinner"></div>
+  <p id="loading-msg">Hämtar historiska kartor…</p>
+  <p id="loading-error"></p>
+</div>
+<div id="header">
+  <h1>Europas gränser 1914–1921</h1>
+  <p id="step-desc"></p>
+</div>
+<div id="timeline"></div>
+<div id="map-wrap">
+  <div id="map"></div>
+  <div id="legend"><div id="legend-title">Förklaring</div><div id="legend-items"></div></div>
+  <div id="info-panel">
+    <button id="info-close" title="Stäng">✕</button>
+    <div id="info-name"></div>
+    <span id="info-badge"></span>
+    <p id="info-text"></p>
+  </div>
+  <div id="nav-row">
+    <button class="nav-btn" id="prev-btn">← Föregående</button>
+    <button class="nav-btn" id="next-btn">Nästa →</button>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+
+/* ═══ CONTROLLERS ════════════════════════════════════════════════ */
+const CTRL = {
+  russia:        {name:'Tsarist Ryssland',         fill:'#7B1520',stroke:'#A02030'},
+  soviet:        {name:'Sovjet (bolsjevikerna)',    fill:'#B02010',stroke:'#D83020'},
+  germany:       {name:'Kejsardömet/Weimar Tyskland',fill:'#404050',stroke:'#60607A'},
+  austria:       {name:'Österrike-Ungern',          fill:'#8B6010',stroke:'#C09020'},
+  ottoman:       {name:'Osmanska riket / Turkiet',  fill:'#6B4020',stroke:'#9B6030'},
+  france:        {name:'Frankrike',                 fill:'#103080',stroke:'#2050B0'},
+  uk:            {name:'Storbritannien',            fill:'#6B1535',stroke:'#9B3055'},
+  poland:        {name:'Polen',                     fill:'#9B1030',stroke:'#C02040'},
+  denmark:       {name:'Danmark',                   fill:'#A03050',stroke:'#C85070'},
+  belgium:       {name:'Belgien',                   fill:'#907010',stroke:'#C09820'},
+  independent:   {name:'Självständig stat',         fill:'#1A6035',stroke:'#28904F'},
+  contested:     {name:'Omstritt / Maktvacuum',     fill:'#905010',stroke:'#C07020'},
+  international: {name:'Int. förvaltning (NF)',     fill:'#503090',stroke:'#7850C0'},
+  neutral:       {name:'Neutral / övrig',           fill:'#505060',stroke:'#707080'},
+};
+
+/* ═══ STEPS ══════════════════════════════════════════════════════ */
+const STEPS = [
+  {year:'1914',      label:'Före kriget',           geojsonYear:1914,
+   desc:'Europa domineras av de gamla stormaktsimperierna. Ryssland kontrollerar Finland, Baltikum, Polen, Ukraina och Vitryssland. Kejsardömet Tyskland innehar Alsace-Lorraine och de östra provinserna Posen och Västpreussen.'},
+  {year:'1917',      label:'Ryska revolutionen',    geojsonYear:1914,
+   desc:'Februarirevolutionen störtar tsar Nikolaj II i mars. Oktoberrevolutionen sätter bolsjevikerna vid makten i november. Ryssland är i inre kaos men fronten håller formellt. Finland utropar självständighet 6 december 1917.'},
+  {year:'Mars 1918', label:'Brest-Litovsk',         geojsonYear:1914,
+   desc:'Det djupt förnedrande fredsfördraget undertecknas 3 mars 1918. Ryssland avträder ca 750 000 km² — en tredjedel av sina europeiska besittningar, inkl. 1/3 av jordbruksmarken och 90 % av kolgruvorna.'},
+  {year:'Nov 1918',  label:'Centralmakterna faller',geojsonYear:1914,
+   desc:'Vapenstilleståndet 11 november 1918 avslutar kriget. Brest-Litovsk ogiltigförklaras. Tyskt tillbakadragande skapar ett maktvacuum i öst — en rad nationalstater utropar omedelbart självständighet.'},
+  {year:'1919–20',   label:'Versailles & fördragen',geojsonYear:1920,
+   desc:'Versaillesfördraget (1919) fastställer Tysklands förluster. Saint-Germain och Trianon upplöser Österrike-Ungern. Den nya europeiska kartan tar form — växla mellan tidssteg för att se förändringen.'},
+  {year:'1921',      label:'Inbördeskriget avslutas',geojsonYear:1920,
+   desc:'Det ryska inbördeskriget avslutas med bolsjevistisk seger. Röda armén har återtagit Ukraina, Vitryssland och Transkaukasien. Rigafreden (1921) fastställer gränsen. Europas karta är nu satt — fram till 1939.'},
+];
+
+/* ═══ COUNTRY INFO — klickbar pedagogisk text för baslagret ══════ */
+const COUNTRY_INFO = [
+  {
+    geoKeys:['german empire','germany','weimar republic','weimar','prussian'],
+    name:'Kejsardömet Tyskland',
+    steps:[
+      {ctrl:'germany',status:'Kejsardömet (1914)',info:'Europa snabbast växande militärmakt med 68 miljoner invånare. Kaiser Wilhelm II leder ett industriellt imperium i allians med Österrike-Ungern och Osmanska riket.'},
+      {ctrl:'germany',status:'Kejsardömet (krigsår)',info:'Obegränsad ubåtskrigföring drar in USA april 1917. "Turnip Winter" 1916–17 drabbade civilbefolkningen hårt med hunger och brist. Inre spänningar ökar men fronten håller.'},
+      {ctrl:'germany',status:'Sista offensiven',info:'Brest-Litovsk ger enorma vinster i öst. Ludendorffs våroffensiv i väster mars 1918 hotar Paris — men misslyckas slutgiltigt.'},
+      {ctrl:'germany',status:'Kejsardömets fall',info:'Matrosuppror i Kiel och revolution i München. Kaiser Wilhelm II abdikerar 9 november. Weimar-republiken utropas exakt när vapenstilleståndet undertecknas.'},
+      {ctrl:'germany',status:'Weimar-republiken',info:'Versaillesfördraget ådömer "krigssskuld" (art. 231), 132 miljarder mark i skadestånd och ~13% territoriella förluster. Weimar-republiken kämpar med ekonomisk kris och politisk extremism.'},
+      {ctrl:'germany',status:'Weimar-republiken',info:'Ekonomisk kris och hyperinflation. Extremister från höger och vänster utmanar demokratin. Hitler gör sitt första kuppförsök 1923.'},
+    ]
+  },
+  {
+    geoKeys:['austria-hungary','austro-hungarian','k.u.k.','cisleithania','austrian empire'],
+    name:'Österrike-Ungern',
+    steps:[
+      {ctrl:'austria',status:'Dubbelmonarkin (1914)',info:'Ett multietniskt imperium med 51 miljoner invånare och tolv officiella språk. Mordet på ärkehertig Franz Ferdinand i Sarajevo 28 juni 1914 utlöser kedjan av händelser som leder till världskriget.'},
+      {ctrl:'austria',status:'Dubbelmonarkin (krigsår)',info:'Kejsar Franz Joseph dör november 1916 efter 68 år vid makten. Den unge Karl I försöker förhandla separatfred men misslyckas. Nationalitetskonflikterna intensifieras.'},
+      {ctrl:'austria',status:'Dubbelmonarkin (sista år)',info:'Imperiet är utmattat men fortsätter kriget. Tjecker, slovaker och sydslaver kräver allt öppnare självstyre. Riket håller ihop på nåder.'},
+      {ctrl:'austria',status:'Upplösningen inleds',info:'Tjeckoslovakien utropas 28 oktober, Jugoslavien 29 oktober, Ungern 31 oktober. Karl I abdikerar 11 november. Det 640 år gamla Habsburgdynastin är slut.'},
+      {ctrl:'independent',status:'Upplöst — nya stater',info:'Saint-Germain (Österrike) och Trianon (Ungern) delar upp imperiet. Ungern förlorar 2/3 av sitt territorium. Österrike är nu en liten alpin stat.'},
+      {ctrl:'independent',status:'Upplöst — nya stater',info:'Österrike och Ungern är rumpstater. Karl I:s två försök att återta Ungerns tron 1921 misslyckas. Hela det ekonomiska systemet måste byggas om från grunden.'},
+    ]
+  },
+  {
+    geoKeys:['hungary','transylvania','magyar'],
+    name:'Ungern',
+    steps:[
+      {ctrl:'austria',status:'Del av Österrike-Ungern',info:'Ungern är den österrikiska dubbelmonarkins jämbördiga partner sedan 1867. Budapest blomstrar och Ungern dominerar Karpaterbassängen.'},
+      {ctrl:'austria',status:'Del av Österrike-Ungern',info:'Ungern bidrar med trupper till alla fronter men är bundet till Wiens utrikespolitik.'},
+      {ctrl:'austria',status:'Del av Österrike-Ungern',info:'Kriget fortsätter. Nationalitetsfrågorna inom imperiet tillspetsas.'},
+      {ctrl:'contested',status:'Ungern självständigt',info:'Ungern utropar självständighet 31 oktober under grev Károlyi. En kortlivad rådsrepublik under Béla Kun 1919 slås ner av rumänska trupper.'},
+      {ctrl:'independent',status:'Trianon-katastrofen',info:'Trianon-fördraget (1920) är en nationell katastrof: Ungern förlorar 2/3 av territoriet och 1/3 av den etniska ungerska befolkningen hamnar utanför gränserna.'},
+      {ctrl:'independent',status:'Kungariket Ungern',info:'Ungern styrs av riksföreståndare Horthy — ett "kungarike utan kung". Återkravet på Trianon-territorier är den dominerande politiska frågan i hela mellankrigstiden.'},
+    ]
+  },
+  {
+    geoKeys:['ottoman empire','turkey','ottoman','turkish empire','osmanli'],
+    name:'Osmanska riket',
+    steps:[
+      {ctrl:'ottoman',status:'Osmanska riket (1914)',info:'"Den sjuke mannen vid Bosporen" — stympat av Balkankrigen 1912–13. Ansluter sig till Centralmakterna november 1914. Kontrollerar Konstantinopel, Anatolien och arabiska länder.'},
+      {ctrl:'ottoman',status:'Osmanska riket (krigsår)',info:'Kriget på flera fronter: arabisk revolt med T.E. Lawrence, brittiskt tryck i Mesopotamien. Folkmordet på armenier 1915–23 kräver uppskattningsvis 1,5 miljoner offer.'},
+      {ctrl:'ottoman',status:'Osmanska riket (slutskede)',info:'Brest-Litovsk ger möjligheten att återtaga kaukasiska territorier från Ryssland. Osmanska trupper avancerar mot Baku och det värdefulla oljan.'},
+      {ctrl:'ottoman',status:'Kapitulation',info:'Mudros-vapenstilleståndet 30 oktober 1918 avslutar osmanernas krig. De allierade ockuperar Konstantinopel. Imperiet är i praktiken upplöst.'},
+      {ctrl:'contested',status:'Sèvres — delning',info:'Sèvresfördraget 1920 delar upp imperiet. Arabiska områden blir brittiska/franska mandat. Anatolien styckas. Mustafa Kemal leder nationalistiskt motstånd.'},
+      {ctrl:'independent',status:'Turkiet under Kemal',info:'Det turkisk-nationella kriget besegrar Grekland 1922. Lausannefreden (1923) skapar Turkiska republiken. Kemal Atatürk moderniserar och sekulariserar landet.'},
+    ]
+  },
+  {
+    geoKeys:['russia','russian empire','ussr','soviet union','soviet russia','r.s.f.s.r','rsfsr'],
+    name:'Ryssland',
+    steps:[
+      {ctrl:'russia',status:'Tsarryssland (1914)',info:'Världens geografiskt största stat med 175 miljoner invånare. Tsar Nikolaj II styr autokratiskt. Allians med Frankrike och Storbritannien — Trippelententen.'},
+      {ctrl:'russia',status:'Revolutionsåret',info:'Februarirevolutionen störtar tsaren i mars. Oktoberrevolutionen sätter bolsjevikerna vid makten i november. Ryssland är i fullständigt inre kaos.'},
+      {ctrl:'soviet',status:'Bolsjevikernas Ryssland',info:'Lenin undertecknar det förnedrande Brest-Litovsk-fördraget för att rädda revolutionen. Ryssland betalar ett enormt pris — men bolsjevikerna överlever.'},
+      {ctrl:'soviet',status:'Inbördeskriget rasar',info:'Inbördeskriget 1918–21 mellan Röda armén och Vita armén (stödda av västerländska makter). Enorm svält och förstörelse drabbar civilbefolkningen.'},
+      {ctrl:'soviet',status:'Röda armén vinner',info:'Röda armén vinner inbördeskriget. Finland och Baltikum behåller sin självständighet men Ukraina, Vitryssland och Transkaukasien återerövras militärt.'},
+      {ctrl:'soviet',status:'Rådsryssland (Sovjet)',info:'Ryska federativa socialistrepubliken bildar Sovjetunionen 1922 tillsammans med Ukraina, Vitryssland och Transkaukasien. En ny stormakt tar form.'},
+    ]
+  },
+  {
+    geoKeys:['france','french republic','république française'],
+    name:'Frankrike',
+    steps:[
+      {ctrl:'france',status:'Tredje republiken (1914)',info:'Frankrike mobiliserar 1,5 miljoner man inom 15 dagar. Återtagandet av Alsace-Lorraine — förlorat 1871 — är Frankrikes centrala krigsorsak och nationella traum.'},
+      {ctrl:'france',status:'Krigsår',info:'Nivellie-offensivens misslyckande utlöser myterier i 54 divisioner 1917. General Pétain stabiliserar fronten. Stämningen är mörk men motståndsviljan håller.'},
+      {ctrl:'france',status:'Kris (våroffensiven)',info:'Tyskarnas Ludendorff-offensiv tränger djupt in i Frankrike. Paris bombarderas av långdistanskanoner. Kritisk situation men de allierade håller.'},
+      {ctrl:'france',status:'Seger',info:'Seger. 1,4 miljoner franska soldater döda. Alsace-Lorraine återtas omedelbart. Eufori blandas med trauma av det ödelagda norra Frankrike.'},
+      {ctrl:'france',status:'Segermakt (Versailles)',info:'Clemenceau — "tigern" — driver Versaillesfördraget. Frankrike kräver maximala garantier: skadestånd, Rhenlandsdemilitarisering, Saar och Alsace-Lorraine.'},
+      {ctrl:'france',status:'Tredje republiken',info:'Frankrike kontrollerar Syrien och Libanon som mandat. Kriegstraumat präglar nationen — "Aldrig igen" formar mellankrigstidens passiva utrikespolitik.'},
+    ]
+  },
+  {
+    geoKeys:['united kingdom','british empire','great britain','britain','england'],
+    name:'Storbritannien',
+    steps:[
+      {ctrl:'uk',status:'Brittiska imperiet (1914)',info:'Det brittiska imperiet styr en fjärdedel av jordens yta. Kriget inleds formellt när Tyskland invaderar Belgien 4 augusti 1914. Brittisk expeditionsstyrka sänds till Frankrike.'},
+      {ctrl:'uk',status:'Brittiska imperiet (krigsår)',info:'USA inträder april 1917. Balfour-deklarationen lovar judarna ett hemland i Palestina. Passchendaele — ett av krigets blodigaste slag — vinns till outhärdligt pris.'},
+      {ctrl:'uk',status:'Kris (våroffensiven)',info:'Ludendorff-offensiven pressar britterna till bristningsgränsen. Haig utfärdar "backs to the wall"-ordern. USA:s trupper börjar anlända i tid.'},
+      {ctrl:'uk',status:'Seger',info:'Seger. 700 000 brittiska soldater döda. Imperiet expanderar med tyska kolonier och osmanska mandat — men det ekonomiska priset av kriget är enormt.'},
+      {ctrl:'uk',status:'Segermakt (Versailles)',info:'Versailles befäster Storbritanniens globala dominans. Irak, Palestina och Transjordanien blir brittiska mandat. Irländska självständighetskriget pågår hemma.'},
+      {ctrl:'uk',status:'Brittiska imperiet',info:'Det irländska frihetskriget avslutas — Irländska fristaten skapas 1922. Imperiet är geografiskt på toppen men ekonomiskt svagare än 1914.'},
+    ]
+  },
+  {
+    geoKeys:['italy','italian kingdom','regno d\'italia','kingdom of italy'],
+    name:'Italien',
+    steps:[
+      {ctrl:'neutral',status:'Neutral (1914)',info:'Italien tillhör formellt Trippelalliansen med Tyskland och Österrike men förklarar sig neutralt 1914. Bägge sidor försöker locka landet med territoriella löften.'},
+      {ctrl:'neutral',status:'I kriget sedan 1915',info:'Italien inträdde på allierades sida maj 1915 mot löften om Sydtyrolen och Trieste. Isonzo-fronten mot Österrike-Ungern kräver enorma förluster.'},
+      {ctrl:'neutral',status:'Caporetto-katastrofen',info:'Caporetto oktober 1917 — österrikisk-tysk offensiv krossar den italienska fronten. 300 000 tillfångatagna. En av krigets värsta militära katastrofer.'},
+      {ctrl:'neutral',status:'Vittorio Veneto — seger',info:'Vittorio Veneto oktober 1918 — Italien vinner en avgörande seger. Österrike-Ungern kapitulerar. Trento, Trieste och Istrien tas.'},
+      {ctrl:'neutral',status:'"Den stympade segern"',info:'Italia fick inte allt man krävde vid Versailles. Den "stympade segern" (vittoria mutilata) ger nationalistisk upprörelse. Mussolini utnyttjar missnöjet.'},
+      {ctrl:'neutral',status:'Politisk kris',info:'Ekonomisk kris och politisk instabilitet. Mussolinis "marsch mot Rom" oktober 1922 ger fascisterna makten. Demokratin eroderas snabbt.'},
+    ]
+  },
+  {
+    geoKeys:['serbia','kingdom of serbia','kráľovstvo srbsko'],
+    name:'Serbien',
+    steps:[
+      {ctrl:'independent',status:'Kungariket Serbien',info:'Det lilla kungariket ses som Österrike-Ungerns fiende nr 1. Franz Ferdinands mördare var bosnienserbisk nationalist. Österrike angriper 28 juli 1914 och utlöser världskriget.'},
+      {ctrl:'independent',status:'Serbien kämpar vidare',info:'Serbien krossas temporärt 1915 men armén reser sig på Saloniki-fronten. Korfu-deklarationen lovar en gemensam sydslavisk stat efter kriget.'},
+      {ctrl:'independent',status:'Saloniki-fronten',info:'Serbiska armén håller Saloniki-fronten fast. Kriget har kostat Serbien 16% av befolkningen — proportionellt de största förlusterna av alla länder.'},
+      {ctrl:'independent',status:'Seger och union',info:'Serbisk-kroatisk-slovensk stat utropas 1 december 1918. Serbien är krigets stora vinnare — men till ett enormt mänskligt pris.'},
+      {ctrl:'independent',status:'Kungariket SHS',info:'Saint-Germain och Trianon ger Jugoslavien stora territorier från Österrike-Ungern: Slovenien, Kroatien, Bosnien, Vojvodina. Men interna spänningar är allvarliga redan från start.'},
+      {ctrl:'independent',status:'Kungariket Jugoslavien',info:'Kungariket SHS konsolideras. Spänningarna mellan serber och kroater är ständiga — kroaterna kräver federalism, serberna föredrar centraliserad stat.'},
+    ]
+  },
+  {
+    geoKeys:['romania','roumania','rumania'],
+    name:'Rumänien',
+    steps:[
+      {ctrl:'neutral',status:'Neutral (1914)',info:'Rumänien är formellt allierat med Centralmakterna men förklarar sig neutralt. Bägge sidor erbjuder Transsylvanien — hem för 3 miljoner rumäner under ungersk styre.'},
+      {ctrl:'independent',status:'I kriget sedan 1916',info:'Rumänien inträdde på allierades sida 1916 mot löftet om Transsylvanien men tvingades till fred i Bukarest 1918 efter militärt nederlag.'},
+      {ctrl:'independent',status:'Ockuperat, väntar',info:'Bukarest ockuperat. Rumänien håller kvar en smal remsa i Moldavien. Fördragets ratificering fördröjs — och Centralmakternas kollaps förändrar snart allt.'},
+      {ctrl:'independent',status:'Återinträder i kriget',info:'Rumänien förklarar krig igen 10 november 1918. Rumänska trupper rör sig snabbt in i Transsylvanien och slår ner den ungerska rådsrepubliken 1919.'},
+      {ctrl:'independent',status:'Stor-Rumänien',info:'Stor-Rumänien är det stora vinnarlandet: Trianon ger Transsylvanien, Versailles ger Bessarabien och Bukovina. Landets yta dubbleras.'},
+      {ctrl:'independent',status:'Stor-Rumänien',info:'Rumänien är nu en av Europas medelstora makter men med stora utmaningar: nationella minoriteter, ekonomisk eftersläpning och regionala spänningar.'},
+    ]
+  },
+  {
+    geoKeys:['bulgaria','bulgarie','kingdom of bulgaria'],
+    name:'Bulgarien',
+    steps:[
+      {ctrl:'neutral',status:'Söker hämnd',info:'Förlorare i Andra Balkankriget 1913. Bulgarien söker hämnd på Serbien och Rumänien. Ansluter sig till Centralmakterna oktober 1915.'},
+      {ctrl:'neutral',status:'Centralmakternas sida',info:'Bulgarien håller Saloniki-fronten men är krigatröttett. Desertering och missnöje ökar bland soldaterna.'},
+      {ctrl:'neutral',status:'Centralmakternas sida',info:'Bulgarien fortsätter i kriget med sjunkande moral och folklig hunger.'},
+      {ctrl:'neutral',status:'Kapitulation',info:'Bulgarien kapitulerade 29 september 1918 — först av Centralmakterna. Tsar Ferdinand abdikerar. Neuilly-fördraget ger stora territoriella förluster.'},
+      {ctrl:'neutral',status:'Neuilly-fördraget',info:'Neuilly 1919: Bulgarien förlorar Syddobrudja till Rumänien, Västra Thrakien till Grekland och delar till Jugoslavien. 150 000 bulgarer flyr hemländerna.'},
+      {ctrl:'neutral',status:'Efterkrigstid',info:'Ekonomisk kris och politisk instabilitet. Revisionism och kravet på återrevansch präglar politiken. Agrara partiet tar makten.'},
+    ]
+  },
+  {
+    geoKeys:['greece','greek','ellas','kingdom of greece','ελλάς'],
+    name:'Grekland',
+    steps:[
+      {ctrl:'neutral',status:'Splittrat land',info:'Nationell schism: kung Konstantin (pro-tysk) mot premiärminister Venizelos (pro-allierade). Officiellt neutralt trots stark press från båda sidor.'},
+      {ctrl:'neutral',status:'I kriget (1917)',info:'De allierade tvingade kung Konstantin att abdikera 1917. Venizelos tar makten. Grekiska trupper kämpar på Makedonien-fronten.'},
+      {ctrl:'neutral',status:'Krigsår',info:'Grekland kämpar vid Saloniki-fronten. Venizelos förhandlar framgångsrikt om territoriella löften för den "Megali Idea" — det stora Grekland.'},
+      {ctrl:'neutral',status:'Seger',info:'Seger. Venizelos på toppen av sin makt förhandlar om Thrakien och Smyrna (Izmir) i Anatolien. Den Megali Idea verkar inom räckhåll.'},
+      {ctrl:'neutral',status:'Sèvresfreden',info:'Sèvresfördraget ger Thrakien och Smyrna. Grekisk armé landsätts i Anatolien — det turkisk-grekiska kriget om Anatoliens framtid inleds.'},
+      {ctrl:'neutral',status:'Katastrofen',info:'Turkisk-Grekiska kriget vänder 1922. Katastrofen i Smyrna leder till massutvisning av 1,2 miljoner greker från Anatolien — ett 3000-årigt närvaro utraderat.'},
+    ]
+  },
+  {
+    geoKeys:['sweden','sverige'],
+    name:'Sverige',
+    steps:[
+      {ctrl:'neutral',status:'Neutral (1914)',info:'Sverige förblir neutralt trots stark pro-tysk opinion bland konservativa. Handels- och exportrelationer med båda sidor — järnmalmexport till Tyskland omstridd.'},
+      {ctrl:'neutral',status:'Neutral (krigsår)',info:'Brittisk blockad skapar livsmedelsbrist. Sverige säljer järnmalm till Tyskland trots internationella protester. Demokratisk rösträttsrörelse växer hemma.'},
+      {ctrl:'neutral',status:'Neutral',info:'Svenska frivilliga stöder informellt Finlands vita sida i inbördeskriget. Demokratisk rösträttsreform genomförs 1918 — allmän rösträtt för män och kvinnor.'},
+      {ctrl:'neutral',status:'Neutral',info:'Krigslutet välkomnat. Sverige undgick kriget men fick ekonomiska svårigheter. Demokratin stärks med allmän och lika rösträtt.'},
+      {ctrl:'neutral',status:'Neutral (NF)',info:'Sverige aktivt i Nationernas förbund. Ålandsfrågan: Sverige och Finland tvistar om öarnas nationalitet — NF beslutar att de tillhör Finland men demilitariseras 1921.'},
+      {ctrl:'neutral',status:'Neutral demokrati',info:'Sverige är en stabil demokrati. Neutraliteten ses som framgångssaga. Socialdemokraterna bildar sin första regering 1920.'},
+    ]
+  },
+  {
+    geoKeys:['czechoslovakia','czechia','bohemia','moravia','ceskoslovensko'],
+    name:'Tjeckoslovakien',
+    steps:[
+      {ctrl:'austria',status:'Del av Österrike-Ungern',info:'Böhmen och Mähren ingår i österrikisk halva; Slovakien i den ungerska. Masaryk och Beneš leder exilregeringen och vinner allierat stöd för självständighet.'},
+      {ctrl:'austria',status:'Del av Österrike-Ungern',info:'Tjeckiska legioner kämpar på allierades sida och kontrollerar delar av Transsibiriska järnvägen 1918 — ett dramatiskt bevis på tjeckisk militär kapacitet.'},
+      {ctrl:'austria',status:'Del av Österrike-Ungern',info:'Nationalister kräver öppet autonomi. Brest-Litovsk hotar men det ryska inbördeskriget ger Masarykrörelsen ett strategiskt tillfälle.'},
+      {ctrl:'independent',status:'Tjeckoslovakien utropat',info:'Tjeckoslovakien utropas självständigt 28 oktober 1918 — den första av Habsburg-imperiets efterföljarstater. Masaryk blir president.'},
+      {ctrl:'independent',status:'Republiken Tjeckoslovakien',info:'Saint-Germain-fördraget erkänner Tjeckoslovakien officiellt. Landet inkluderar det tyskbefolkade Sudetenlandet av strategiska skäl — ett beslut med ödesdiger framtid 1938.'},
+      {ctrl:'independent',status:'Republiken Tjeckoslovakien',info:'Tjeckoslovakien är en av mellankrigstiden demokratiska framgångssagor — stabil, industrialiserad och med fungerande parlamentarism.'},
+    ]
+  },
+  {
+    geoKeys:['denmark','danish','danmark','kongeriget'],
+    name:'Danmark',
+    steps:[
+      {ctrl:'denmark',status:'Neutral (1914)',info:'Danmark förblir neutralt under hela kriget trots tyskt tryck. Danska invånare i tyskt Slesvig tvingas tjäna i den tyska armén mot sin vilja.'},
+      {ctrl:'denmark',status:'Neutral (krigsår)',info:'Neutraliteten håller. Danmark handlar med båda sidor. Uppskattningsvis 1700 danska soldater dog som tvångsinkallade i den tyska armén.'},
+      {ctrl:'denmark',status:'Neutral',info:'Neutral. Debatten om Slesvig-folkomröstning är livlig bland danskar och danska slesvigar.'},
+      {ctrl:'denmark',status:'Vapenstilleståndet',info:'Vapenstilleståndet öppnar omedelbart dörren för folkomröstning om Norra Slesvig — en fråga som varit aktuell sedan erövringen 1864.'},
+      {ctrl:'denmark',status:'Slesvig återförenat',info:'Folkomröstning februari 1920: norra Slesvig röstar för återförening. Officiellt överlämnat 15 juni 1920. NF hyllar det som ett modellfall för demokratisk självbestämmanderätt.'},
+      {ctrl:'denmark',status:'Konstitutionell monarki',info:'Danmark är en stabil parlamentarisk demokrati. Neutralitetens framgång under kriget befäster en nordisk säkerhetstradition.'},
+    ]
+  },
+  {
+    geoKeys:['norway','norge','kongeriket norge'],
+    name:'Norge',
+    steps:[
+      {ctrl:'neutral',status:'Neutral (1914)',info:'Norge förblir neutralt. Som sjöfartsnation är landet hårt drabbat — tyska ubåtar sänker 900 norska fartyg och 2000 sjömän dör trots neutraliteten.'},
+      {ctrl:'neutral',status:'Neutral (krigsår)',info:'Norge lider svårt av ubåtskriget. Norsk handelsflotta tjänar på frakt åt de allierade men till enorma förluster.'},
+      {ctrl:'neutral',status:'Neutral',info:'Neutral.'},
+      {ctrl:'neutral',status:'Neutral',info:'Krigsslutet är en lättnad. Norge har undvikit direkt militär inblandning men betalat ett högt pris i sjöfartsförluster.'},
+      {ctrl:'neutral',status:'Neutral demokrati',info:'Norge är aktivt i NF och verkar för internationell rätt. Svalbard-fördraget 1920 ger Norge suveränitet över Spetsbergen.'},
+      {ctrl:'neutral',status:'Neutral demokrati',info:'Norge är en stabil parlamentarisk demokrati. Den nordiska neutralitetsmodellen tar form.'},
+    ]
+  },
+  {
+    geoKeys:['belgium','belgique','belgien','kingdom of belgium'],
+    name:'Belgien',
+    steps:[
+      {ctrl:'belgium',status:'Invaderat aug 1914',info:'Belgien invaderas av Tyskland 4 augusti 1914 trots garanterat neutralitet — "scraps of paper"-incidenten drar in Storbritannien. Kung Albert I leder motståndet.'},
+      {ctrl:'belgium',status:'Ockuperat',info:'Belgien är under full tysk ockupation. Belgiska trupper håller en smal remsa vid Ijzer-floden. Tyskt utnyttjande av industri och civila pågår systematiskt.'},
+      {ctrl:'belgium',status:'Ockuperat',info:'Belgien fortsätter att vara ockuperat. De allierade befriar gradvis belgiska territorier under hösten 1918.'},
+      {ctrl:'belgium',status:'Befriat',info:'Belgien befrias i september–oktober 1918. Kung Albert återvänder triumfatoriskt till Bryssel 22 november 1918.'},
+      {ctrl:'belgium',status:'Segermakt',info:'Versaillesfördraget kompenserar Belgien med Eupen och Malmédy från Tyskland. Belgien kräver stora skadestånd för krigsförstörelsen.'},
+      {ctrl:'belgium',status:'Återuppbyggnad',info:'Belgien återuppbyggs med stöd av tyska skadestånd. Landet är en av de mest krigsdrabbade nationerna och stark förespråkare för Nationernas förbund.'},
+    ]
+  },
+];
+
+/* Bygg lookup: geoKey → country-post */
+const countryLookup = new Map();
+COUNTRY_INFO.forEach(c => c.geoKeys.forEach(k => countryLookup.set(k, c)));
+function findCountryInfo(name) {
+  const n = (name||'').toLowerCase().trim();
+  if (countryLookup.has(n)) return countryLookup.get(n);
+  for (const [k, v] of countryLookup)
+    if (n.includes(k) || k.includes(n)) return v;
+  return null;
+}
+
+/* ═══ OVERLAY TERRITORIES — prioriterar GeoJSON-geometri ════════ */
+const TERRITORIES = [
+  {
+    id:'finland',name:'Finland',
+    geoNames:['finland'],
+    coords:[[22,60],[25,60],[28,60.5],[30,61.5],[31,63],[29.5,68.5],[27,70],[24,70],[21,68],[20,65],[21,62],[22,60]],
+    steps:[
+      {ctrl:'russia',     status:'Ryskt storfurstendöme',    info:'Finland har ingått i det ryska imperiet sedan 1809 med intern autonomi och egna lagar, men tsaren styr som storfurste.'},
+      {ctrl:'russia',     status:'Ryskt storfurstendöme',    info:'Bolsjevikernas maktövertagande i oktober skapar en historisk öppning. Finlands lantdag kräver ökad autonomi.'},
+      {ctrl:'independent',status:'Självständigt (dec 1917)', info:'Finland utropade självständighet 6 december 1917, erkänt av Lenin. Landet genomgår ett blodigt inbördeskrig (jan–maj 1918) mellan vita och röda.'},
+      {ctrl:'independent',status:'Självständig republik',    info:'Vita gardet segrade med tyskt stöd. Finland erkänns internationellt. Inbördeskrigets sår läker långsamt.'},
+      {ctrl:'independent',status:'Självständig republik',    info:'Tartufredsfördrag (1920) fastställer gränsen mot Sovjet. Finland är nu del av cordon sanitaire av stater mellan Sovjet och väst.'},
+      {ctrl:'independent',status:'Självständig republik',    info:'Finland är en stabil demokrati, antagen till Nationernas förbund 1920.'},
+    ]
+  },
+  {
+    id:'estonia',name:'Estland',
+    geoNames:['estonia','eesti'],
+    coords:[[21.7,57.5],[23.5,57.3],[26,57.5],[28,57.8],[28.2,58.3],[28,59.5],[26,59.7],[23.5,59.5],[22,59.2],[21.5,58.5],[21.7,57.5]],
+    steps:[
+      {ctrl:'russia',    status:'Rysk provins',                    info:'Estland ingår i de ryska Östersjöprovinserna sedan 1710. Balttysk adel dominerar, men en estnisk nationell rörelse har vuxit under 1800-talets sång- och kulturrörelse.'},
+      {ctrl:'russia',    status:'Rysk provins',                    info:'Provisoriska regeringen ger Estland viss autonomi 1917. Det estniska nationella rådet kräver självbestämmande.'},
+      {ctrl:'germany',   status:'Tyskt ockuperat (Brest-Litovsk)',  info:'Ryssland avträdde Estland till Tyskland. Tyska trupper ockuperar landet, men estniska politiker förbereder sig för självständighet.'},
+      {ctrl:'contested', status:'Självständighet utropad',          info:'Estland utropar självständighet 28 november 1918. Röda armén anfaller omedelbart — frihetskriget inleds.'},
+      {ctrl:'independent',status:'Självständig republik',           info:'Tartufredsfördrag (1920) erkänner estländsk suveränitet — Rysslands första fredsavtal med en ny grannstat.'},
+      {ctrl:'independent',status:'Självständig republik',           info:'Estland är en stabil parlamentarisk demokrati, antagen till Nationernas förbund 1921.'},
+    ]
+  },
+  {
+    id:'latvia',name:'Lettland',
+    geoNames:['latvia','lettland','latvija'],
+    coords:[[21,55.7],[23,55.7],[26.5,55.7],[28.2,56.2],[28.2,57.3],[26,57.5],[23.5,57.3],[21.7,57.5],[21,56.8],[21,55.7]],
+    steps:[
+      {ctrl:'russia',    status:'Rysk provins',                    info:'Lettland ingår i Östersjöprovinserna. Balttysk adel dominerar, men en lettisk nationell rörelse växer stadigt under 1800-talet.'},
+      {ctrl:'russia',    status:'Rysk provins',                    info:'Under revolutionen 1917 kräver lettiska rörelser självständighet. Tyska trupper ockuperar redan delar av landet.'},
+      {ctrl:'germany',   status:'Tyskt ockuperat (Brest-Litovsk)',  info:'Ryssland avträdde Lettland till Tyskland. Tyskt styre etableras formellt.'},
+      {ctrl:'contested', status:'Självständighet utropad',          info:'Lettland utropar självständighet 18 november 1918. Frihetskriget pågår mot Röda armén och balttyska Freikorps.'},
+      {ctrl:'independent',status:'Självständig republik',           info:'Rigafredsfördrag (1920) fastställer gränsen mot Sovjet och erkänner lettisk suveränitet.'},
+      {ctrl:'independent',status:'Självständig republik',           info:'Lettland är en parlamentarisk demokrati, antagen till Nationernas förbund 1921. Riga blomstrar som handelsstad.'},
+    ]
+  },
+  {
+    id:'lithuania',name:'Litauen',
+    geoNames:['lithuania','lietuva'],
+    coords:[[21,54.5],[23,54],[25.5,54],[26.5,54.2],[26,56],[24,56.5],[22,56],[21,55.7],[20.5,55],[21,54.5]],
+    steps:[
+      {ctrl:'russia',    status:'Rysk provins',                    info:'Litauen ingick i Ryssland sedan Polens delning 1795. Litauisk kultur och språk undertrycks aktivt under 1800-talet.'},
+      {ctrl:'germany',   status:'Tyskt ockuperat sedan 1915',      info:'Tyska trupper ockuperade Litauen redan 1915. Tyskt militärstyre råder under hela kriget.'},
+      {ctrl:'germany',   status:'Tyskt ockuperat (Brest-Litovsk)', info:'Litauens råd utropade självständighet 16 februari 1918 under tyskt "skydd" — en komplicerad balansakt.'},
+      {ctrl:'contested', status:'Självständighet utropad',          info:'Tyskt tillbakadragande utlöser kaos. Litauen kämpar mot bolsjeviker och polska anspråk på Vilnius-regionen.'},
+      {ctrl:'independent',status:'Självständig republik',           info:'Polen ockuperar Vilnius — Kaunas blir tillfällig huvudstad. Litauen erkänt av de allierade 1922.'},
+      {ctrl:'independent',status:'Självständig republik',           info:'Litauen erkänt internationellt, antaget till NF 1921. Konflikten med Polen om Vilnius präglar hela mellankrigstiden.'},
+    ]
+  },
+  {
+    id:'poland',name:'Polen',
+    geoNames:['poland','polska'],
+    coords:[[17.5,50.5],[19.5,50],[23.5,50.5],[24,51.5],[24,53],[22,53.5],[20.5,54],[18.5,54],[17.5,53.5],[17,52],[17.5,50.5]],
+    steps:[
+      {ctrl:'russia',    status:'Ryskt Kongresspolen',          info:'Polen delades 1795. Den ryska delen hålls under stram kontroll efter uppror 1830 och 1863. Polsk kultur och språk undertrycks systematiskt.'},
+      {ctrl:'germany',   status:'Tyskt ockuperat sedan 1915',   info:'Tyska och österrikiska trupper ockuperade 1915. Centralmakterna lovar ett framtida polskt kungarike — ett löfte de aldrig håller.'},
+      {ctrl:'germany',   status:'Tyskt ockuperat (Brest-Litovsk)', info:'Ryssland bekräftar formellt avståendet. Polackerna är rasande — de fick inget inflytande i fredsförhandlingarna.'},
+      {ctrl:'independent',status:'Polen återupprättat',          info:'Polen utropar självständighet 11 november 1918 — exakt samma dag som vapenstilleståndet. 123 år av delning är slut. Piłsudski tar befälet.'},
+      {ctrl:'poland',    status:'Republiken Polen',              info:'Versaillesfördraget erkänner Polen officiellt. Landet erhåller Posen, Västpreussen (den polska korridoren) och Galicien.'},
+      {ctrl:'poland',    status:'Republiken Polen',              info:'Det polsk-ryska kriget avslutas med Rigafreden. Polen är nu en av Europas större stater.'},
+    ]
+  },
+  {
+    id:'ukraine',name:'Ukraina',
+    geoNames:['ukraine','ukraina','ukrainian peoples republic'],
+    coords:[[22,48],[28,45.5],[33,45],[36.5,46.5],[40,48.5],[40,51.5],[36,52.5],[32,52.5],[28,52],[24,51.5],[22,50.5],[22,48]],
+    steps:[
+      {ctrl:'russia',    status:'Ryskt territorium',              info:'Ukraina är fullständigt integrerat i det ryska imperiet. Ukrainsk kultur och språk begränsas hårt sedan 1863.'},
+      {ctrl:'russia',    status:'Ryskt territorium',              info:'Ukrainska Centralrada utropas i Kiev mars 1917 och kräver autonomi. Bolsjevikerna erkänner det formellt men motarbetar det i praktiken.'},
+      {ctrl:'germany',   status:'Tyskt skyddat (Brest-Litovsk)', info:'Ukraina slöt separat fred med Centralmakterna 9 februari 1918 ("brödfreden"). Tyska trupper ockuperar landet i utbyte mot spannmål.'},
+      {ctrl:'contested', status:'Inbördeskrig',                   info:'Tyskt tillbakadragande utlöser fullskaligt inbördeskrig. Bolsjeviker, vita armén, ukrainska nationalister och Polen strider om kontrollen.'},
+      {ctrl:'contested', status:'Inbördeskrig (slutskede)',       info:'Bolsjevikerna tar gradvis överhanden. Det ukrainska självständighetshoppet krossas militärt.'},
+      {ctrl:'soviet',    status:'Ukrainska SSR',                  info:'Röda armén segrade. Ukraina inlemmades som Ukrainska SSR 1922 — en status som varade till 1991.'},
+    ]
+  },
+  {
+    id:'belarus',name:'Vitryssland',
+    geoNames:['byelorussia','belarus','belorussia','bielorussia'],
+    coords:[[24,51.5],[27.5,51.5],[32.5,52],[32.5,54.5],[31.5,56],[28.5,56.5],[24.5,56],[23,55],[22.5,53.5],[24,53],[24,51.5]],
+    steps:[
+      {ctrl:'russia',    status:'Ryskt territorium',              info:'Vitryska territorier helt integrerade i Ryssland. Ingen separat politisk status — vitrysk nationell identitet är svagare än hos grannarnas rörelser.'},
+      {ctrl:'russia',    status:'Ryskt territorium',              info:'En vitrysk nationell rörelse existerar men är svag. Revolutionsåret ger ingen tydlig vitrysk politisk röst.'},
+      {ctrl:'germany',   status:'Tyskt ockuperat (Brest-Litovsk)', info:'Ryssland avträdde Vitryssland till Tyskland. En kortlivad folkrepublik utropas under tyskt skydd.'},
+      {ctrl:'contested', status:'Maktvacuum',                     info:'Tyskt tillbakadragande skapar kaos. Bolsjeviker och polska trupper tävlar om kontrollen.'},
+      {ctrl:'contested', status:'Omstritt',                       info:'Polsk-ryska kriget 1919–21 rasar över vitryska territorier. Polska trupper ockuperar västra Vitryssland.'},
+      {ctrl:'soviet',    status:'Vitryska SSR',                   info:'Rigafreden (1921): västra Vitryssland till Polen, östra inlemmas i Sovjet som Vitryska SSR. Delat till 1939.'},
+    ]
+  },
+  {
+    id:'georgia',name:'Georgien',
+    geoNames:['georgia','géorgie','sakartvelo'],
+    coords:[[41,41],[47,41],[47,43.5],[41,43.5],[41,41]],
+    steps:[
+      {ctrl:'russia',    status:'Ryskt territorium',              info:'Georgien har ingått i Ryssland sedan 1801. Rik kultur och historia — ett av de äldsta kristna länderna i världen.'},
+      {ctrl:'russia',    status:'Ryskt territorium',              info:'Transkaukasiska rådet försöker hålla samman regionen under revolutionskaosen.'},
+      {ctrl:'contested', status:'Georgisk republik (1918)',       info:'Georgien utropar självständighet 26 maj 1918 under tyskt skydd. Mensjevikpartiet leder landet mot parlamentarisk demokrati.'},
+      {ctrl:'independent',status:'Självständig republik',        info:'Georgien erkänns av de allierade och är faktiskt självständigt. En fungerande demokrati tar form — ovanlig för regionen.'},
+      {ctrl:'independent',status:'Erkänd av NF (1920)',          info:'Georgien erkänns av NF och de allierade 1920. Men Röda armén hotar allt mer.'},
+      {ctrl:'soviet',    status:'Georgiska SSR',                  info:'Röda armén invaderade februari 1921 trots internationella protester. Georgien inlemmas i Transkaukasiska SFSR inom Sovjet.'},
+    ]
+  },
+  {
+    id:'armenia',name:'Armenien',
+    geoNames:['armenia','hayastan'],
+    coords:[[43.5,38.8],[47,38.8],[47,41],[43.5,41],[43.5,38.8]],
+    steps:[
+      {ctrl:'russia',    status:'Ryskt territorium',              info:'Armenien har ingått i Ryssland sedan 1828. Det armeniska folket är splittrat mellan Ryssland och det Osmanska riket.'},
+      {ctrl:'russia',    status:'Ryskt territorium',              info:'Folkmordet på armenier i det Osmanska riket 1915–23 kräver uppskattningsvis 1,5 miljoner offer. Rysk-armeniska trupper kämpar mot osmanerna.'},
+      {ctrl:'contested', status:'Armenisk republik (1918)',       info:'Armenien utropar självständighet 28 maj 1918. Landet är försvagat av kriget och folkmordet och kämpar mot osmanska trupper.'},
+      {ctrl:'independent',status:'Självständig republik',        info:'Armenien är självständigt men hårt pressat. Kriget med Turkiet om det armeniska höglandet är blodigt och destruktivt.'},
+      {ctrl:'independent',status:'Erkänd men hotad',             info:'Erkänns av de allierade 1920. Sèvresfördraget lovade stora armeniska territorier — men löftena förblir papper.'},
+      {ctrl:'soviet',    status:'Armeniska SSR',                  info:'Röda armén invaderade november 1920. Armenien inlemmas i Sovjet. Den armeniska diasporan sprider sig över världen.'},
+    ]
+  },
+  {
+    id:'azerbaijan',name:'Azerbajdzjan',
+    geoNames:['azerbaijan','azerbaïdjan','azərbaycan'],
+    coords:[[47,38.3],[50.5,38.3],[50.5,41.8],[47,41.8],[47,38.3]],
+    steps:[
+      {ctrl:'russia',    status:'Ryskt territorium',              info:'Azerbajdzjan har ingått i Ryssland sedan 1813. Baku vid Kaspiska havet är ett av världens tidiga oljecentrum.'},
+      {ctrl:'russia',    status:'Ryskt territorium',              info:'Nationalistisk rörelse växer. Baku är en kosmopolitisk stad med armenier, ryssar och azerbajdzjaner.'},
+      {ctrl:'contested', status:'Azerbajdzjansk republik (1918)', info:'Azerbajdzjan utropar självständighet 28 maj 1918 — den första demokratiska republiken i den muslimska världen. Brittiska trupper anländer till Baku.'},
+      {ctrl:'independent',status:'Självständig republik',        info:'Azerbajdzjan kontrollerar Baku och de värdefulla oljeresurserna. Britterna lämnar 1919.'},
+      {ctrl:'independent',status:'Erkänd republik',              info:'Erkänns av de allierade 1920. Men Röda armén rör sig allt närmre.'},
+      {ctrl:'soviet',    status:'Azerbajdzjanska SSR',            info:'Röda armén invaderade april 1920 — den första av de tre kaukasiska republikerna att falla. Bakus olja är en strategisk vinst för Sovjet.'},
+    ]
+  },
+  {
+    id:'alsace-lorraine',name:'Alsace-Lorraine',
+    geoNames:['alsace','alsace-lorraine','alsace lorraine'],
+    coords:[[6,47.5],[8.2,47.5],[8.3,48.5],[7.8,49.5],[6.2,49.5],[5.8,49],[6,47.5]],
+    steps:[
+      {ctrl:'germany',   status:'Tyskt (sedan 1871)',           info:'Annekterades av det preussisk-tyska kejsardömet efter kriget 1870–71. Återföreningen med Frankrike är Frankrikes centrala krigsorsak och nationella trauma.'},
+      {ctrl:'germany',   status:'Tyskt territorium',             info:'Fronten löper i närheten. Återföreningen är ett av de mest emotionellt laddade franska krigsmålen.'},
+      {ctrl:'germany',   status:'Tyskt territorium',             info:'Brest-Litovsk gäller östfronten och förändrar ingenting här. Men fransmännen vet att segern är nära.'},
+      {ctrl:'france',    status:'Åter franskt',                  info:'Vapenstilleståndet 11 november 1918 innebär att Frankrike omedelbart återtar Alsace-Lorraine — krigets mest emotionella ögonblick för det franska folket.'},
+      {ctrl:'france',    status:'Franskt territorium',           info:'Återlämnandet bekräftas högtidligt i Versaillesfördraget 1919. Tyskt sedan 47 år, nu franskt igen.'},
+      {ctrl:'france',    status:'Franskt territorium',           info:'Fullt integrerat i Frankrike. Tyska ortnamn ersätts med franska. Invånarna har en unik alsacisk identitet.'},
+    ]
+  },
+  {
+    id:'posen',name:'Posen & Västpreussen',
+    geoNames:['posen','poznan','west prussia'],
+    coords:[[15.5,52],[18.5,52],[19.5,53],[19,54],[17.5,54.5],[15.5,54.5],[14.5,54],[14.5,52.5],[15.5,52]],
+    steps:[
+      {ctrl:'germany',   status:'Tyska provinser',              info:'Posen och Västpreussen är tyska provinser med blandad polsk-tysk befolkning. Polska kulturella rörelser är aktiva trots tyskt förtryck.'},
+      {ctrl:'germany',   status:'Tyska provinser',              info:'Ingen förändring. Regionen är djupt inuti Tyska kejsardömet.'},
+      {ctrl:'germany',   status:'Tyska provinser',              info:'Brest-Litovsk förändrar ingenting här, men Polen inväntar sin chans.'},
+      {ctrl:'contested', status:'Storpolska uppresningen',      info:'Storpolska uppresningen 27 december 1918: den polska befolkningen reser sig mot tyskt styre och tar kontroll.'},
+      {ctrl:'poland',    status:'Polska korridoren (Versailles)',info:'Versaillesfördraget: regionen till Polen — den polska korridoren ger havsaccess men skär av Ostpreussen från resten av Tyskland.'},
+      {ctrl:'poland',    status:'Republiken Polen',             info:'Den polska korridoren är etablerad. Ostpreussens avskärning sår frön till de krav Hitler formulerar 1939.'},
+    ]
+  },
+  {
+    id:'danzig',name:'Danzig (Gdańsk)',
+    geoNames:['free city of danzig','danzig','gdansk','gdańsk'],
+    coords:[[18.2,54],[19.2,54],[19.5,54.6],[18.8,54.7],[18,54.5],[18.2,54]],
+    steps:[
+      {ctrl:'germany',      status:'Tyskt territorium',           info:'Danzig är en gammal hansestad med övervägande tyskt befolkning. Viktig handels- och hamnstad vid Östersjön.'},
+      {ctrl:'germany',      status:'Tyskt territorium',           info:'Ingen förändring under krigsåren.'},
+      {ctrl:'germany',      status:'Tyskt territorium',           info:'Ingen förändring.'},
+      {ctrl:'germany',      status:'Tyskt territorium',           info:'Polens krav på havsaccess via Danzig diskuteras i Paris.'},
+      {ctrl:'international',status:'Fri stad Danzig (NF)',        info:'Versaillesfördraget skapar Fristaden Danzig under NF. Polen fick hamnrättigheter men inte suveränitet — en kompromiss ingen var nöjd med.'},
+      {ctrl:'international',status:'Fri stad Danzig (NF)',        info:'En öppen konfliktpunkt: tyskt befolkning, polska hamnrättigheter, svag NF-kontroll. Hitler gör Danzig till sin kris mot Polen 1939.'},
+    ]
+  },
+  {
+    id:'north-schleswig',name:'Norra Slesvig',
+    geoNames:['north schleswig','northern schleswig','sønderjylland'],
+    coords:[[8.5,54.8],[10.5,54.8],[10.8,55.2],[10,55.6],[8.8,55.4],[8.5,55],[8.5,54.8]],
+    steps:[
+      {ctrl:'germany',   status:'Tyskt (sedan 1864)',            info:'Erövrades av Preussen 1864. Blandad dansk-tysk befolkning — danskarna i norr har aldrig glömt sin identitet.'},
+      {ctrl:'germany',   status:'Tyskt territorium',             info:'Danska invånare tjänar mot sin vilja i den tyska armén.'},
+      {ctrl:'germany',   status:'Tyskt territorium',             info:'Ingen förändring.'},
+      {ctrl:'germany',   status:'Tyskt territorium',             info:'Vapenstilleståndet öppnar diskussioner om en demokratisk folkomröstning.'},
+      {ctrl:'denmark',   status:'Danskt territorium',            info:'Folkomröstning 1920: Norra Slesvig röstar för återförening. Överlämnat 15 juni 1920 — hyllas som ett modellfall för demokratisk självbestämmanderätt.'},
+      {ctrl:'denmark',   status:'Danskt territorium',            info:'Fullt återförenat med Danmark. Ses som ett av Versaillessystemets lyckade undantag.'},
+    ]
+  },
+  {
+    id:'saar',name:'Saarområdet',
+    geoNames:['saar','saarland','saar basin'],
+    coords:[[6.4,49],[7.5,49],[7.5,49.5],[6.4,49.5],[6.4,49]],
+    steps:[
+      {ctrl:'germany',      status:'Tyskt territorium',           info:'Saar är ett kolrikt industriområde centralt för stålindustrin. Saarbrücken är centrum.'},
+      {ctrl:'germany',      status:'Tyskt territorium',           info:'Saar bidrar aktivt till tyskt krigsmateriel under hela kriget.'},
+      {ctrl:'germany',      status:'Tyskt territorium',           info:'Ingen förändring.'},
+      {ctrl:'germany',      status:'Tyskt territorium',           info:'Frankrike kräver kompensation för tyskt förstörande av franska kolgruvor.'},
+      {ctrl:'international',status:'NF-förvaltning (15 år)',      info:'Versaillesfördraget: Saar under NF-förvaltning i 15 år. Frankrike kontrollerar kolgruvorna som ersättning för förstörda franska gruvor.'},
+      {ctrl:'international',status:'NF-förvaltning',              info:'Folkomröstning 1935: 90,8% röstade för återförening med Nazityskland — en propagandaseger för Hitler.'},
+    ]
+  },
+  {
+    id:'eupen',name:'Eupen & Malmédy',
+    geoNames:['eupen','eupen-malmedy','malmedy'],
+    coords:[[5.8,50.2],[6.5,50.2],[6.5,50.75],[5.8,50.75],[5.8,50.2]],
+    steps:[
+      {ctrl:'germany',   status:'Tyskt territorium',              info:'Eupen och Malmédy är tyska gränsstäder med blandad belgisk-tysk befolkning.'},
+      {ctrl:'germany',   status:'Tyskt territorium',              info:'Belgien ockuperas av tyskt 1914 och kräver kompensation.'},
+      {ctrl:'germany',   status:'Tyskt territorium',              info:'Ingen förändring.'},
+      {ctrl:'germany',   status:'Tyskt territorium',              info:'Belgien förbereder sina territoriella krav inför fredskonferensen.'},
+      {ctrl:'belgium',   status:'Belgiskt territorium',           info:'Versaillesfördraget överlämnar Eupen och Malmédy till Belgien som kompensation för den tyska invasionen 1914.'},
+      {ctrl:'belgium',   status:'Belgiskt territorium',           info:'Integrerade i Belgien. Nazityskland annekterade området 1940.'},
+    ]
+  },
+];
+
+/* ═══ VITLISTA FÖR EUROPEISKA FEATURES ══════════════════════════ */
+const EU_NAMES = new Set([
+  'russian empire','russia','german empire','germany','weimar republic',
+  'austria-hungary','austro-hungarian empire','austria','hungary',
+  'ottoman empire','turkey','france','united kingdom','british empire',
+  'great britain','italy','spain','portugal','belgium','netherlands',
+  'switzerland','sweden','norway','denmark','finland','estonia','latvia',
+  'lithuania','poland','czechoslovakia','yugoslavia','serbia','romania',
+  'bulgaria','greece','albania','montenegro','luxembourg','liechtenstein',
+  'ukraine','byelorussia','belarus','georgia','armenia','azerbaijan',
+  'moldova','prussia','bohemia','moravia','galicia','transylvania',
+  'andorra','monaco','san marino','free city of danzig','danzig',
+  'kingdom of serbs','kingdom of serbia','roumania','rumania',
+  'cisleithania','transleithania','sakartvelo','hayastan','azərbaycan',
+]);
+function isEuropean(f) {
+  const n = (f.properties?.NAME || f.properties?.name || '').toLowerCase();
+  if (!n) return false;
+  return EU_NAMES.has(n) || Array.from(EU_NAMES).some(k => n.includes(k));
+}
+
+/* ═══ STATE ══════════════════════════════════════════════════════ */
+let currentStep = 0, map;
+let baseLayer1914 = null, baseLayer1920 = null, activeBaseLayer = null;
+let overlayLayers = {};
+let activeFeature = null; // {type:'territory'|'country', id?, country?}
+const geoCache = {};
+const featureLookup = new Map(); // name_lower → geometry (from 1920 GeoJSON)
+
+/* ═══ MAP INIT ═══════════════════════════════════════════════════ */
+function initMap() {
+  map = L.map('map', {center:[52,26],zoom:4,minZoom:3,maxZoom:9});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+    attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/">CARTO</a>',
+    subdomains:'abcd',maxZoom:19,
+  }).addTo(map);
+}
+
+/* ═══ LOAD GEOJSON ═══════════════════════════════════════════════ */
+async function loadGeoJSON(year) {
+  if (geoCache[year]) return geoCache[year];
+  const url = `https://cdn.jsdelivr.net/gh/aourednik/historical-basemaps@master/geojson/world_${year}.geojson`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`HTTP ${resp.status} för år ${year}`);
+  const data = await resp.json();
+  geoCache[year] = data;
+  return data;
+}
+
+/* ═══ POPULATE FEATURE LOOKUP (för overlay-geometrier) ══════════ */
+function populateLookup(data) {
+  data.features.forEach(f => {
+    const keys = ['NAME','name','LABEL','label','SOVEREIGNT','ADMIN','COUNTRY']
+      .map(k => (f.properties?.[k]||'').toLowerCase().trim()).filter(Boolean);
+    keys.forEach(k => { if (!featureLookup.has(k)) featureLookup.set(k, f.geometry); });
+  });
+}
+
+function findGeometry(geoNames) {
+  for (const n of geoNames) {
+    if (featureLookup.has(n)) return featureLookup.get(n);
+    for (const [k, g] of featureLookup)
+      if (k.includes(n) || n.includes(k)) return g;
+  }
+  return null;
+}
+
+/* ═══ BUILD BASE LAYER ═══════════════════════════════════════════ */
+function buildBaseLayer(data) {
+  return L.geoJSON(data, {
+    filter: f => isEuropean(f),
+    style: f => {
+      const nm = f.properties?.NAME || f.properties?.name || '';
+      const ci = findCountryInfo(nm);
+      const key = ci ? ci.steps[currentStep].ctrl : 'neutral';
+      const c = CTRL[key] || CTRL.neutral;
+      return {fillColor:c.fill, color:c.stroke, weight:0.8, fillOpacity:0.28, opacity:0.6};
+    },
+    onEachFeature: (f, lyr) => {
+      const nm = f.properties?.NAME || f.properties?.name || '';
+      const ci = findCountryInfo(nm);
+      const label = ci ? ci.name : nm;
+      if (label) lyr.bindTooltip(label, {sticky:true, direction:'top', offset:[0,-4]});
+      if (ci) {
+        lyr.on('click', e => { L.DomEvent.stopPropagation(e); showCountryInfo(ci); });
+        lyr.on('mouseover', function() { this.setStyle({fillOpacity:0.5}); });
+        lyr.on('mouseout', function() { this.setStyle({fillOpacity:0.28}); });
+      }
+    }
+  });
+}
+
+/* ═══ SWITCH BASE LAYER ══════════════════════════════════════════ */
+function switchBaseLayer(year) {
+  const nl = year===1914 ? baseLayer1914 : baseLayer1920;
+  if (nl===activeBaseLayer) { refreshBaseStyles(); return; }
+  if (activeBaseLayer) map.removeLayer(activeBaseLayer);
+  nl.addTo(map); nl.bringToBack();
+  activeBaseLayer = nl;
+  Object.values(overlayLayers).forEach(l => l.bringToFront());
+}
+
+function refreshBaseStyles() {
+  if (!activeBaseLayer) return;
+  activeBaseLayer.eachLayer(lyr => {
+    const nm = lyr.feature?.properties?.NAME || lyr.feature?.properties?.name || '';
+    const ci = findCountryInfo(nm);
+    if (ci) {
+      const key = ci.steps[currentStep].ctrl;
+      const c = CTRL[key]||CTRL.neutral;
+      lyr.setStyle({fillColor:c.fill, color:c.stroke});
+    }
+  });
+}
+
+/* ═══ BUILD OVERLAYS ═════════════════════════════════════════════ */
+function buildOverlays() {
+  TERRITORIES.forEach(t => {
+    const geom = (t.geoNames?.length ? findGeometry(t.geoNames) : null)
+      || {type:'Polygon', coordinates:[t.coords]};
+    const layer = L.geoJSON(
+      {type:'Feature', properties:{id:t.id,name:t.name}, geometry:geom},
+      {
+        style: () => overlayStyle(t.id),
+        onEachFeature: (_f, lyr) => {
+          lyr.bindTooltip(`<strong>${t.name}</strong>`, {sticky:true,direction:'top',offset:[0,-4]});
+          lyr.on('click', e => { L.DomEvent.stopPropagation(e); showTerritoryInfo(t.id); });
+          lyr.on('mouseover', function() { this.setStyle({fillOpacity:0.85,weight:2.5}); this.bringToFront(); });
+          lyr.on('mouseout', function() { this.setStyle(overlayStyle(t.id)); });
+        }
+      }
+    ).addTo(map);
+    overlayLayers[t.id] = layer;
+  });
+}
+
+function overlayStyle(id) {
+  const t = TERRITORIES.find(x=>x.id===id);
+  const c = CTRL[t.steps[currentStep].ctrl];
+  return {fillColor:c.fill, color:c.stroke, weight:1.5, fillOpacity:0.68, opacity:1};
+}
+
+function updateOverlays() {
+  TERRITORIES.forEach(t => overlayLayers[t.id]?.setStyle(overlayStyle(t.id)));
+}
+
+/* ═══ INFO PANEL ══════════════════════════════════════════════════ */
+function showPanel({name, ctrl, status, info}) {
+  const c = CTRL[ctrl]||CTRL.neutral;
+  document.getElementById('info-name').textContent = name;
+  const b = document.getElementById('info-badge');
+  b.textContent = status; b.style.background = c.fill;
+  document.getElementById('info-text').textContent = info;
+  document.getElementById('info-panel').classList.add('visible');
+}
+
+function showTerritoryInfo(id) {
+  const t = TERRITORIES.find(x=>x.id===id); if (!t) return;
+  activeFeature = {type:'territory', id};
+  const s = t.steps[currentStep];
+  showPanel({name:t.name, ctrl:s.ctrl, status:s.status, info:s.info});
+}
+
+function showCountryInfo(ci) {
+  activeFeature = {type:'country', ci};
+  const s = ci.steps[currentStep];
+  showPanel({name:ci.name, ctrl:s.ctrl, status:s.status, info:s.info});
+}
+
+function hideInfo() {
+  activeFeature = null;
+  document.getElementById('info-panel').classList.remove('visible');
+}
+
+/* ═══ LEGEND ══════════════════════════════════════════════════════ */
+function updateLegend() {
+  const seen = new Map();
+  TERRITORIES.forEach(t => { const k=t.steps[currentStep].ctrl; if(!seen.has(k)) seen.set(k,CTRL[k]); });
+  const el = document.getElementById('legend-items');
+  el.innerHTML = '';
+  seen.forEach((c,k) => {
+    const d = document.createElement('div'); d.className='legend-item';
+    d.innerHTML=`<span class="legend-swatch" style="background:${c.fill}"></span><span>${c.name}</span>`;
+    el.appendChild(d);
+  });
+}
+
+/* ═══ TIMELINE ════════════════════════════════════════════════════ */
+function buildTimeline() {
+  const el = document.getElementById('timeline');
+  STEPS.forEach((s,i) => {
+    const btn = document.createElement('button');
+    btn.className='step-btn'+(i===0?' active':'');
+    btn.innerHTML=`<span class="yr">${s.year}</span><span class="lbl">${s.label}</span>`;
+    btn.addEventListener('click', ()=>setStep(i));
+    el.appendChild(btn);
+  });
+}
+
+/* ═══ SET STEP ════════════════════════════════════════════════════ */
+function setStep(i) {
+  currentStep = i;
+  document.querySelectorAll('.step-btn').forEach((b,idx)=>b.classList.toggle('active',idx===i));
+  document.getElementById('step-desc').textContent = STEPS[i].desc;
+  document.getElementById('prev-btn').disabled = i===0;
+  document.getElementById('next-btn').disabled = i===STEPS.length-1;
+  switchBaseLayer(STEPS[i].geojsonYear);
+  updateOverlays();
+  updateLegend();
+  if (activeFeature?.type==='territory') showTerritoryInfo(activeFeature.id);
+  if (activeFeature?.type==='country')   showCountryInfo(activeFeature.ci);
+}
+
+/* ═══ KEYBOARD ════════════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.target.tagName==='INPUT') return;
+  if (e.key==='ArrowRight' && currentStep<STEPS.length-1) setStep(currentStep+1);
+  if (e.key==='ArrowLeft'  && currentStep>0)              setStep(currentStep-1);
+  if (e.key==='Escape') hideInfo();
+});
+
+/* ═══ EVENTS ══════════════════════════════════════════════════════ */
+document.getElementById('info-close').addEventListener('click', hideInfo);
+document.getElementById('prev-btn').addEventListener('click', ()=>{ if(currentStep>0) setStep(currentStep-1); });
+document.getElementById('next-btn').addEventListener('click', ()=>{ if(currentStep<STEPS.length-1) setStep(currentStep+1); });
+
+/* ═══ BOOT ════════════════════════════════════════════════════════ */
+async function boot() {
+  buildTimeline(); initMap();
+  const msg = document.getElementById('loading-msg');
+  const err = document.getElementById('loading-error');
+  try {
+    msg.textContent = 'Hämtar 1914 års karta…';
+    const d1914 = await loadGeoJSON(1914);
+    baseLayer1914 = buildBaseLayer(d1914);
+
+    msg.textContent = 'Hämtar 1920 års karta…';
+    const d1920 = await loadGeoJSON(1920);
+    populateLookup(d1920); // bygg geometrilookup för overlays
+    baseLayer1920 = buildBaseLayer(d1920);
+
+    buildOverlays();
+    setStep(0);
+    document.getElementById('loading').classList.add('hidden');
+  } catch(e) {
+    console.error(e);
+    document.getElementById('loading-spinner').style.display='none';
+    msg.style.display='none';
+    err.style.display='block';
+    err.innerHTML=`<strong>Kunde inte ladda kartfilerna.</strong><br><br>Sidan måste öppnas från en webbserver, inte som lokal fil.<br>Ladda upp till GitHub Pages — det fungerar automatiskt.<br><br>Fel: ${e.message}`;
+  }
+}
+boot();
+</script>
+</body>
+</html>
