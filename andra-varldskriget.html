@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andra världskriget 1939–1945 · Interaktiv läromodul</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:            #080a05;
+            --bg-surface:    #10120c;
+            --bg-card:       #161810;
+            --bg-card-hover: #1d2016;
+            --border:        #252918;
+            --border-light:  #363b22;
+            --text-primary:  #e2d9bc;
+            --text-secondary:#938d74;
+            --text-dim:      #504e3e;
+            --gold:          #c4923a;
+            --gold-light:    #d4a84c;
+            --red:           #8b1a1a;
+            --red-bright:    #b03030;
+            --olive:         #445728;
+            --olive-light:   #607840;
+            --phase-1: #8b7040;
+            --phase-2: #8b1a1a;
+            --phase-3: #4a2870;
+            --phase-4: #b48a2e;
+            --phase-5: #2a6040;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: 'Libre Baskerville', Georgia, serif;
+            font-size: 16px;
+            line-height: 1.75;
+            background-image:
+                linear-gradient(rgba(196,146,58,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(196,146,58,0.03) 1px, transparent 1px);
+            background-size: 44px 44px;
+        }
+
+        /* ─── HERO ─────────────────────────────────────── */
+        .hero {
+            position: relative;
+            padding: 90px 24px 70px;
+            text-align: center;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% 0%, rgba(196,146,58,0.11) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 15% 90%, rgba(139,26,26,0.07) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .hero-eyebrow {
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 7px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-family: 'Special Elite', cursive;
+            font-size: clamp(2.4rem, 7vw, 5rem);
+            color: var(--text-primary);
+            line-height: 1.1;
+            text-shadow: 0 4px 40px rgba(196,146,58,0.25);
+            margin-bottom: 10px;
+        }
+        .hero-dates {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 300;
+            letter-spacing: 8px;
+            color: var(--text-secondary);
+            margin-bottom: 36px;
+        }
+        .hero-ornament {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            max-width: 360px;
+            margin: 0 auto 32px;
+        }
+        .hero-ornament::before, .hero-ornament::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to var(--dir, right), transparent, var(--gold));
+        }
+        .hero-ornament::after { --dir: left; }
+        .hero-ornament span { color: var(--gold); font-size: 18px; }
+        .hero-intro {
+            max-width: 640px;
+            margin: 0 auto;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        /* ─── STICKY NAV ────────────────────────────────── */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(8,10,5,0.94);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+        .sticky-nav ul {
+            display: flex;
+            list-style: none;
+            max-width: 860px;
+            margin: 0 auto;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .sticky-nav ul::-webkit-scrollbar { display: none; }
+        .sticky-nav a {
+            display: block;
+            padding: 15px 22px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .sticky-nav a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+        /* ─── SECTION LAYOUT ────────────────────────────── */
+        .section {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 72px 24px;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 52px;
+        }
+        .section-tag {
+            font-family: 'Oswald', sans-serif;
+            font-size: 9px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+        .section-title {
+            font-family: 'Special Elite', cursive;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            max-width: 460px;
+            margin: 0 auto;
+        }
+        .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+        /* ─── REVEAL ANIMATION ──────────────────────────── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ─── TIMELINE ──────────────────────────────────── */
+        .timeline-wrap {
+            position: relative;
+            padding-left: 44px;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 14px;
+            top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom,
+                var(--phase-1) 0%,
+                var(--phase-2) 25%,
+                var(--phase-3) 45%,
+                var(--phase-4) 65%,
+                var(--phase-5) 100%);
+            opacity: 0.6;
+        }
+        .tl-phase { margin-bottom: 6px; }
+        .tl-phase-hdr {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+            margin-left: -44px;
+        }
+        .phase-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            flex-shrink: 0;
+            background: var(--bg);
+        }
+        .phase-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+        .tl-event { position: relative; margin-bottom: 8px; }
+        .tl-event::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 17px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            background: var(--bg);
+            z-index: 1;
+        }
+        .tl-btn {
+            width: 100%;
+            text-align: left;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 3px solid;
+            border-radius: 3px;
+            padding: 14px 18px;
+            cursor: pointer;
+            color: inherit;
+            transition: background 0.2s;
+        }
+        .tl-btn:hover { background: var(--bg-card-hover); }
+        .tl-btn.open { background: var(--bg-card-hover); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+        .ev-date {
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            opacity: 0.65;
+            margin-bottom: 3px;
+        }
+        .ev-title {
+            font-family: 'Special Elite', cursive;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+        .tl-detail {
+            display: none;
+            padding: 16px 20px 18px;
+            background: rgba(255,255,255,0.018);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-left: 3px solid;
+            border-radius: 0 0 3px 3px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.85;
+            animation: slideDown 0.25s ease;
+        }
+        .tl-detail.open { display: block; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .ev-stat {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 4px 12px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.035);
+            font-family: 'Oswald', sans-serif;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        /* ─── FLIP CARDS ────────────────────────────────── */
+        .flip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 18px;
+        }
+        .flip-card {
+            height: 188px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flip-inner {
+            position: relative;
+            width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+        .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+        .flip-front, .flip-back {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            border-radius: 4px;
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .flip-front {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            align-items: center;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+        .flip-card:hover .flip-front { border-color: var(--border-light); }
+        .flip-back {
+            background: var(--bg-surface);
+            border: 1px solid var(--gold);
+            transform: rotateY(180deg);
+        }
+        .flip-icon { font-size: 28px; margin-bottom: 12px; }
+        .flip-term { font-family: 'Special Elite', cursive; font-size: 1.05rem; color: var(--text-primary); }
+        .flip-hint { font-family: 'Oswald', sans-serif; font-size: 9px; letter-spacing: 3px; color: var(--text-dim); margin-top: 10px; text-transform: uppercase; }
+        .flip-label { font-family: 'Oswald', sans-serif; font-size: 9px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; }
+        .flip-def { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.75; }
+
+        /* ─── STATS ─────────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+            gap: 14px;
+            margin-bottom: 52px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--red);
+            border-radius: 3px;
+            padding: 22px 18px;
+            text-align: center;
+        }
+        .stat-card.c-gold { border-top-color: var(--gold); }
+        .stat-card.c-olive { border-top-color: var(--olive-light); }
+        .stat-card.c-purple { border-top-color: #6a40a0; }
+        .stat-num {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .stat-unit { font-size: 1rem; color: var(--text-secondary); font-weight: 300; }
+        .stat-lbl {
+            font-family: 'Oswald', sans-serif;
+            font-size: 9px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .stat-note { font-size: 0.73rem; color: var(--text-dim); margin-top: 6px; font-style: italic; }
+
+        /* ─── BAR CHART ─────────────────────────────────── */
+        .chart-section { }
+        .chart-heading {
+            font-family: 'Special Elite', cursive;
+            font-size: 1.05rem;
+            margin-bottom: 28px;
+            color: var(--text-primary);
+        }
+        .bar-chart { display: flex; flex-direction: column; gap: 13px; }
+        .bar-row { display: grid; grid-template-columns: 130px 1fr 90px; align-items: center; gap: 14px; }
+        .bar-lbl { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 1px; text-align: right; color: var(--text-secondary); }
+        .bar-track { height: 26px; background: rgba(255,255,255,0.04); border-radius: 2px; overflow: hidden; }
+        .bar-fill { height: 100%; width: 0; border-radius: 2px; transition: width 1.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .bar-val { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 0.5px; color: var(--text-secondary); }
+
+        /* ─── QUIZ ──────────────────────────────────────── */
+        .quiz-shell {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .q-progress-bar { height: 3px; background: var(--border); }
+        .q-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--red-bright)); transition: width 0.4s ease; }
+        .q-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px 0;
+        }
+        .q-counter { font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--text-dim); }
+        .q-score { font-family: 'Oswald', sans-serif; font-size: 13px; color: var(--gold); }
+        .q-body { padding: 24px 24px 18px; }
+        .q-question { font-family: 'Special Elite', cursive; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 22px; line-height: 1.55; }
+        .q-options { display: flex; flex-direction: column; gap: 9px; }
+        .q-opt {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 13px 18px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            text-align: left;
+            width: 100%;
+            color: inherit;
+        }
+        .q-opt:hover:not(:disabled) { background: rgba(255,255,255,0.045); border-color: var(--border-light); }
+        .q-letter { font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 600; color: var(--gold); min-width: 16px; padding-top: 1px; flex-shrink: 0; }
+        .q-text { font-size: 0.9rem; color: var(--text-primary); line-height: 1.55; }
+        .q-opt.correct { border-color: var(--olive-light); background: rgba(74,92,42,0.2); }
+        .q-opt.wrong { border-color: var(--red); background: rgba(139,26,26,0.15); }
+        .q-opt.correct .q-letter { color: var(--olive-light); }
+        .q-opt.wrong .q-letter { color: var(--red-bright); }
+        .q-feedback {
+            display: none;
+            margin-top: 18px;
+            padding: 14px 18px;
+            border-radius: 3px;
+            font-size: 0.865rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+        .q-feedback.show { display: block; }
+        .q-feedback.fb-ok { background: rgba(74,92,42,0.13); border-left: 3px solid var(--olive-light); }
+        .q-feedback.fb-no { background: rgba(139,26,26,0.13); border-left: 3px solid var(--red-bright); }
+        .q-footer { display: flex; justify-content: flex-end; padding: 4px 24px 22px; }
+        .btn-next {
+            display: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 11px 26px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .btn-next.show { display: block; }
+        .btn-next:hover { background: var(--gold); color: var(--bg); }
+        .q-result {
+            display: none;
+            padding: 56px 24px 52px;
+            text-align: center;
+        }
+        .q-result.show { display: block; }
+        .r-score { font-family: 'Special Elite', cursive; font-size: 4.5rem; color: var(--gold); line-height: 1; margin-bottom: 6px; }
+        .r-lbl { font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 5px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 22px; }
+        .r-msg { font-size: 0.9rem; color: var(--text-secondary); font-style: italic; margin-bottom: 30px; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .btn-restart {
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 11px 26px;
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .btn-restart:hover { border-color: var(--gold); color: var(--gold); }
+
+
+        /* ─── QUOTE BLOCK ────────────────────────────── */
+        .ev-quote {
+            position: relative;
+            margin: 18px 0 4px;
+            padding: 14px 16px 14px 18px;
+            border-left: 2px solid;
+            background: rgba(255,255,255,0.022);
+            border-radius: 0 3px 3px 0;
+        }
+        .ev-quote-mark {
+            font-family: 'Special Elite', cursive;
+            font-size: 3.2rem;
+            line-height: 0.4;
+            opacity: 0.22;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .ev-quote-text {
+            font-family: 'Libre Baskerville', serif;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.75;
+            margin-bottom: 10px;
+        }
+        .ev-quote-attr {
+            font-family: 'Oswald', sans-serif;
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
+
+        /* ─── PLAYER CHIPS ───────────────────────────── */
+        .ev-players {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+        .ev-player {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 11px 5px 6px;
+            background: rgba(255,255,255,0.028);
+            border: 1px solid var(--border);
+            border-left: 2px solid;
+            border-radius: 100px;
+        }
+        .ev-player-avatar {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            background: rgba(255,255,255,0.055);
+            flex-shrink: 0;
+        }
+        .ev-player-info { display: flex; flex-direction: column; line-height: 1.25; }
+        .ev-player-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-primary);
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .ev-player-role {
+            font-family: 'Oswald', sans-serif;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            white-space: nowrap;
+        }
+
+        /* ─── FOOTER ────────────────────────────────────── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 28px 24px;
+            text-align: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        /* ─── RESPONSIVE ────────────────────────────────── */
+        @media (max-width: 580px) {
+            .bar-row { grid-template-columns: 80px 1fr 68px; gap: 8px; }
+            .bar-lbl { font-size: 10px; }
+            .flip-grid { grid-template-columns: 1fr 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .q-top { padding: 14px 16px 0; }
+            .q-body { padding: 18px 16px 14px; }
+            .q-footer { padding: 4px 16px 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════ HERO -->
+<header class="hero">
+    <p class="hero-eyebrow">Interaktiv läromodul &nbsp;·&nbsp; Historia 1b &amp; 2b</p>
+    <h1>Andra Världskriget</h1>
+    <p class="hero-dates">1 9 3 9 &nbsp;—&nbsp; 1 9 4 5</p>
+    <div class="hero-ornament"><span>✦</span></div>
+    <p class="hero-intro">Den mest destruktiva konflikten i mänsklighetens historia, ett krig som kostade uppemot 70 miljoner liv och omformade hela den politiska världsordningen.</p>
+</header>
+
+<!-- ══════════════════════════════════════════════════════ NAV -->
+<nav class="sticky-nav" aria-label="Modulnavigation">
+    <ul>
+        <li><a href="#tidslinje">⟐ Tidslinje</a></li>
+        <li><a href="#begrepp">◈ Nyckelbegrepp</a></li>
+        <li><a href="#statistik">◉ Statistik</a></li>
+        <li><a href="#quiz">✎ Quiz</a></li>
+    </ul>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════ TIDSLINJE -->
+<section id="tidslinje" class="section">
+    <div class="section-header reveal">
+        <p class="section-tag">Kronologi</p>
+        <h2 class="section-title">Krigets gång: Tidslinje</h2>
+        <p class="section-desc">Klicka på en händelse för att expandera och läsa mer. Tidslinjen är indelad i fem faser.</p>
+    </div>
+
+    <div class="timeline-wrap">
+        <div class="timeline-line"></div>
+
+        <!-- ── FAS I ────────────────────────── -->
+        <div class="tl-phase">
+            <div class="tl-phase-hdr">
+                <div class="phase-badge" style="color: var(--phase-1);">I</div>
+                <span class="phase-name" style="color: var(--phase-1);">Upptak &amp; Expansion &nbsp;·&nbsp; 1936–1939</span>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-1);">
+                <button class="tl-btn" style="border-left-color: var(--phase-1);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-1);">Mars 1936</div>
+                    <div class="ev-title">Remilitariseringen av Rhenlandet</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-1);">
+                    Tyska trupper marscherade in i det demilitariserade Rhenlandet i strid med Versaillesfördraget, ett enormt risktagande. Men Frankrike och Storbritanniens totala passivitet stärkte Hitlers övertygelse om att Västmakterna inte hade vilja att kämpa, och banade väg för ytterligare aggressioner.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">AH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Adolf Hitler</span>
+                            <span class="ev-player-role">Rikskansler</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">WB</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Werner von Blomberg</span>
+                            <span class="ev-player-role">Krigsminister</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-1);">
+                <button class="tl-btn" style="border-left-color: var(--phase-1);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-1);">Mars 1938</div>
+                    <div class="ev-title">Anschluss: annekteringen av Österrike</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-1);">
+                    Hitler tvingade fram en förening (<em>Anschluss</em>) mellan Nazityskland och Österrike. Åtgärden välkomnades av en stor del av den österrikiska befolkningen, och återigen uteblev all militär reaktion från Västmakterna.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">AH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Adolf Hitler</span>
+                            <span class="ev-player-role">Führer</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">AS</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Arthur Seyss-Inquart</span>
+                            <span class="ev-player-role">Österrikisk nazist</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-1);">
+                <button class="tl-btn" style="border-left-color: var(--phase-1);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-1);">September 1938</div>
+                    <div class="ev-title">Münchenöverenskommelsen &amp; Appeasement</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-1);">
+                    Vid konferensen i München gav Storbritanniens Chamberlain och Frankrikes Daladier efter för Hitlers krav på det tjeckiska Sudetlandet. Politiken kallas <em>appeasement</em>, att köpa fred genom eftergifter. Chamberlain återvände hem och lovade "fred i vår tid." Tjeckoslovakien fick inte ens delta i förhandlingarna.
+                    <span class="ev-stat" style="color: var(--phase-1);">☞ Nyckelbegrepp: Appeasement</span>
+                <div class="ev-quote" style="border-color: var(--phase-1); color: var(--phase-1);">
+                    <div class="ev-quote-mark">"</div>
+                    <p class="ev-quote-text">I believe it is peace for our time.</p>
+                    <div class="ev-quote-attr">Neville Chamberlain, 30 september 1938</div>
+                </div>
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">NC</div>
+                        <div class="ev-player-info"><span class="ev-player-name">Neville Chamberlain</span><span class="ev-player-role">Storbritanien</span></div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">ÉD</div>
+                        <div class="ev-player-info"><span class="ev-player-name">Édouard Daladier</span><span class="ev-player-role">Frankrike</span></div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">AH</div>
+                        <div class="ev-player-info"><span class="ev-player-name">Adolf Hitler</span><span class="ev-player-role">Nazityskland</span></div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">BM</div>
+                        <div class="ev-player-info"><span class="ev-player-name">Benito Mussolini</span><span class="ev-player-role">Italien</span></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-1);">
+                <button class="tl-btn" style="border-left-color: var(--phase-1);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-1);">Mars 1939</div>
+                    <div class="ev-title">Ockupationen av Tjeckoslovakien</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-1);">
+                    Trots löftena i München invaderade Tyskland resten av Tjeckoslovakien och annekterade även Memel-distriktet från Litauen. Det var nu uppenbart att appeasement-politiken hade misslyckats totalt.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">AH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Adolf Hitler</span>
+                            <span class="ev-player-role">Nazityskland</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">EH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Emil Hácha</span>
+                            <span class="ev-player-role">Tjeckiens president</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-1);">
+                <button class="tl-btn" style="border-left-color: var(--phase-1);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-1);">Augusti 1939</div>
+                    <div class="ev-title">Molotov-Ribbentrop-pakten</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-1);">
+                    De ideologiska dödsfienderna Nazityskland och Sovjetunionen undertecknade en icke-angreppspakt. I ett <em>hemligt protokoll</em> delade de upp Östeuropa i intressesfärer. Polen skulle delas, Baltikum gick till Sovjet. Pakten chockade världen och lade grunden för invasionen av Polen.
+                    <span class="ev-stat" style="color: var(--phase-1);">⚠ Det hemliga protokollet bekräftades inte officiellt förrän 1989</span>
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">VM</div>
+                        <div class="ev-player-info"><span class="ev-player-name">Vjatjeslav Molotov</span><span class="ev-player-role">Sovjet</span></div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">JR</div>
+                        <div class="ev-player-info"><span class="ev-player-name">Joachim von Ribbentrop</span><span class="ev-player-role">Nazityskland</span></div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-1);">
+                        <div class="ev-player-avatar" style="color: var(--phase-1);">JS</div>
+                        <div class="ev-player-info"><span class="ev-player-name">Josef Stalin</span><span class="ev-player-role">I bakgrunden</span></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── FAS II ───────────────────────── -->
+        <div class="tl-phase">
+            <div class="tl-phase-hdr">
+                <div class="phase-badge" style="color: var(--phase-2);">II</div>
+                <span class="phase-name" style="color: var(--phase-2);">Tyska Offensiver &nbsp;·&nbsp; 1939–1940</span>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-2);">
+                <button class="tl-btn" style="border-left-color: var(--phase-2);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-2);">1 september 1939</div>
+                    <div class="ev-title">Invasionen av Polen: kriget börjar</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-2);">
+                    Kriget inleddes med ett tyskt blixtanfall mot Polen. Två dagar senare förklarade Storbritannien och Frankrike krig mot Tyskland. Polska försvaret kollapsade snabbt under kombinerat tryck från väst (Tyskland) och öst (Sovjet, 17 september). Redan under de första fem veckorna avrättades minst 16 000 polska civila av tyska styrkor.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-2);">
+                        <div class="ev-player-avatar" style="color: var(--phase-2);">AH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Adolf Hitler</span>
+                            <span class="ev-player-role">Överbefälhavare</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-2);">
+                        <div class="ev-player-avatar" style="color: var(--phase-2);">WB</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Walther von Brauchitsch</span>
+                            <span class="ev-player-role">Wehrmacht</span>
+                        </div>
+                    </div>
+                </div>
+                    <span class="ev-stat" style="color: var(--phase-2);">☠ 16 000+ civila avrättade inom de fem första veckorna</span>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-2);">
+                <button class="tl-btn" style="border-left-color: var(--phase-2);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-2);">April 1940</div>
+                    <div class="ev-title">Danmark och Norge faller</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-2);">
+                    Tyskland invaderade Skandinavien för att säkra de livsviktiga järnmalmstransporterna från Sverige och kontrollera strategiska hamnlägen mot Atlanten. Danmark kapitulerade utan strid på en enda dag; i Norge fortsatte ett utdraget motstånd med brittiskt stöd.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-2);">
+                        <div class="ev-player-avatar" style="color: var(--phase-2);">AH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Adolf Hitler</span>
+                            <span class="ev-player-role">Överbefälhavare</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-2);">
+                        <div class="ev-player-avatar" style="color: var(--phase-2);">NF</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Nikolaus von Falkenhorst</span>
+                            <span class="ev-player-role">Norgeoperationen</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-2);">
+                <button class="tl-btn" style="border-left-color: var(--phase-2);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-2);">Maj–Juni 1940</div>
+                    <div class="ev-title">Västfrontens kollaps &amp; Dunkirk</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-2);">
+                    Tyska pansarförband slog till via Ardennerna och kringgick Maginotlinjen totalt. Belgien, Nederländerna och Luxemburg föll på dagar. Den brittiska expeditionskåren trängdes in mot havet vid Dunkirk, där en dramatisk evakuering (Operation Dynamo) som räddade över 300 000 soldater med hjälp av civila och militära fartyg. Frankrike begärde vapenstillestånd i juni.
+                <div class="ev-quote" style="border-color: var(--phase-2); color: var(--phase-2);">
+                    <div class="ev-quote-mark">"</div>
+                    <p class="ev-quote-text">We shall fight on the beaches, we shall fight on the landing grounds, we shall never surrender.</p>
+                    <div class="ev-quote-attr">Winston Churchill, Underhuset, 4 juni 1940</div>
+                </div>
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-2);">
+                        <div class="ev-player-avatar" style="color: var(--phase-2);">WC</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Winston Churchill</span>
+                            <span class="ev-player-role">Premiärminister</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-2);">
+                        <div class="ev-player-avatar" style="color: var(--phase-2);">GG</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">General Lord Gort</span>
+                            <span class="ev-player-role">Brittiska expeditionskåren</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-2);">
+                        <div class="ev-player-avatar" style="color: var(--phase-2);">AH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Adolf Hitler</span>
+                            <span class="ev-player-role">Stopporder vid Dunkirk</span>
+                        </div>
+                    </div>
+                </div>
+                    <span class="ev-stat" style="color: var(--phase-2);">⚓ 300 000+ soldater evakuerade vid Dunkirk</span>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-2);">
+                <button class="tl-btn" style="border-left-color: var(--phase-2);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-2);">1940–1941</div>
+                    <div class="ev-title">Slaget om Storbritannien: The Blitz</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-2);">
+                    Luftwaffe inledde massiva flyganfall för att tvinga ned brittisk krigsmoral och förbereda en invasion. Det brittiska flygvapnet RAF kämpade emot i vad som kom att kallas "The Few." Invasionsplanerna skrinlades, men de tyska bombningarna av städer, The Blitz, dödade över 40 000 brittiska civila.
+                <div class="ev-quote" style="border-color: var(--phase-2); color: var(--phase-2);">
+                    <div class="ev-quote-mark">"</div>
+                    <p class="ev-quote-text">Never in the field of human conflict was so much owed by so many to so few.</p>
+                    <div class="ev-quote-attr">Winston Churchill, Underhuset, 20 augusti 1940</div>
+                </div>
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-2);">
+                        <div class="ev-player-avatar" style="color: var(--phase-2);">WC</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Winston Churchill</span>
+                            <span class="ev-player-role">Premiärminister</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-2);">
+                        <div class="ev-player-avatar" style="color: var(--phase-2);">HD</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Hugh Dowding</span>
+                            <span class="ev-player-role">RAF-befälhavare</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-2);">
+                        <div class="ev-player-avatar" style="color: var(--phase-2);">HG</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Hermann Göring</span>
+                            <span class="ev-player-role">Luftwaffe-chef</span>
+                        </div>
+                    </div>
+                </div>
+                    <span class="ev-stat" style="color: var(--phase-2);">✈ 40 000+ brittiska civila döda under The Blitz</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── FAS III ──────────────────────── -->
+        <div class="tl-phase">
+            <div class="tl-phase-hdr">
+                <div class="phase-badge" style="color: var(--phase-3);">III</div>
+                <span class="phase-name" style="color: var(--phase-3);">Globalt Krig &nbsp;·&nbsp; 1941–1942</span>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-3);">
+                <button class="tl-btn" style="border-left-color: var(--phase-3);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-3);">22 juni 1941</div>
+                    <div class="ev-title">Operation Barbarossa: invasionen av Sovjet</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-3);">
+                    Hitler bröt icke-angreppspakten och inledde den största militäroperationen i historien mot Sovjetunionen. Målet var att erövra <em>Lebensraum</em> (livsrum för det tyska folket) och utrota det som nazisterna kallade "judeobolsjevismen." Redan dag ett förstördes 1 200 sovjetiska flygplan. Under de tre första månaderna led Sovjet förluster på 2,5 miljoner soldater i döda, sårade eller tillfångatagna.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-3);">
+                        <div class="ev-player-avatar" style="color: var(--phase-3);">AH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Adolf Hitler</span>
+                            <span class="ev-player-role">Överbefälhavare</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-3);">
+                        <div class="ev-player-avatar" style="color: var(--phase-3);">HG</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Heinz Guderian</span>
+                            <span class="ev-player-role">Pansartrupper</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-3);">
+                        <div class="ev-player-avatar" style="color: var(--phase-3);">JS</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Josef Stalin</span>
+                            <span class="ev-player-role">Röda armén</span>
+                        </div>
+                    </div>
+                </div>
+                    <span class="ev-stat" style="color: var(--phase-3);">✈ 1 200 sovjet-flygplan förstörda, dag ett &nbsp;|&nbsp; 2,5 milj förluster på tre månader</span>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-3);">
+                <button class="tl-btn" style="border-left-color: var(--phase-3);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-3);">7 december 1941</div>
+                    <div class="ev-title">Pearl Harbor: USA inträder i kriget</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-3);">
+                    Japan genomförde ett överraskningsanfall mot den amerikanska flottbasen Pearl Harbor på Hawaii. 2 403 amerikaner dog och 188 flygplan förstördes. Dagen efter förklarade USA krig mot Japan, och kriget blev definitvt globalt. President Roosevelt beskrev det som "ett datum som skall leva i vanära."
+                <div class="ev-quote" style="border-color: var(--phase-3); color: var(--phase-3);">
+                    <div class="ev-quote-mark">"</div>
+                    <p class="ev-quote-text">A date which will live in infamy.</p>
+                    <div class="ev-quote-attr">Franklin D. Roosevelt, Kongressen, 8 december 1941</div>
+                </div>
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-3);">
+                        <div class="ev-player-avatar" style="color: var(--phase-3);">FR</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Franklin D. Roosevelt</span>
+                            <span class="ev-player-role">President</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-3);">
+                        <div class="ev-player-avatar" style="color: var(--phase-3);">IY</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Isoroku Yamamoto</span>
+                            <span class="ev-player-role">Japansk flotta</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-3);">
+                        <div class="ev-player-avatar" style="color: var(--phase-3);">HK</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Husband Kimmel</span>
+                            <span class="ev-player-role">Pearl Harbors försvar</span>
+                        </div>
+                    </div>
+                </div>
+                    <span class="ev-stat" style="color: var(--phase-3);">☠ 2 403 amerikaner döda &nbsp;·&nbsp; 188 flygplan förstörda</span>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-3);">
+                <button class="tl-btn" style="border-left-color: var(--phase-3);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-3);">1941–1945 (pågående)</div>
+                    <div class="ev-title">Förintelsen</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-3);">
+                    Under kriget genomförde nazisterna ett systematiskt och industriellt folkmord på uppskattningsvis 6 miljoner judar, samt hundratusentals romer, homosexuella och personer med funktionsnedsättning. I dödslägret Auschwitz-Birkenau i Polen mördades ensamt över 1 miljon människor. Förintelsen är ett av historiens absolut mörkaste kapitel.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-3);">
+                        <div class="ev-player-avatar" style="color: var(--phase-3);">HH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Heinrich Himmler</span>
+                            <span class="ev-player-role">SS-ledare</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-3);">
+                        <div class="ev-player-avatar" style="color: var(--phase-3);">AE</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Adolf Eichmann</span>
+                            <span class="ev-player-role">Deportationslogistik</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-3);">
+                        <div class="ev-player-avatar" style="color: var(--phase-3);">RH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Rudolf Höss</span>
+                            <span class="ev-player-role">Auschwitz-kommendant</span>
+                        </div>
+                    </div>
+                </div>
+                    <span class="ev-stat" style="color: var(--phase-3);">☠ ~6 miljoner judar mördade &nbsp;·&nbsp; 1 miljon+ i Auschwitz-Birkenau</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── FAS IV ───────────────────────── -->
+        <div class="tl-phase">
+            <div class="tl-phase-hdr">
+                <div class="phase-badge" style="color: var(--phase-4);">IV</div>
+                <span class="phase-name" style="color: var(--phase-4);">Vändpunkterna &nbsp;·&nbsp; 1942–1943</span>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-4);">
+                <button class="tl-btn" style="border-left-color: var(--phase-4);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-4);">Juni 1942</div>
+                    <div class="ev-title">Slaget vid Midway: Japans dominans bryts</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-4);">
+                    I Stilla havet lyckades USA, delvis tack vare knäckta japanska koder, sänka fyra japanska hangarfartyg. Japan hade inte resurser att ersätta dem. Midway markerade en definitiv vändpunkt och dominansen i Stilla havet gick därefter till de allierades fördel.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-4);">
+                        <div class="ev-player-avatar" style="color: var(--phase-4);">CN</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Chester Nimitz</span>
+                            <span class="ev-player-role">Stillahavets flotta</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-4);">
+                        <div class="ev-player-avatar" style="color: var(--phase-4);">IY</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Isoroku Yamamoto</span>
+                            <span class="ev-player-role">Japansk flotta</span>
+                        </div>
+                    </div>
+                </div>
+                    <span class="ev-stat" style="color: var(--phase-4);">⚓ 4 japanska hangarfartyg sänkta</span>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-4);">
+                <button class="tl-btn" style="border-left-color: var(--phase-4);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-4);">Oktober–November 1942</div>
+                    <div class="ev-title">El Alamein: hotet mot Suezkanalen upphör</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-4);">
+                    Brittiska styrkor under general Montgomery besegrade Rommels Afrikakår i Nordafrika. Segern stoppade det tyska hotet mot Suezkanalen och Mellanösterns oljekällor, strategiskt avgörande för de allierades krigsföring.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-4);">
+                        <div class="ev-player-avatar" style="color: var(--phase-4);">BM</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Bernard Montgomery</span>
+                            <span class="ev-player-role">8:e armén</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-4);">
+                        <div class="ev-player-avatar" style="color: var(--phase-4);">ER</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Erwin Rommel</span>
+                            <span class="ev-player-role">Afrikakåren</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-4);">
+                <button class="tl-btn" style="border-left-color: var(--phase-4);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-4);">Sept 1942–Feb 1943</div>
+                    <div class="ev-title">Stalingrad: det blodigaste slaget i historien</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-4);">
+                    Den tyska 6:e armén omringades av de sovjetiska Operation Uranus. Hitler förbjöd varje återtåg. Armén svalt, frös och slogs i ruinerna av Stalingrad. I februari 1943 kapitulerade fältmarskalk Paulus med resterande styrkor. Tyskland förlorade totalt över 300 000 man. Stalingrad markerade en definitiv psykologisk och militär vändpunkt: det stod nu klart att Nazityskland befann sig i reträtt.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-4);">
+                        <div class="ev-player-avatar" style="color: var(--phase-4);">FP</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Friedrich Paulus</span>
+                            <span class="ev-player-role">6:e armén</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-4);">
+                        <div class="ev-player-avatar" style="color: var(--phase-4);">GZ</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Georgy Zhukov</span>
+                            <span class="ev-player-role">Röda armén</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-4);">
+                        <div class="ev-player-avatar" style="color: var(--phase-4);">AH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Adolf Hitler</span>
+                            <span class="ev-player-role">Förbjöd återtåg</span>
+                        </div>
+                    </div>
+                </div>
+                    <span class="ev-stat" style="color: var(--phase-4);">☠ 300 000+ tyska soldater: döda, sårade eller tillfångatagna</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── FAS V ────────────────────────── -->
+        <div class="tl-phase">
+            <div class="tl-phase-hdr">
+                <div class="phase-badge" style="color: var(--phase-5);">V</div>
+                <span class="phase-name" style="color: var(--phase-5);">Slutfas &amp; Seger &nbsp;·&nbsp; 1944–1945</span>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-5);">
+                <button class="tl-btn" style="border-left-color: var(--phase-5);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-5);">6 juni 1944</div>
+                    <div class="ev-title">D-dagen: Landstigningen i Normandie</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-5);">
+                    Den 6 juni 1944 genomfördes den största amfibiska landstigningsoperationen i historien längs Normandies kuster. Mer än 156 000 allierade soldater landsattes på fem stränder under massivt tyskt motstånd. Operationen öppnade en andra front i Europa och inledde den långa marschen österut mot Berlin.
+                <div class="ev-quote" style="border-color: var(--phase-5); color: var(--phase-5);">
+                    <div class="ev-quote-mark">"</div>
+                    <p class="ev-quote-text">The eyes of the world are upon you.</p>
+                    <div class="ev-quote-attr">Dwight D. Eisenhower, Order of the Day, 6 juni 1944</div>
+                </div>
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">DE</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Dwight D. Eisenhower</span>
+                            <span class="ev-player-role">Överbefälhavare</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">BM</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Bernard Montgomery</span>
+                            <span class="ev-player-role">Markstyrkor</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">ER</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Erwin Rommel</span>
+                            <span class="ev-player-role">Atlantvallen</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-5);">
+                <button class="tl-btn" style="border-left-color: var(--phase-5);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-5);">April–Maj 1945</div>
+                    <div class="ev-title">Berlins fall &amp; Tysklands villkorslösa kapitulation</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-5);">
+                    Sovjetiska trupper intog Berlin i maj 1945 efter intensiva stadsstrider. Hitler begick självmord i sin bunker den 30 april. Nazityskland undertecknade den villkorslösa kapitulationen den 7 maj 1945. Kriget i Europa var slut. VE-Day firades den 8 maj.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">GZ</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Georg Zhukov</span>
+                            <span class="ev-player-role">Röda armén</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">AH</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Adolf Hitler</span>
+                            <span class="ev-player-role">Bunker, Berlin</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">JG</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Joseph Goebbels</span>
+                            <span class="ev-player-role">Propaganda</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-5);">
+                <button class="tl-btn" style="border-left-color: var(--phase-5);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-5);">6 &amp; 9 Augusti 1945</div>
+                    <div class="ev-title">Atombomberna: Hiroshima &amp; Nagasaki</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-5);">
+                    President Truman beordrade användandet av de nya kärnvapnen för att tvinga Japan till snabb kapitulation och undvika en kostsam landinvasion. Den 6 augusti fällde B-29:an <em>Enola Gay</em> bomben "Little Boy" över Hiroshima. Ca 100 000 dog omedelbart och 60 % av staden utplånades. Den 9 augusti föll "Fat Man" över Nagasaki och dödade minst 35 000 direkt.
+                <div class="ev-quote" style="border-color: var(--phase-5); color: var(--phase-5);">
+                    <div class="ev-quote-mark">"</div>
+                    <p class="ev-quote-text">Now I am become Death, the destroyer of worlds.</p>
+                    <div class="ev-quote-attr">J. Robert Oppenheimer, vid Trinity-testet, juli 1945</div>
+                </div>
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">HT</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Harry S. Truman</span>
+                            <span class="ev-player-role">President</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">PT</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Paul Tibbets</span>
+                            <span class="ev-player-role">Enola Gay-pilot</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">H</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Hirohito</span>
+                            <span class="ev-player-role">Japansk kejsare</span>
+                        </div>
+                    </div>
+                </div>
+                    <span class="ev-stat" style="color: var(--phase-5);">☢ ~100 000 döda i Hiroshima &nbsp;·&nbsp; ~35 000 i Nagasaki</span>
+                </div>
+            </div>
+
+            <div class="tl-event" style="color: var(--phase-5);">
+                <button class="tl-btn" style="border-left-color: var(--phase-5);" onclick="toggleTl(this)">
+                    <div class="ev-date" style="color: var(--phase-5);">2 september 1945</div>
+                    <div class="ev-title">Japans kapitulation: krigets officiella slut</div>
+                </button>
+                <div class="tl-detail" style="border-left-color: var(--phase-5);">
+                    Kejsar Hirohito tillkännagav Japans kapitulation via radio den 15 augusti. Den formella, villkorslösa kapitulationen undertecknades den 2 september 1945 ombord på det amerikanska slagskeppet <em>USS Missouri</em> i Tokyobukten. Andra världskriget var officiellt slut.
+                <div class="ev-players">
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">DM</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Douglas MacArthur</span>
+                            <span class="ev-player-role">Överbefälhavare</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">H</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Hirohito</span>
+                            <span class="ev-player-role">Japansk kejsare</span>
+                        </div>
+                    </div>
+                    <div class="ev-player" style="border-left-color: var(--phase-5);">
+                        <div class="ev-player-avatar" style="color: var(--phase-5);">MS</div>
+                        <div class="ev-player-info">
+                            <span class="ev-player-name">Mamoru Shigemitsu</span>
+                            <span class="ev-player-role">Utrikesminister</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════════════════ FLIP CARDS -->
+<section id="begrepp" class="section">
+    <div class="section-header reveal">
+        <p class="section-tag">Begrepp</p>
+        <h2 class="section-title">Nyckelbegrepp</h2>
+        <p class="section-desc">Klicka på ett kort för att avslöja definitionen.</p>
+    </div>
+
+    <div class="flip-grid">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')" tabindex="0" role="button" aria-label="Blixtkrig - klicka för definition">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    <div class="flip-icon">⚡</div>
+                    <div class="flip-term">Blitzkrieg</div>
+                    <div class="flip-hint">Klicka för definition</div>
+                </div>
+                <div class="flip-back">
+                    <div class="flip-label">Militär taktik</div>
+                    <div class="flip-def">"Blixtkriget", en tysk militärdoktrin baserad på extremt snabba, samordnade anfall med pansarfordon, infanteri och flyg. Syftade till att bryta fiendens försvar innan det hann reorganisera sig.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-card" onclick="this.classList.toggle('flipped')" tabindex="0" role="button" aria-label="Appeasement - klicka för definition">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    <div class="flip-icon">🕊️</div>
+                    <div class="flip-term">Appeasement</div>
+                    <div class="flip-hint">Klicka för definition</div>
+                </div>
+                <div class="flip-back">
+                    <div class="flip-label">Utrikespolitik</div>
+                    <div class="flip-def">Strategin att göra eftergifter till en aggressiv stat för att undvika konflikt. Förknippas med Münchenavtalet 1938, då Britain och Frankrike gav Hitler Sudetlandet i utbyte mot ett tomt fredslofte.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-card" onclick="this.classList.toggle('flipped')" tabindex="0" role="button" aria-label="Förintelsen - klicka för definition">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    <div class="flip-icon">🕯️</div>
+                    <div class="flip-term">Förintelsen</div>
+                    <div class="flip-hint">Klicka för definition</div>
+                </div>
+                <div class="flip-back">
+                    <div class="flip-label">Folkmord</div>
+                    <div class="flip-def">Nazisternas systematiska och industrialiserade folkmord på ca 6 miljoner judar samt hundratusentals romer, homosexuella och funktionsnedsatta under krigsåren 1941–1945.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-card" onclick="this.classList.toggle('flipped')" tabindex="0" role="button" aria-label="Lebensraum - klicka för definition">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    <div class="flip-icon">🗺️</div>
+                    <div class="flip-term">Lebensraum</div>
+                    <div class="flip-hint">Klicka för definition</div>
+                </div>
+                <div class="flip-back">
+                    <div class="flip-label">Nazistisk ideologi</div>
+                    <div class="flip-def">"Livsrum": en central nazistisk idé om att det tyska folket behövde erövra territorium i öst (framför allt Sovjet) för sin expansion och rasliga överlevnad. Var ett av de viktigaste motiven bakom Operation Barbarossa.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-card" onclick="this.classList.toggle('flipped')" tabindex="0" role="button" aria-label="Molotov-Ribbentrop-pakten - klicka för definition">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    <div class="flip-icon">🤝</div>
+                    <div class="flip-term">Molotov–Ribbentrop</div>
+                    <div class="flip-hint">Klicka för definition</div>
+                </div>
+                <div class="flip-back">
+                    <div class="flip-label">Diplomatisk pakt · 1939</div>
+                    <div class="flip-def">Icke-angreppspakten 1939 mellan Nazityskland och Sovjet. Innehöll ett hemligt protokoll som delade upp Polen och Östeuropa i intressesfärer, ett av historiens mest cyniska diplomatiska avtal.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-card" onclick="this.classList.toggle('flipped')" tabindex="0" role="button" aria-label="Operation Barbarossa - klicka för definition">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    <div class="flip-icon">🛡️</div>
+                    <div class="flip-term">Operation Barbarossa</div>
+                    <div class="flip-hint">Klicka för definition</div>
+                </div>
+                <div class="flip-back">
+                    <div class="flip-label">Militär operation · 1941</div>
+                    <div class="flip-def">Den tyska invasionen av Sovjet startad 22 juni 1941, den största militäroperationen i historien. Tre miljoner tyska soldater angrep längs en 2 900 km lång front. Brottet mot pakten med Stalin förändrade krigets karaktär totalt.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════════════════ STATISTIK -->
+<section id="statistik" class="section">
+    <div class="section-header reveal">
+        <p class="section-tag">Mänskliga kostnaden</p>
+        <h2 class="section-title">Siffror ur mörkret</h2>
+        <p class="section-desc">Andra världskriget krävde fler liv än någon annan konflikt i mänsklighetens historia.</p>
+    </div>
+
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card c-olive">
+            <div class="stat-num"><span class="count" data-target="70">0</span><span class="stat-unit"> milj</span></div>
+            <div class="stat-lbl">Totalt döda (uppskattning)</div>
+            <div class="stat-note">Varav ca hälften civila</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num"><span class="count" data-target="25">0</span><span class="stat-unit"> milj</span></div>
+            <div class="stat-lbl">Sovjet: störst förlust</div>
+            <div class="stat-note">~16 milj civila</div>
+        </div>
+        <div class="stat-card c-purple">
+            <div class="stat-num"><span class="count" data-target="6">0</span><span class="stat-unit"> milj</span></div>
+            <div class="stat-lbl">Judar (Förintelsen)</div>
+            <div class="stat-note">1 miljon+ i Auschwitz ensamt</div>
+        </div>
+        <div class="stat-card c-gold">
+            <div class="stat-num"><span class="count" data-target="100">0</span><span class="stat-unit"> 000</span></div>
+            <div class="stat-lbl">Hiroshima: omedelbart döda</div>
+            <div class="stat-note">60% av staden utplånades</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num"><span class="count" data-target="2403">0</span></div>
+            <div class="stat-lbl">Pearl Harbor: döda</div>
+            <div class="stat-note">7 december 1941</div>
+        </div>
+        <div class="stat-card c-olive">
+            <div class="stat-num"><span class="count" data-target="300">0</span><span class="stat-unit"> 000</span></div>
+            <div class="stat-lbl">Dunkirk: räddade soldater</div>
+            <div class="stat-note">Operation Dynamo, 1940</div>
+        </div>
+    </div>
+
+    <div class="chart-section reveal">
+        <p class="chart-heading">Dödstal per land / grupp, uppskattning i miljoner</p>
+        <div class="bar-chart" id="barChart">
+            <div class="bar-row">
+                <div class="bar-lbl">Sovjet</div>
+                <div class="bar-track"><div class="bar-fill" data-pct="96" style="background: linear-gradient(90deg, #6a1010, #b03030);"></div></div>
+                <div class="bar-val">~25 milj</div>
+            </div>
+            <div class="bar-row">
+                <div class="bar-lbl">Kina</div>
+                <div class="bar-track"><div class="bar-fill" data-pct="77" style="background: linear-gradient(90deg, #5a2a10, #8b4020);"></div></div>
+                <div class="bar-val">~20 milj</div>
+            </div>
+            <div class="bar-row">
+                <div class="bar-lbl">Polen</div>
+                <div class="bar-track"><div class="bar-fill" data-pct="23" style="background: linear-gradient(90deg, #3a2460, #5a3880);"></div></div>
+                <div class="bar-val">~6 milj</div>
+            </div>
+            <div class="bar-row">
+                <div class="bar-lbl">Förintelsen</div>
+                <div class="bar-track"><div class="bar-fill" data-pct="23" style="background: linear-gradient(90deg, #2a1818, #4a2828);"></div></div>
+                <div class="bar-val">~6 milj</div>
+            </div>
+            <div class="bar-row">
+                <div class="bar-lbl">Tyskland</div>
+                <div class="bar-track"><div class="bar-fill" data-pct="25" style="background: linear-gradient(90deg, #5a4a20, #8a7430);"></div></div>
+                <div class="bar-val">~6,6 milj</div>
+            </div>
+            <div class="bar-row">
+                <div class="bar-lbl">USA</div>
+                <div class="bar-track"><div class="bar-fill" data-pct="2" style="background: linear-gradient(90deg, var(--olive), var(--olive-light));"></div></div>
+                <div class="bar-val">~0,4 milj</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════════════════ QUIZ -->
+<section id="quiz" class="section">
+    <div class="section-header reveal">
+        <p class="section-tag">Självtest</p>
+        <h2 class="section-title">Diagnostisk Quiz</h2>
+        <p class="section-desc">Välj det alternativ du anser stämmer. Direkt feedback förklarar varför varje alternativ är rätt eller fel.</p>
+    </div>
+
+    <div class="quiz-shell">
+        <div class="q-progress-bar">
+            <div class="q-progress-fill" id="qProgress" style="width:0%"></div>
+        </div>
+        <div class="q-top">
+            <span class="q-counter" id="qCounter">Fråga 1 av 6</span>
+            <span class="q-score" id="qScore">Poäng: 0</span>
+        </div>
+        <div class="q-body" id="qBody"><!-- rendered by JS --></div>
+        <div class="q-footer">
+            <button class="btn-next" id="btnNext" onclick="nextQ()">Nästa fråga →</button>
+        </div>
+        <div class="q-result" id="qResult">
+            <div class="r-score" id="rScore">0/6</div>
+            <div class="r-lbl">Resultat</div>
+            <div class="r-msg" id="rMsg"></div>
+            <button class="btn-restart" onclick="restartQuiz()">↺ Gör om quizzen</button>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>Interaktiv läromodul &nbsp;·&nbsp; Historia 1b &amp; 2b &nbsp;·&nbsp; Andra Världskriget 1939–1945</p>
+</footer>
+
+<script>
+/* ─── TIMELINE TOGGLE ────────────────────────────────── */
+function toggleTl(btn) {
+    const detail = btn.nextElementSibling;
+    const isOpen = detail.classList.contains('open');
+    document.querySelectorAll('.tl-detail.open').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.tl-btn.open').forEach(b => b.classList.remove('open'));
+    if (!isOpen) {
+        detail.classList.add('open');
+        btn.classList.add('open');
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+/* ─── SCROLL REVEAL ──────────────────────────────────── */
+const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+/* ─── FLIP CARDS: keyboard support ──────────────────── */
+document.querySelectorAll('.flip-card').forEach(card => {
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.classList.toggle('flipped'); } });
+});
+
+/* ─── COUNT-UP ANIMATION ─────────────────────────────── */
+function animateCount(el) {
+    const target = parseInt(el.dataset.target, 10);
+    const dur = 1800;
+    const t0 = performance.now();
+    function step(now) {
+        const p = Math.min((now - t0) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * ease).toLocaleString('sv-SE');
+        if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+const statObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.querySelectorAll('.count').forEach(animateCount);
+            statObs.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.3 });
+const sg = document.getElementById('statsGrid');
+if (sg) statObs.observe(sg);
+
+/* ─── BAR CHART ANIMATION ────────────────────────────── */
+const chartObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.querySelectorAll('.bar-fill').forEach((bar, i) => {
+                setTimeout(() => { bar.style.width = bar.dataset.pct + '%'; }, i * 160);
+            });
+            chartObs.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.2 });
+const bc = document.getElementById('barChart');
+if (bc) chartObs.observe(bc);
+
+/* ─── QUIZ ───────────────────────────────────────────── */
+const QUESTIONS = [
+    {
+        q: "Vad var det primära syftet med Molotov-Ribbentrop-pakten (1939)?",
+        opts: [
+            "Att gemensamt planera en invasion av Frankrike",
+            "Att dela upp Östeuropa i tyska och sovjetiska intressesfärer",
+            "Att bilda ett militärt allianssystem riktat mot Storbritannien",
+            "Att lösa gränstvisten om Danzig via diplomati"
+        ],
+        correct: 1,
+        fb: {
+            ok: "Rätt! Paktens hemliga protokoll delade upp Polen och resten av Östeuropa mellan de två makterna, vilket banade direkt väg för invasionen av Polen i september 1939.",
+            no: [
+                "Fel. Pakten handlade inte om ett gemensamt anfall mot Frankrike. Kärnan var uppdelningen av Östeuropa. Frankrike anfölls inte förrän 1940.",
+                "Fel. Det var faktiskt tvärtom: pakten slöts mellan Nazityskland och Sovjet, och var en icke-angreppspakt dem emellan, inte ett allianssystem mot Sovjet.",
+                "Fel. Danzig var ett separat diplomatiskt problem. Paktens hemliga protokoll handlade om uppdelningen av hela Östeuropa i intressesfärer, inte om Danzig specifikt."
+            ]
+        }
+    },
+    {
+        q: "Varför mötte Hitlers remilitarisering av Rhenlandet (1936) inget militärt motstånd?",
+        opts: [
+            "Frankrike saknade militär kapacitet att ingripa",
+            "Befolkningen i Rhenlandet välkomnade aktivt de tyska trupperna",
+            "Nationernas förbund hade godkänt åtgärden i förväg",
+            "Frankrike och Storbritannien valde politiskt att inte reagera militärt"
+        ],
+        correct: 3,
+        fb: {
+            ok: "Rätt! Det var ett politiskt val, inte militär oförmåga. Frankrike hade kapacitet att agera men valde appeasement. Hitlers övertygelse om att Västmakterna saknade vilja att kämpa stärktes dramatiskt.",
+            no: [
+                "Fel. Frankrike hade faktiskt militär överlägsenhet 1936. Det handlade om ett politiskt beslut att inte ingripa, inte på grund av brist på militär förmåga.",
+                "Delvis missvisande. Visst fanns det stöd i Rhenlandet, men den avgörande faktorn för det uteblivna motståndet var ett politiskt beslut i Paris och London, inte den lokala befolkningens reaktion.",
+                "Fel. Nationernas förbund godkände inte åtgärden. Remilitariseringen bröt mot Versaillesfördraget och Locarnofördraget."
+            ]
+        }
+    },
+    {
+        q: "Vilket slag markerade den definitiva vändpunkten i Stilla havet och bröt Japans marinala dominans?",
+        opts: [
+            "Striderna om Iwo Jima (1945)",
+            "Anfallet mot Pearl Harbor (1941)",
+            "Slaget vid Midway (1942)",
+            "Invasionen av Okinawa (1945)"
+        ],
+        correct: 2,
+        fb: {
+            ok: "Rätt! Vid Midway i juni 1942 sänkte USA fyra japanska hangarfartyg. Japan hade inte resurser att ersätta dem, och dominansen i Stilla havet gick permanent till de allierades fördel.",
+            no: [
+                "Fel. Iwo Jima (1945) var ett av krigets sista och blodigaste slag, men vid det laget hade Japan redan förlorat sin dominans till sjöss för länge sedan.",
+                "Fel. Pearl Harbor var Japans offensiva anfall som drog in USA i kriget, en stor japansk framgång, inte en vändpunkt till japansk nackdel.",
+                "Fel. Okinawa 1945 ägde rum nästan tre år efter Midway. Det var en av de sista striderna, inte vändpunkten."
+            ]
+        }
+    },
+    {
+        q: "Varför kapitulerade den tyska 6:e armén vid Stalingrad i februari 1943?",
+        opts: [
+            "Hitler beordrade ett strategiskt återtåg för att rädda styrkorna",
+            "Armén var omringad och fick slut på förnödenheter",
+            "Panserkapaciteten hade uttömts i nederlaget vid El Alamein",
+            "Mussolini drog tillbaka de italienska förbanden och blottade flanken"
+        ],
+        correct: 1,
+        fb: {
+            ok: "Rätt! Operation Uranus omringade hela 6:e armén. Hitler förbjöd återtåg och försök att försörja truppen med flyg misslyckades. Armén svalt och frös ihjäl under strider i ruinerna tills kapitulatiosn inte gick att undvika.",
+            no: [
+                "Fel. Ett vanligt missförstånd. Hitler förbjöd faktiskt återtåg, han beordrade det inte. Fältmarskalk Paulus begärde tillstånd att bryta sig ur men fick nej.",
+                "Fel. El Alamein var en separat kampanj i Nordafrika utan direkt koppling till panserstyrkornas situation vid Stalingrad.",
+                "Fel. Italiens roll vid Stalingrad var begränsad till flanksäkring. Den avgörande faktorn var den sovjetiska omringningsoperationen, inte ett italienskt återtåg."
+            ]
+        }
+    },
+    {
+        q: "Vad syftar 'Dunkirk' på i ett historiskt sammanhang?",
+        opts: [
+            "Det brittiska sjöslag som stoppade den tyska invasionsflottan 1940",
+            "Den brittiska evakueringsoperationen från det ockuperade Frankrike 1940",
+            "Det första RAF-bombningsanfallet mot tyska industristäder",
+            "Konferensen där Churchill vägrade ingå separatfred med Hitler"
+        ],
+        correct: 1,
+        fb: {
+            ok: "Rätt! Dunkirk var Operation Dynamo, en nödevakuering där över 300 000 brittiska och allierade soldater räddades från de franska kusterna med hjälp av hundratals civila och militära fartyg.",
+            no: [
+                "Fel. Det förekom inget avgörande sjöslag vid Dunkirk. Det handlade om evakuering under tyskt flyg- och artillerianfall, inte en strid mot den tyska flottan.",
+                "Fel. Dunkirk handlar specifikt om evakueringsoperationen 1940. RAF:s bomboffensiv mot tyska städer var en separat, senare operation.",
+                "Fel. Ingen formell konferens om separatfred hölls vid Dunkirk. Churchill kommunicerade sin beslutsamhet, men det var inte en fredskonferens."
+            ]
+        }
+    },
+    {
+        q: "Hur många människor dog uppskattningsvis totalt under andra världskriget?",
+        opts: [
+            "Ungefär 20–30 miljoner",
+            "Ungefär 35–45 miljoner",
+            "Ungefär 50–70 miljoner",
+            "Ungefär 80–100 miljoner"
+        ],
+        correct: 2,
+        fb: {
+            ok: "Rätt! Historiker uppskattar att 50–70 miljoner människor dog, vilket gör kriget till den dödligaste konflikten i mänsklighetens historia. Ungefär hälften var civila.",
+            no: [
+                "Fel. En kraftig underskattning. 20–30 miljoner är i storleksordningen bara Sovjetunionens förluster. De samlade förlusterna var mycket högre.",
+                "Fel. 35–45 miljoner underskattar de verkliga förlusterna avsevärt. Enbart Sovjet och Kina förlorade uppskattningsvis 45 miljoner tillsammans.",
+                "Fel. En överskattning. 80–100 miljoner överskrider vad historiker beräknar. Den etablerade akademiska uppskattningen är 50–70 miljoner."
+            ]
+        }
+    }
+];
+
+let cur = 0, score = 0, answered = false;
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function renderQ() {
+    const q = QUESTIONS[cur];
+    const total = QUESTIONS.length;
+    document.getElementById('qCounter').textContent = `Fråga ${cur + 1} av ${total}`;
+    document.getElementById('qProgress').style.width = `${(cur / total) * 100}%`;
+    document.getElementById('qScore').textContent = `Poäng: ${score}`;
+    document.getElementById('qBody').innerHTML = `
+        <p class="q-question">${q.q}</p>
+        <div class="q-options">
+            ${q.opts.map((o, i) => `
+                <button class="q-opt" onclick="pick(${i})" data-idx="${i}">
+                    <span class="q-letter">${LETTERS[i]}</span>
+                    <span class="q-text">${o}</span>
+                </button>
+            `).join('')}
+        </div>
+        <div class="q-feedback" id="qFb"></div>
+    `;
+    document.getElementById('btnNext').classList.remove('show');
+    answered = false;
+}
+
+function pick(idx) {
+    if (answered) return;
+    answered = true;
+    const q = QUESTIONS[cur];
+    const opts = document.querySelectorAll('.q-opt');
+    const fb = document.getElementById('qFb');
+    const btn = document.getElementById('btnNext');
+    opts.forEach(o => o.disabled = true);
+    opts[q.correct].classList.add('correct');
+    const ok = idx === q.correct;
+    if (ok) {
+        score++;
+        document.getElementById('qScore').textContent = `Poäng: ${score}`;
+        fb.className = 'q-feedback fb-ok show';
+        fb.innerHTML = `<strong>✓ Rätt!</strong> ${q.fb.ok}`;
+    } else {
+        opts[idx].classList.add('wrong');
+        fb.className = 'q-feedback fb-no show';
+        fb.innerHTML = `<strong>✗ Fel.</strong> ${q.fb.no[idx]}`;
+    }
+    btn.textContent = cur < QUESTIONS.length - 1 ? 'Nästa fråga →' : 'Visa resultat →';
+    btn.classList.add('show');
+}
+
+function nextQ() {
+    cur++;
+    if (cur >= QUESTIONS.length) showResult();
+    else renderQ();
+}
+
+function showResult() {
+    document.getElementById('qBody').style.display = 'none';
+    document.querySelector('.q-footer').style.display = 'none';
+    document.getElementById('qResult').classList.add('show');
+    document.getElementById('rScore').textContent = `${score}/${QUESTIONS.length}`;
+    document.getElementById('qProgress').style.width = '100%';
+    const pct = score / QUESTIONS.length;
+    const msgs = [
+        "Behöver mer studietid. Gå igenom tidslinjen och nyckelbegreppen noga och gör om quizzen.",
+        "Godkänt. Bra grund, titta igenom de händelser du tvekade på och gör om.",
+        "Bra resultat! Du har en solid förståelse för andra världskrigets förlopp.",
+        "Utmärkt! Du behärskar händelserna, begreppen och orsakerna med stor precision.",
+        "Perfekt! Felfri genomgång, du har en djup och nyanserad förståelse för kriget."
+    ];
+    document.getElementById('rMsg').textContent = msgs[Math.min(Math.floor(pct * 4.01), 4)];
+}
+
+function restartQuiz() {
+    cur = 0; score = 0; answered = false;
+    document.getElementById('qBody').style.display = 'block';
+    document.querySelector('.q-footer').style.display = 'flex';
+    document.getElementById('qResult').classList.remove('show');
+    renderQ();
+}
+
+renderQ();
+</script>
+</body>
+</html>
