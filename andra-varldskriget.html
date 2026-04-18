@@ -1987,7 +1987,7 @@ function buildCardHTML(id) {
     const lastName = p.name.split(' ').pop();
     return `<div class="pg-card">
         <div class="pg-img-wrap">
-            <img src="images/ww2/${id}.jpg" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <img src="images/${id}.jpg" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="pg-placeholder"><span class="pg-placeholder-initials">${pgInitials(p.name)}</span><span class="pg-placeholder-icon">📷</span></div>
         </div>
         <div class="pg-name">${lastName}</div>
