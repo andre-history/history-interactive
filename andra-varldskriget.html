@@ -751,6 +751,32 @@
         .pg-pulse .pg-img-wrap {
             animation: pgPulse 0.9s ease-out 2;
         }
+
+        /* ─── TOOLTIP MOBILE OVERRIDE ───────────────────── */
+        @media (max-width: 600px) {
+            .pg-tooltip {
+                position: fixed;
+                left: 50% !important;
+                top: 50% !important;
+                bottom: auto !important;
+                transform: translate(-50%, -50%) !important;
+                width: min(90vw, 300px);
+                max-height: 80vh;
+                overflow-y: auto;
+                z-index: 1000;
+            }
+            /* hide arrow on fixed modal */
+            .pg-tooltip::after { display: none; }
+            /* dim overlay behind tooltip */
+            .pg-card.touch-open::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.55);
+                z-index: 999;
+            }
+            .pg-card.touch-open .pg-tooltip { display: block; }
+        }
     </style>
 </head>
 <body>
@@ -2130,6 +2156,28 @@ function activateChipLinks() {
 }
 
 activateChipLinks();
+
+/* ─── GALLERY TOOLTIP: TOUCH SUPPORT ────────────────── */
+function initGalleryTouch() {
+    if (window.matchMedia('(max-width: 600px)').matches) {
+        document.querySelectorAll('.pg-card').forEach(card => {
+            card.addEventListener('click', e => {
+                const isOpen = card.classList.contains('touch-open');
+                // Close any open tooltip
+                document.querySelectorAll('.pg-card.touch-open')
+                    .forEach(c => c.classList.remove('touch-open'));
+                if (!isOpen) card.classList.add('touch-open');
+                e.stopPropagation();
+            });
+        });
+        // Tap outside closes
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.pg-card.touch-open')
+                .forEach(c => c.classList.remove('touch-open'));
+        });
+    }
+}
+initGalleryTouch();
 
 renderQ();
 </script>
