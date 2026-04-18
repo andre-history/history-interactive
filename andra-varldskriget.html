@@ -303,7 +303,8 @@
             gap: 18px;
         }
         .flip-card {
-            height: 188px;
+            /* height set dynamically by JS per card; min-height is fallback during load */
+            min-height: 160px;
             perspective: 1000px;
             cursor: pointer;
         }
@@ -323,6 +324,8 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            /* last-resort fallback if JS measurement somehow misses */
+            overflow-y: auto;
         }
         .flip-front {
             background: var(--bg-card);
@@ -1511,6 +1514,41 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 /* ─── FLIP CARDS: keyboard support ──────────────────── */
 document.querySelectorAll('.flip-card').forEach(card => {
     card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.classList.toggle('flipped'); } });
+});
+
+/* ─── FLIP CARDS: auto-height per card ──────────────────
+   Measures both faces and sets each card's height to
+   whichever face is taller — no text ever clipped.
+   Runs on load and again on resize (e.g. mobile rotation). */
+function sizeFlipCards() {
+    document.querySelectorAll('.flip-card').forEach(card => {
+        const front = card.querySelector('.flip-front');
+        const back  = card.querySelector('.flip-back');
+
+        // Temporarily make both faces measurable
+        card.style.height     = 'auto';
+        front.style.position  = 'relative';
+        back.style.position   = 'relative';
+        back.style.transform  = 'none';
+        back.style.visibility = 'hidden';
+
+        const h = Math.max(front.scrollHeight, back.scrollHeight) + 2;
+
+        // Restore 3D positioning
+        front.style.position  = '';
+        back.style.position   = '';
+        back.style.transform  = '';
+        back.style.visibility = '';
+
+        card.style.height = h + 'px';
+    });
+}
+
+sizeFlipCards();
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(sizeFlipCards, 120);
 });
 
 /* ─── COUNT-UP ANIMATION ─────────────────────────────── */
