@@ -303,8 +303,7 @@
             gap: 18px;
         }
         .flip-card {
-            /* height set dynamically by JS per card; min-height is fallback during load */
-            min-height: 160px;
+            min-height: 160px; /* height set per-card by JS */
             perspective: 1000px;
             cursor: pointer;
         }
@@ -324,8 +323,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            /* last-resort fallback if JS measurement somehow misses */
-            overflow-y: auto;
+            overflow-y: auto; /* last-resort fallback */
         }
         .flip-front {
             background: var(--bg-card);
@@ -598,6 +596,161 @@
             .q-body { padding: 18px 16px 14px; }
             .q-footer { padding: 4px 16px 18px; }
         }
+
+        /* ─── PERSON GALLERY ─────────────────────────────── */
+        .pg-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 28px;
+        }
+        .pg-tab {
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 7px 14px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+            white-space: nowrap;
+        }
+        .pg-tab:hover { border-color: var(--border-light); color: var(--text-primary); }
+        .pg-tab.active { border-color: var(--gold); color: var(--gold); background: rgba(196,146,58,0.07); }
+        .pg-panel { display: none; }
+        .pg-panel.active { display: block; }
+        .pg-nation-hdr {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            margin-top: 28px;
+        }
+        .pg-nation-hdr:first-child { margin-top: 0; }
+        .pg-nation-label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 9px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .pg-nation-line { flex: 1; height: 1px; background: var(--border); }
+        .pg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+        .pg-card { position: relative; cursor: default; }
+        .pg-img-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            border-radius: 4px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            transition: border-color 0.2s;
+        }
+        .pg-card:hover .pg-img-wrap { border-color: var(--gold); }
+        .pg-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+            filter: grayscale(35%) contrast(1.05);
+            transition: filter 0.3s;
+        }
+        .pg-card:hover .pg-img-wrap img { filter: grayscale(0%) contrast(1.1); }
+        .pg-placeholder {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--bg-card);
+        }
+        .pg-placeholder-initials {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--border-light);
+            letter-spacing: 2px;
+        }
+        .pg-placeholder-icon { font-size: 1rem; opacity: 0.25; }
+        .pg-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 7px;
+            text-align: center;
+            line-height: 1.3;
+            letter-spacing: 0.5px;
+        }
+        .pg-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            background: var(--bg-surface);
+            border: 1px solid var(--gold);
+            border-radius: 4px;
+            padding: 14px 16px;
+            z-index: 300;
+            pointer-events: none;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+        }
+        .pg-card:hover .pg-tooltip { display: block; }
+        .pg-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--gold);
+        }
+        .pg-tt-role { font-family: 'Oswald', sans-serif; font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+        .pg-tt-name { font-family: 'Special Elite', cursive; font-size: 1rem; color: var(--text-primary); margin-bottom: 2px; }
+        .pg-tt-years { font-family: 'Oswald', sans-serif; font-size: 10px; color: var(--text-dim); margin-bottom: 9px; letter-spacing: 1px; }
+        .pg-tt-bio { font-size: 0.77rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 9px; }
+        .pg-tt-events { display: flex; flex-wrap: wrap; gap: 4px; }
+        .pg-tt-tag { font-family: 'Oswald', sans-serif; font-size: 9px; letter-spacing: 1px; padding: 2px 7px; border-radius: 2px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-light); color: var(--text-dim); white-space: nowrap; }
+        @media (max-width: 500px) {
+            .pg-grid { grid-template-columns: repeat(3, 1fr); gap: 9px; }
+            .pg-tab { font-size: 9px; padding: 6px 10px; letter-spacing: 2px; }
+            .pg-tooltip { width: 190px; }
+        }
+
+        /* ─── CHIP LINK & PULSE ──────────────────────────── */
+        .chip-linked { transition: border-color 0.15s, background 0.15s; }
+        .chip-linked:hover { background: rgba(196,146,58,0.1) !important; border-color: var(--gold) !important; }
+        .chip-linked:hover .ev-player-name { color: var(--gold-light); }
+        .chip-linked::after {
+            content: '↓';
+            font-size: 9px;
+            opacity: 0.45;
+            margin-left: 4px;
+            font-family: sans-serif;
+        }
+        @keyframes pgPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(196,146,58,0.7); border-color: var(--gold); }
+            50%  { box-shadow: 0 0 0 10px rgba(196,146,58,0); border-color: var(--gold); }
+            100% { box-shadow: 0 0 0 0 rgba(196,146,58,0); border-color: var(--border); }
+        }
+        .pg-pulse .pg-img-wrap {
+            animation: pgPulse 0.9s ease-out 2;
+        }
     </style>
 </head>
 <body>
@@ -617,6 +770,7 @@
         <li><a href="#tidslinje">⟐ Tidslinje</a></li>
         <li><a href="#begrepp">◈ Nyckelbegrepp</a></li>
         <li><a href="#statistik">◉ Statistik</a></li>
+                <li><a href="#galleri">☰ Galleri</a></li>
         <li><a href="#quiz">✎ Quiz</a></li>
     </ul>
 </nav>
@@ -1182,7 +1336,7 @@
                     <div class="ev-player" style="border-left-color: var(--phase-5);">
                         <div class="ev-player-avatar" style="color: var(--phase-5);">GZ</div>
                         <div class="ev-player-info">
-                            <span class="ev-player-name">Georg Zhukov</span>
+                            <span class="ev-player-name">Georgy Zhukov</span>
                             <span class="ev-player-role">Röda armén</span>
                         </div>
                     </div>
@@ -1456,6 +1610,19 @@
     </div>
 </section>
 
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════════════════ PERSON GALLERY -->
+<section id="galleri" class="section">
+    <div class="section-header reveal">
+        <p class="section-tag">Aktörer</p>
+        <h2 class="section-title">Persongalleri</h2>
+        <p class="section-desc">Nyckelgestalter bakom krigets händelser. Håll muspekaren över ett porträtt för mer information.</p>
+    </div>
+    <div id="personGallery"></div>
+</section>
+
 <hr class="divider">
 
 <!-- ══════════════════════════════════════════════════════ QUIZ -->
@@ -1511,45 +1678,7 @@ const revealObs = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-/* ─── FLIP CARDS: keyboard support ──────────────────── */
-document.querySelectorAll('.flip-card').forEach(card => {
-    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.classList.toggle('flipped'); } });
-});
 
-/* ─── FLIP CARDS: auto-height per card ──────────────────
-   Measures both faces and sets each card's height to
-   whichever face is taller — no text ever clipped.
-   Runs on load and again on resize (e.g. mobile rotation). */
-function sizeFlipCards() {
-    document.querySelectorAll('.flip-card').forEach(card => {
-        const front = card.querySelector('.flip-front');
-        const back  = card.querySelector('.flip-back');
-
-        // Temporarily make both faces measurable
-        card.style.height     = 'auto';
-        front.style.position  = 'relative';
-        back.style.position   = 'relative';
-        back.style.transform  = 'none';
-        back.style.visibility = 'hidden';
-
-        const h = Math.max(front.scrollHeight, back.scrollHeight) + 2;
-
-        // Restore 3D positioning
-        front.style.position  = '';
-        back.style.position   = '';
-        back.style.transform  = '';
-        back.style.visibility = '';
-
-        card.style.height = h + 'px';
-    });
-}
-
-sizeFlipCards();
-let resizeTimer;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(sizeFlipCards, 120);
-});
 
 /* ─── COUNT-UP ANIMATION ─────────────────────────────── */
 function animateCount(el) {
@@ -1780,6 +1909,227 @@ function restartQuiz() {
     document.getElementById('qResult').classList.remove('show');
     renderQ();
 }
+
+/* ─── FLIP CARDS: keyboard support ──────────────────── */
+document.querySelectorAll('.flip-card').forEach(card => {
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.classList.toggle('flipped'); } });
+});
+
+/* ─── FLIP CARDS: auto-height per card ───────────────── */
+function sizeFlipCards() {
+    document.querySelectorAll('.flip-card').forEach(card => {
+        const front = card.querySelector('.flip-front');
+        const back  = card.querySelector('.flip-back');
+        card.style.height     = 'auto';
+        front.style.position  = 'relative';
+        back.style.position   = 'relative';
+        back.style.transform  = 'none';
+        back.style.visibility = 'hidden';
+        const h = Math.max(front.scrollHeight, back.scrollHeight) + 2;
+        front.style.position  = '';
+        back.style.position   = '';
+        back.style.transform  = '';
+        back.style.visibility = '';
+        card.style.height = h + 'px';
+    });
+}
+sizeFlipCards();
+let resizeTimer;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(sizeFlipCards, 120); });
+
+/* ─── PERSON GALLERY ─────────────────────────────────── */
+const NATIONS = [
+    { id:'de', label:'🇩🇪 Nazityskland', ids:['adolf-hitler','heinrich-himmler','joseph-goebbels','hermann-goring','erwin-rommel','heinz-guderian','joachim-ribbentrop','friedrich-paulus','adolf-eichmann','rudolf-hoss'] },
+    { id:'gb', label:'🇬🇧 Storbritannien', ids:['winston-churchill','bernard-montgomery','neville-chamberlain','hugh-dowding'] },
+    { id:'us', label:'🇺🇸 USA',            ids:['franklin-roosevelt','dwight-eisenhower','harry-truman','douglas-macarthur','chester-nimitz'] },
+    { id:'su', label:'🇷🇺 Sovjet',          ids:['josef-stalin','georgy-zhukov','vjatjeslav-molotov'] },
+    { id:'jp', label:'🇯🇵 Japan',           ids:['hirohito','isoroku-yamamoto'] },
+    { id:'it', label:'🇮🇹 Italien',         ids:['benito-mussolini'] },
+    { id:'fr', label:'🇫🇷 Frankrike',       ids:['edouard-daladier'] },
+];
+const PERSONS = {
+    'adolf-hitler':       {name:'Adolf Hitler',           years:'1889–1945',role:'Rikskansler · Nazityskland',          bio:'Grundare och ledare för Nazityskland. Hans ideologi om rasöverlägsenhet, Lebensraum och antisemitism var den direkta drivkraften bakom kriget i Europa och Förintelsen.',events:['Anschluss','Münchenavtalet','Invasionen av Polen','Barbarossa','Stalingrad']},
+    'winston-churchill':  {name:'Winston Churchill',       years:'1874–1965',role:'Premiärminister · Storbritannien',   bio:'Övertog som premiärminister 1940 och vägrade kapitulera trots Frankrikes fall. Hans tal stärkte brittisk folkvilja under The Blitz och han var en central arkitekt bakom den allierade strategin.',events:['Dunkirk','Slag om Storbritannien','D-dagen']},
+    'josef-stalin':       {name:'Josef Stalin',            years:'1878–1953',role:'Generalsekreterare · Sovjet',        bio:'Ledde Sovjet genom dess mest förödande krig. Initialt överrumplad av Barbarossa, samlades han och dirigerade det enorma motstånd som slutligen krossade Nazityskland på östfronten.',events:['Molotov–Ribbentrop','Barbarossa','Stalingrad','Berlin']},
+    'franklin-roosevelt': {name:'Franklin D. Roosevelt',   years:'1882–1945',role:'President · USA',                    bio:'Ledde USA in i kriget efter Pearl Harbor och byggde upp den "arsenal of democracy" som försörjde de allierade. Avled i april 1945, kort före Tysklands kapitulation.',events:['Pearl Harbor','D-dagen','Jalta']},
+    'benito-mussolini':   {name:'Benito Mussolini',         years:'1883–1945',role:'Il Duce · Italien',                  bio:'Fascistisk diktator och Hitlers allierade. Italiens militära misslyckanden i Nordafrika försvagade axelmakterna. Störtades 1943, avrättades av partisaner 1945.',events:['Axelmakternas pakt','Nordafrika']},
+    'hirohito':           {name:'Hirohito',                 years:'1901–1989',role:'Kejsare · Japan',                    bio:'Japansk kejsare under hela kriget. Tillkännagav kapitulationen via radio 1945. Hans exakta roll i krigsbesluten är historiskt omdiskuterad.',events:['Pearl Harbor','Japans kapitulation']},
+    'heinrich-himmler':   {name:'Heinrich Himmler',         years:'1900–1945',role:'SS-Reichsführer · Nazityskland',    bio:'Chef för SS och Gestapo samt arkitekt bakom Förintelsens industrialiserade massmord. Ansvarade direkt för koncentrationslägersystemet och Einsatzgruppen.',events:['Förintelsen','Wannseekonferensen']},
+    'hermann-goring':     {name:'Hermann Göring',           years:'1893–1946',role:'Luftwaffe-chef · Nazityskland',     bio:'Chef för Luftwaffe och Hitlers utsedde efterträdare. Hans löfte att försörja Stalingrad med flyg misslyckades katastrofalt. Tog gift natten före avrättningen i Nürnberg.',events:['Slag om Storbritannien','Stalingrad']},
+    'joseph-goebbels':    {name:'Joseph Goebbels',          years:'1897–1945',role:'Propagandaminister · Nazityskland', bio:'Mästaren bakom nazistisk propaganda. Stannade hos Hitler till slutet i Berlins bunker och begick självmord dagen efter Hitler.',events:['Berlinoperationen']},
+    'erwin-rommel':       {name:'Erwin Rommel',             years:'1891–1944',role:'Fältmarskalk · Wehrmacht',          bio:'Kallad "Ökenfuxen" för sina briljanta pansaroperationer i Nordafrika. Kommenderade Atlantvallen inför D-dagen. Kopplad till attentatsförsöket mot Hitler 1944 — tvingades ta gift.',events:['Nordafrika','D-dagen']},
+    'heinz-guderian':     {name:'Heinz Guderian',           years:'1888–1954',role:'Pansargeneral · Wehrmacht',         bio:'Pionjär för den moderna pansartaktiken och en av Blitzkriegets huvudarkitekter. Ledde pansarförbanden under invasionen av Frankrike och i inledningsskedet av Barbarossa.',events:['Invasionen av Frankrike','Barbarossa']},
+    'joachim-ribbentrop': {name:'Joachim von Ribbentrop',   years:'1893–1946',role:'Utrikesminister · Nazityskland',    bio:'Förhandlare bakom Molotov–Ribbentrop-pakten 1939. Hängdes i Nürnberg 1946 som en av de mest ansvariga för krigets utbrott.',events:['Molotov–Ribbentrop-pakten']},
+    'friedrich-paulus':   {name:'Friedrich Paulus',         years:'1890–1957',role:'Fältmarskalk · Wehrmacht',          bio:'Befälhavare för den tyska 6:e armén vid Stalingrad. Begärde upprepade gånger om tillstånd att bryta sig ur omringningen — Hitler nekade varje gång. Kapitulerade i februari 1943.',events:['Stalingrad']},
+    'adolf-eichmann':     {name:'Adolf Eichmann',           years:'1906–1962',role:'SS-officer · Nazityskland',         bio:'Den byråkratiske organisatören bakom deportationerna av judar till förintelselägren. Kidnappades av Mossad i Argentina 1960 och hängdes i Israel 1962.',events:['Förintelsen','Wannseekonferensen']},
+    'rudolf-hoss':        {name:'Rudolf Höss',              years:'1901–1947',role:'Lagerkommendant · Auschwitz',       bio:'Kommendant för Auschwitz-Birkenau. Under hans befäl mördades uppskattningsvis 1,1 miljoner människor. Hängdes 1947 vid lägrets port.',events:['Förintelsen']},
+    'dwight-eisenhower':  {name:'Dwight D. Eisenhower',     years:'1890–1969',role:'Överbefälhavare · Allierade i väst',bio:'Supreme Commander för de allierade i Europa. Planerade och ledde Operation Overlord (D-dagen) och framryckningen genom Frankrike och in i Tyskland.',events:['D-dagen','Ardenneroffensiven']},
+    'bernard-montgomery': {name:'Bernard Montgomery',       years:'1887–1976',role:'Fältmarskalk · Storbritannien',    bio:'Vann det avgörande slaget vid El Alamein 1942 och ledde brittiska markstyrkor under D-dagen. Känd för sin metodiska stil — och sina bråk med Eisenhower om strategi.',events:['El Alamein','D-dagen']},
+    'neville-chamberlain':{name:'Neville Chamberlain',      years:'1869–1940',role:'Premiärminister · Storbritannien',  bio:'Ansiktet utåt för appeasement-politiken. Undertecknade Münchenavtalet 1938 och proklamerade "fred i vår tid." Ersattes av Churchill i maj 1940.',events:['Münchenavtalet','Appeasement']},
+    'georgy-zhukov':      {name:'Georgy Zhukov',            years:'1896–1974',role:'Marskalk · Röda armén',             bio:'Sovjetunionens mest framgångsrike militäre befälhavare. Ledde försvaret av Moskva, Kursk och slutoffensiven mot Berlin. Tog emot Tysklands kapitulation 1945.',events:['Slag om Moskva','Kursk','Berlinoperationen']},
+    'vjatjeslav-molotov': {name:'Vjatjeslav Molotov',       years:'1890–1986',role:'Utrikesminister · Sovjet',          bio:'Stalins närmaste man i utrikespolitiken och förhandlare av icke-angreppspakten med Nazityskland 1939. Pakten bär hans namn men var i praktiken Stalins beslut.',events:['Molotov–Ribbentrop-pakten']},
+    'harry-truman':       {name:'Harry S. Truman',          years:'1884–1972',role:'President · USA',                   bio:'Övertog presidentposten efter Roosevelts död april 1945. Fattade det kontroversiella beslutet att fälla atombomberna över Hiroshima och Nagasaki.',events:['Hiroshima & Nagasaki','Japans kapitulation']},
+    'douglas-macarthur':  {name:'Douglas MacArthur',        years:'1880–1964',role:'General · USA · Stilla havet',      bio:'Överbefälhavare för de allierade i Stilla havet. Ledde island hopping-framträngandet mot Japan och tog emot Japans formella kapitulation ombord på USS Missouri.',events:['Stilla havet','Japans kapitulation']},
+    'isoroku-yamamoto':   {name:'Isoroku Yamamoto',         years:'1884–1943',role:'Amiral · Japanska flottan',         bio:'Planerade anfallet mot Pearl Harbor och slaget vid Midway. Varnade tidigt för att Japan inte kunde vinna ett utdraget krig mot USA. Sköts ned av amerikanskt flyg 1943.',events:['Pearl Harbor','Midway']},
+    'hugh-dowding':       {name:'Hugh Dowding',              years:'1882–1970',role:'RAF-befälhavare · Storbritannien',    bio:'Överbefälhavare för RAF Fighter Command under Slaget om Storbritannien 1940. Hans beslut att spara jagarstyrkorna från Frankrike räddade tillräckligt med flygplan för att vinna luftstriden hemma. Avskedades kort efter segern — aldrig formellt erkänd under sin livstid.',events:['Slag om Storbritannien']},
+    'chester-nimitz':     {name:'Chester Nimitz',            years:'1885–1966',role:'Flottamiral · USA · Stilla havet',   bio:'Överbefälhavare för USA:s Stillahavsflotta efter Pearl Harbor. Ledde den avgörande segern vid Midway och koordinerade island hopping-kampanjen mot Japan. Tog emot Japans kapitulation ombord på USS Missouri.',events:['Midway','Stilla havet','Japans kapitulation']},
+    'edouard-daladier':   {name:'Édouard Daladier',          years:'1884–1970',role:'Premiärminister · Frankrike',         bio:'Undertecknade Münchenavtalet 1938 tillsammans med Chamberlain. Ska lär ha sagt om folkmassornas jubel vid hemkomsten: "Ah, les cons" — de förstod inte att de hyllade sin egen undergång. Satt fängslad av Vichyregimen 1940–1945.',events:['Münchenavtalet','Appeasement']},
+};
+
+function pgInitials(name) {
+    return name.split(' ').filter(w => /[A-ZÅÄÖ]/.test(w[0])).map(w => w[0]).slice(0,2).join('');
+}
+
+function buildCardHTML(id) {
+    const p = PERSONS[id];
+    if (!p) return '';
+    const tags = p.events.map(e => `<span class="pg-tt-tag">${e}</span>`).join('');
+    const lastName = p.name.split(' ').pop();
+    return `<div class="pg-card">
+        <div class="pg-img-wrap">
+            <img src="images/ww2/${id}.jpg" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="pg-placeholder"><span class="pg-placeholder-initials">${pgInitials(p.name)}</span><span class="pg-placeholder-icon">📷</span></div>
+        </div>
+        <div class="pg-name">${lastName}</div>
+        <div class="pg-tooltip">
+            <div class="pg-tt-role">${p.role}</div>
+            <div class="pg-tt-name">${p.name}</div>
+            <div class="pg-tt-years">${p.years}</div>
+            <div class="pg-tt-bio">${p.bio}</div>
+            <div class="pg-tt-events">${tags}</div>
+        </div>
+    </div>`;
+}
+
+function buildGallery() {
+    const wrap = document.getElementById('personGallery');
+    if (!wrap) return;
+
+    // Tab bar
+    const tabBar = document.createElement('div');
+    tabBar.className = 'pg-tabs';
+    const allTab = document.createElement('button');
+    allTab.className = 'pg-tab active';
+    allTab.textContent = '☰ Alla';
+    allTab.dataset.panel = 'all';
+    tabBar.appendChild(allTab);
+    NATIONS.forEach(n => {
+        const btn = document.createElement('button');
+        btn.className = 'pg-tab';
+        btn.textContent = n.label;
+        btn.dataset.panel = n.id;
+        tabBar.appendChild(btn);
+    });
+    wrap.appendChild(tabBar);
+
+    // "Alla" panel
+    const allPanel = document.createElement('div');
+    allPanel.className = 'pg-panel active';
+    allPanel.dataset.panel = 'all';
+    NATIONS.forEach(n => {
+        const group = document.createElement('div');
+        group.innerHTML = `<div class="pg-nation-hdr"><span class="pg-nation-label">${n.label}</span><div class="pg-nation-line"></div></div>`;
+        const grid = document.createElement('div');
+        grid.className = 'pg-grid';
+        n.ids.forEach(id => grid.insertAdjacentHTML('beforeend', buildCardHTML(id)));
+        group.appendChild(grid);
+        allPanel.appendChild(group);
+    });
+    wrap.appendChild(allPanel);
+
+    // Individual nation panels
+    NATIONS.forEach(n => {
+        const panel = document.createElement('div');
+        panel.className = 'pg-panel';
+        panel.dataset.panel = n.id;
+        const grid = document.createElement('div');
+        grid.className = 'pg-grid';
+        n.ids.forEach(id => grid.insertAdjacentHTML('beforeend', buildCardHTML(id)));
+        panel.appendChild(grid);
+        wrap.appendChild(panel);
+    });
+
+    // Tab switching
+    tabBar.addEventListener('click', e => {
+        const btn = e.target.closest('.pg-tab');
+        if (!btn) return;
+        tabBar.querySelectorAll('.pg-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        wrap.querySelectorAll('.pg-panel').forEach(p => p.classList.remove('active'));
+        wrap.querySelector(`.pg-panel[data-panel="${btn.dataset.panel}"]`).classList.add('active');
+    });
+}
+
+buildGallery();
+
+/* ─── TIMELINE CHIP LINKS TO GALLERY ────────────────── */
+const PERSON_LINK = {
+    'Adolf Hitler':'adolf-hitler','Heinrich Himmler':'heinrich-himmler',
+    'Joseph Goebbels':'joseph-goebbels','Hermann Göring':'hermann-goring',
+    'Erwin Rommel':'erwin-rommel','Heinz Guderian':'heinz-guderian',
+    'Joachim von Ribbentrop':'joachim-ribbentrop','Friedrich Paulus':'friedrich-paulus',
+    'Adolf Eichmann':'adolf-eichmann','Rudolf Höss':'rudolf-hoss',
+    'Winston Churchill':'winston-churchill','Bernard Montgomery':'bernard-montgomery',
+    'Neville Chamberlain':'neville-chamberlain','Hugh Dowding':'hugh-dowding',
+    'Franklin D. Roosevelt':'franklin-roosevelt','Dwight D. Eisenhower':'dwight-eisenhower',
+    'Harry S. Truman':'harry-truman','Douglas MacArthur':'douglas-macarthur',
+    'Chester Nimitz':'chester-nimitz',
+    'Josef Stalin':'josef-stalin','Georgy Zhukov':'georgy-zhukov',
+    'Vjatjeslav Molotov':'vjatjeslav-molotov',
+    'Hirohito':'hirohito','Isoroku Yamamoto':'isoroku-yamamoto',
+    'Benito Mussolini':'benito-mussolini',
+    'Édouard Daladier':'edouard-daladier',
+};
+
+// Nation tab to activate per person-id
+const PERSON_NATION = {};
+NATIONS.forEach(n => n.ids.forEach(id => PERSON_NATION[id] = n.id));
+
+function activateChipLinks() {
+    document.querySelectorAll('.ev-player-name').forEach(nameEl => {
+        const name = nameEl.textContent.trim();
+        const id = PERSON_LINK[name];
+        if (!id) return;
+
+        const chip = nameEl.closest('.ev-player');
+        if (!chip) return;
+        chip.style.cursor = 'pointer';
+        chip.title = 'Visa i persongalleri';
+        chip.classList.add('chip-linked');
+
+        chip.addEventListener('click', () => {
+            // Switch to correct nation tab (or 'all')
+            const nationId = PERSON_NATION[id];
+            const wrap = document.getElementById('personGallery');
+            if (!wrap) return;
+
+            // Activate the nation tab
+            wrap.querySelectorAll('.pg-tab').forEach(t => t.classList.remove('active'));
+            wrap.querySelectorAll('.pg-panel').forEach(p => p.classList.remove('active'));
+            const targetTab = wrap.querySelector(`.pg-tab[data-panel="${nationId}"]`);
+            const targetPanel = wrap.querySelector(`.pg-panel[data-panel="${nationId}"]`);
+            if (targetTab) targetTab.classList.add('active');
+            if (targetPanel) targetPanel.classList.add('active');
+
+            // Scroll to gallery section
+            document.getElementById('galleri').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Pulse the matching card after scroll settles
+            setTimeout(() => {
+                const cards = wrap.querySelectorAll('.pg-card');
+                cards.forEach(card => {
+                    const img = card.querySelector('img');
+                    if (img && img.src.includes(id + '.jpg')) {
+                        card.classList.add('pg-pulse');
+                        setTimeout(() => card.classList.remove('pg-pulse'), 1800);
+                    }
+                });
+            }, 700);
+        });
+    });
+}
+
+activateChipLinks();
 
 renderQ();
 </script>
