@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ojämlikhet & Ekonomin – Interaktiv Lektion</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:opsz,wght@9..144,700;9..144,900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green: #059669;
+  --green-mid: #10b981;
+  --green-light: #d1fae5;
+  --green-xlight: #ecfdf5;
+  --red: #dc2626;
+  --red-mid: #ef4444;
+  --red-light: #fee2e2;
+  --red-xlight: #fff5f5;
+  --purple: #7c3aed;
+  --purple-light: #ede9fe;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --blue: #2563eb;
+  --pink: #db2777;
+  --bg: #f0f4ff;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+}
+
+/* ─── HERO ─── */
+.hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4f46e5 75%, #7c3aed 100%);
+  padding: 4.5rem 2rem 5rem;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.hero-dots {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.hero-emoji { font-size: 4rem; margin-bottom: 1rem; display: block; }
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+.hero h1 span {
+  background: linear-gradient(90deg, #fbbf24, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  font-size: 1.15rem;
+  opacity: 0.88;
+  max-width: 580px;
+  margin: 0 auto;
+  position: relative;
+  font-weight: 600;
+}
+.hero-pills {
+  display: flex; gap: 0.6rem; justify-content: center;
+  margin-top: 2rem; flex-wrap: wrap; position: relative;
+}
+.hero-pill {
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-radius: 100px;
+  padding: 0.35rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+}
+
+/* ─── WRAPPER ─── */
+.page { max-width: 1100px; margin: 0 auto; padding: 3.5rem 1.5rem; }
+
+.section-label {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: var(--purple); color: white;
+  font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.1em; padding: 0.3rem 0.85rem; border-radius: 100px;
+  margin-bottom: 0.75rem;
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700; margin-bottom: 0.4rem; color: var(--text);
+}
+.section-sub { color: var(--muted); font-size: 1rem; margin-bottom: 2rem; font-weight: 600; }
+
+/* ─── CARD SHELL ─── */
+.card {
+  background: white; border-radius: 20px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+/* ════════════════════════════════
+   SCALE SECTION
+════════════════════════════════ */
+.scale-wrap { padding: 2rem; margin-bottom: 3.5rem; }
+
+/* Mobile: flex column with reordered elements so chips come first */
+@media (max-width: 600px) {
+  .scale-wrap {
+    padding: 1.25rem;
+    display: flex; flex-direction: column;
+  }
+  .scale-legend { order: 1; }
+  .bank         { order: 2; margin-bottom: 1rem; grid-template-columns: 1fr; }
+  .zones        { order: 3; }
+  .svg-box      { order: 4; max-width: 100%; margin: 0.75rem auto 0; }
+  .presets      { order: 5; }
+  #sbar         { order: 6; }
+  #btn-reveal   { order: 7; }
+  #country-match{ order: 8; }
+  #chain-panel  { order: 9; }
+  .btn-reset    { order: 10; }
+
+  #scale-svg    { max-height: 160px; }
+  .zone         { min-height: 80px; }
+  .chain-steps  { flex-direction: column; }
+  .chain-arrow  { transform: rotate(90deg); padding-left: 1rem; align-self: flex-start; }
+}
+
+.scale-legend {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1rem;
+}
+.leg-tag {
+  display: flex; align-items: center; gap: 0.45rem;
+  font-weight: 800; font-size: 1.05rem; padding: 0.4rem 1rem;
+  border-radius: 100px;
+}
+.leg-tag.inc { background: var(--green-light); color: var(--green); }
+.leg-tag.bel { background: var(--red-light); color: var(--red); }
+
+/* SVG Container */
+.svg-box {
+  max-width: 560px; margin: 0 auto 1.5rem;
+  position: relative;
+}
+#scale-svg { width: 100%; height: auto; display: block; }
+
+/* Drop zones */
+.zones {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1rem; margin-bottom: 1.25rem;
+}
+.zone {
+  min-height: 110px; border-radius: 16px; border: 2.5px dashed;
+  padding: 0.875rem; display: flex; flex-wrap: wrap;
+  gap: 0.45rem; align-content: flex-start;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.zone.inc-zone { border-color: var(--green-mid); background: var(--green-xlight); }
+.zone.bel-zone { border-color: var(--red-mid); background: var(--red-xlight); }
+.zone.over { transform: scale(1.02); box-shadow: 0 0 0 3px rgba(124,58,237,0.35); }
+.zone-title {
+  width: 100%; font-weight: 900; font-size: 0.78rem;
+  text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.35rem;
+}
+.zone.inc-zone .zone-title { color: var(--green); }
+.zone.bel-zone .zone-title { color: var(--red); }
+
+/* Chip bank */
+.bank {
+  background: #f8fafc; border: 2px solid var(--border);
+  border-radius: 16px; padding: 1.25rem;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.6rem; min-height: 72px; margin-bottom: 1.25rem;
+}
+.bank-title {
+  grid-column: 1 / -1;
+  font-size: 0.78rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+  margin-bottom: 0.15rem;
+}
+
+/* Chips – two-layer card design */
+.chip {
+  display: flex; flex-direction: column;
+  padding: 0.7rem 0.95rem; border-radius: 14px;
+  cursor: grab; user-select: none;
+  background: white; border: 2px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  touch-action: none;
+  transition: border-color 0.35s, background 0.35s, box-shadow 0.18s, transform 0.18s;
+}
+.chip:hover { transform: translateY(-2px); box-shadow: 0 5px 18px rgba(0,0,0,0.12); }
+.chip:active { cursor: grabbing; }
+.chip.dragging { opacity: 0.35; transform: scale(0.96); }
+
+.chip-event { font-size: 0.85rem; font-weight: 700; line-height: 1.4; }
+
+/* Concept label – hidden until revealed */
+.chip-concept {
+  display: flex; align-items: center; gap: 0.3rem;
+  margin-top: 0; max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height 0.45s ease, opacity 0.4s ease 0.15s, margin-top 0.35s ease;
+  font-size: 0.72rem; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 0.06em; border-top: 1.5px dashed transparent;
+}
+.chip-thinker { font-size: 0.68rem; font-weight: 600; opacity: 0.65; margin-left: auto; }
+
+/* Correct reveal */
+.chip.revealed {
+  border-color: var(--purple); background: var(--purple-light);
+  cursor: pointer;
+}
+.chip.revealed .chip-concept {
+  max-height: 2rem; opacity: 1; margin-top: 0.45rem;
+  color: var(--purple); border-color: rgba(124,58,237,0.25);
+}
+.chip.revealed:hover { filter: brightness(0.96); }
+.chip.chain-active { box-shadow: 0 0 0 3px var(--purple) !important; }
+
+@keyframes popin {
+  0%   { transform: scale(0.78); opacity: 0; }
+  70%  { transform: scale(1.06); }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.chip.pop { animation: popin 0.28s ease forwards; }
+
+/* Chain panel */
+.chain-panel {
+  display: none; margin-top: 1rem;
+  padding: 1.4rem 1.5rem; border-radius: 16px;
+  background: #f8fafc; border: 2px solid var(--border);
+}
+.chain-panel.show { display: block; animation: slideDown 0.3s ease; }
+.chain-title {
+  font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 700;
+  margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.chain-hint {
+  font-size: 0.72rem; color: var(--muted); margin-left: auto;
+  font-family: 'Nunito', sans-serif; font-weight: 600; font-style: italic;
+}
+.chain-steps {
+  display: flex; align-items: stretch; gap: 0; margin-bottom: 1rem;
+}
+.chain-step {
+  flex: 1; padding: 0.8rem 0.85rem; border-radius: 12px;
+  background: white; border: 1.5px solid var(--border);
+}
+.chain-step-label {
+  font-size: 0.63rem; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.35rem;
+}
+.chain-step-text { font-size: 0.83rem; font-weight: 700; line-height: 1.45; }
+.chain-arrow {
+  align-self: center; color: #d1d5db;
+  font-size: 1.3rem; padding: 0 0.35rem; flex-shrink: 0;
+}
+.chain-quote {
+  font-style: italic; font-size: 0.84rem; color: var(--muted);
+  padding: 0.65rem 1rem; border-left: 3px solid;
+  border-radius: 0 10px 10px 0; background: white; line-height: 1.6;
+}
+
+/* Preset scenario buttons */
+.presets { margin-bottom: 1.25rem; }
+
+.presets-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 0.5rem 0;
+  background: none; border: none; border-bottom: 1.5px solid var(--border);
+  font-family: 'Nunito', sans-serif; font-size: 0.78rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+  cursor: pointer; transition: color 0.18s;
+}
+.presets-toggle:hover { color: var(--purple); }
+
+.presets-arrow {
+  font-size: 0.9rem; transition: transform 0.22s ease;
+  display: inline-block;
+}
+.presets-arrow.open { transform: rotate(90deg); }
+
+.presets-body {
+  overflow: hidden; max-height: 0;
+  transition: max-height 0.35s ease, padding 0.25s ease;
+  padding: 0;
+}
+.presets-body.open {
+  max-height: 400px;
+  padding: 0.85rem 0 0;
+}
+
+.preset-btns { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.6rem; }
+.preset-btn {
+  padding: 0.4rem 0.9rem; border-radius: 100px;
+  border: 2px solid var(--border); background: white;
+  font-family: 'Nunito', sans-serif; font-weight: 700;
+  font-size: 0.82rem; cursor: pointer; color: var(--text);
+  transition: all 0.18s;
+}
+.preset-btn:hover:not(:disabled) { border-color: var(--purple); color: var(--purple); transform: translateY(-1px); }
+.preset-btn:disabled { opacity: 0.38; cursor: not-allowed; transform: none; }
+
+/* Locked presets overlay */
+.presets-locked {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin-top: 0.6rem; padding: 0.5rem 0.75rem;
+  background: #f1f5f9; border-radius: 10px;
+  font-size: 0.78rem; font-weight: 700; color: var(--muted);
+}
+.presets-locked.hidden { display: none; }
+
+/* Status bar */
+.status-bar {
+  padding: 0.85rem 1.5rem; border-radius: 14px;
+  font-weight: 700; font-size: 0.95rem;
+  text-align: center; display: none; transition: all 0.3s;
+}
+.status-bar.show { display: block; }
+.status-bar.ok   { background: var(--green-light); color: var(--green); }
+.status-bar.warn { background: var(--red-light); color: var(--red); }
+.status-bar.info { background: var(--amber-light); color: var(--amber); }
+
+/* Reveal button */
+.btn-reveal {
+  display: none; margin: 0.85rem auto 0;
+  padding: 0.75rem 2.2rem; border-radius: 100px; border: none;
+  background: linear-gradient(135deg, var(--purple), #4f46e5);
+  color: white; font-family: 'Nunito', sans-serif;
+  font-weight: 900; font-size: 1rem; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(124,58,237,0.35);
+  transition: all 0.2s;
+}
+.btn-reveal.show { display: block; }
+.btn-reveal:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(124,58,237,0.45); }
+
+/* Country match panel */
+.country-match {
+  display: none; margin-top: 1rem;
+  padding: 1.3rem 1.5rem; border-radius: 16px; border: 2px solid;
+}
+.country-match.show { display: block; animation: slideDown 0.4s ease; }
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.cm-top { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+.cm-flag { font-size: 2rem; line-height: 1; }
+.cm-name { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 700; }
+.cm-why  { font-size: 0.9rem; line-height: 1.65; }
+
+.btn-reset {
+  display: block; margin: 0.75rem auto 0;
+  padding: 0.45rem 1.3rem; border-radius: 100px;
+  border: 2px solid var(--border); background: white;
+  font-family: 'Nunito', sans-serif; font-weight: 700;
+  font-size: 0.88rem; cursor: pointer; color: var(--muted);
+  transition: all 0.18s;
+}
+.btn-reset:hover { border-color: var(--purple); color: var(--purple); }
+
+/* ════════════════════════════════
+   THINKERS
+════════════════════════════════ */
+.thinkers { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.1rem; margin-bottom: 3.5rem; }
+.thinker {
+  background: white; border-radius: 20px;
+  padding: 1.5rem; border-top: 5px solid;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  transition: transform 0.2s;
+}
+.thinker:hover { transform: translateY(-4px); }
+.thinker.fri { border-color: #f59e0b; }
+.thinker.sch { border-color: #3b82f6; }
+.thinker.sti { border-color: #10b981; }
+.thinker.pik { border-color: #ec4899; }
+
+.thinker-ico { font-size: 2.4rem; margin-bottom: 0.65rem; display: block; }
+.thinker-name { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 700; }
+.thinker-camp {
+  font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.07em; margin: 0.3rem 0 0.8rem;
+}
+.thinker.fri .thinker-camp { color: #f59e0b; }
+.thinker.sch .thinker-camp { color: #3b82f6; }
+.thinker.sti .thinker-camp { color: #10b981; }
+.thinker.pik .thinker-camp { color: #ec4899; }
+.thinker-q { font-style: italic; color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
+.thinker-tldr {
+  margin-top: 0.75rem; padding: 0.6rem 0.75rem;
+  border-radius: 10px; background: #f8fafc;
+  font-size: 0.82rem; font-weight: 700; line-height: 1.5;
+  color: var(--text); border-left: 3px solid;
+}
+.thinker.fri .thinker-tldr { border-color: #f59e0b; }
+.thinker.sch .thinker-tldr { border-color: #3b82f6; }
+.thinker.sti .thinker-tldr { border-color: #10b981; }
+.thinker.pik .thinker-tldr { border-color: #ec4899; }
+
+/* ════════════════════════════════
+   FACTORS EXPLAINED
+════════════════════════════════ */
+.factors { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.1rem; margin-bottom: 3.5rem; }
+.factor {
+  background: white; border-radius: 18px;
+  padding: 1.4rem; border-left: 5px solid;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.055);
+}
+.factor.inc-f { border-color: var(--green-mid); }
+.factor.bel-f { border-color: var(--red-mid); }
+.factor-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.7rem; }
+.factor-ico { font-size: 1.5rem; }
+.factor-name { font-weight: 800; font-size: 1rem; flex: 1; }
+.factor-badge {
+  font-size: 0.68rem; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 0.06em; padding: 0.2rem 0.6rem; border-radius: 100px;
+}
+.inc-f .factor-badge { background: var(--green-light); color: var(--green); }
+.bel-f .factor-badge { background: var(--red-light); color: var(--red); }
+.factor-text { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.7rem; line-height: 1.6; }
+.factor-credit { font-size: 0.78rem; font-weight: 800; color: var(--purple); }
+
+/* ════════════════════════════════
+   EXAMPLES
+════════════════════════════════ */
+.ex-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.ex-tab {
+  padding: 0.45rem 1.15rem; border-radius: 100px;
+  border: 2px solid var(--border); background: white;
+  font-family: 'Nunito', sans-serif; font-weight: 700;
+  font-size: 0.9rem; cursor: pointer; transition: all 0.18s;
+}
+.ex-tab:hover:not(.on) { border-color: var(--purple); color: var(--purple); }
+.ex-tab.on { background: var(--purple); border-color: var(--purple); color: white; }
+
+.ex-panel { display: none; padding: 2rem; }
+.ex-panel.on { display: block; }
+
+.ex-head { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.25rem; }
+.ex-flag { font-size: 3rem; line-height: 1; }
+.ex-ttl { font-family: 'Fraunces', serif; font-size: 1.45rem; font-weight: 700; }
+.ex-per { color: var(--muted); font-size: 0.88rem; margin-top: 0.15rem; font-weight: 600; }
+.verdict {
+  display: inline-block; padding: 0.35rem 1rem;
+  border-radius: 100px; font-weight: 800; font-size: 0.8rem;
+  margin-bottom: 1.25rem;
+}
+.verdict.bad  { background: var(--red-light); color: var(--red); }
+.verdict.good { background: var(--green-light); color: var(--green); }
+.verdict.mix  { background: var(--amber-light); color: var(--amber); }
+
+.ex-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.85rem; margin-bottom: 1.25rem; }
+.stat-box { border-radius: 14px; padding: 1rem; text-align: center; position: relative; }
+.stat-val { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 900; display: block; }
+.stat-lbl { font-size: 0.78rem; color: var(--muted); font-weight: 700; margin-top: 0.15rem; }
+
+/* Stat tooltip */
+.stat-info {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: rgba(0,0,0,0.12); color: inherit;
+  font-size: 0.62rem; font-weight: 900; cursor: pointer;
+  margin-left: 0.25rem; vertical-align: middle;
+  border: none; font-family: 'Nunito', sans-serif;
+  transition: background 0.15s;
+}
+.stat-info:hover { background: rgba(0,0,0,0.22); }
+
+.stat-tooltip {
+  display: none; position: absolute; bottom: calc(100% + 8px);
+  left: 50%; transform: translateX(-50%);
+  background: #1e1b4b; color: white;
+  font-size: 0.78rem; font-weight: 600; line-height: 1.5;
+  padding: 0.6rem 0.85rem; border-radius: 10px;
+  width: 200px; text-align: left; z-index: 100;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  pointer-events: none;
+}
+.stat-tooltip::after {
+  content: ''; position: absolute; top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent; border-top-color: #1e1b4b;
+}
+.stat-info:hover + .stat-tooltip,
+.stat-info:focus + .stat-tooltip { display: block; }
+.ex-body { color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+
+/* ════════════════════════════════
+   QUIZ
+════════════════════════════════ */
+.quiz-shell {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+  border-radius: 22px; padding: 2.5rem;
+  margin-bottom: 3.5rem; color: white;
+}
+.quiz-hdg { font-family: 'Fraunces', serif; font-size: 1.75rem; font-weight: 900; margin-bottom: 0.35rem; }
+.quiz-sub { opacity: 0.78; font-size: 0.95rem; margin-bottom: 1.75rem; font-weight: 600; }
+
+.q-dots { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+.q-dot {
+  width: 13px; height: 13px; border-radius: 50%;
+  background: rgba(255,255,255,0.25); transition: all 0.25s;
+}
+.q-dot.cur  { background: white; transform: scale(1.2); }
+.q-dot.good { background: #34d399; }
+.q-dot.bad  { background: #f87171; }
+
+.q-block { display: none; }
+.q-block.on { display: block; }
+
+.q-num { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.65; font-weight: 800; margin-bottom: 0.4rem; }
+.q-text { font-size: 1.08rem; font-weight: 700; margin-bottom: 1.4rem; line-height: 1.55; }
+
+.q-opts { display: flex; flex-direction: column; gap: 0.65rem; }
+.q-opt {
+  background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.28);
+  border-radius: 13px; padding: 0.85rem 1.2rem;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  font-weight: 600; font-size: 0.93rem; color: white;
+  text-align: left; transition: all 0.18s; width: 100%;
+}
+.q-opt:hover:not(:disabled) { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.6); }
+.q-opt:disabled { cursor: default; }
+.q-opt.right { background: rgba(52,211,153,0.3); border-color: #34d399; }
+.q-opt.wrong { background: rgba(248,113,113,0.3); border-color: #f87171; }
+
+.q-fb {
+  margin-top: 1rem; padding: 0.95rem 1.2rem; border-radius: 13px;
+  font-weight: 600; font-size: 0.92rem; display: none; line-height: 1.55;
+}
+.q-fb.on { display: block; }
+.q-fb.ok  { background: rgba(52,211,153,0.25); border: 2px solid #34d399; }
+.q-fb.err { background: rgba(248,113,113,0.25); border: 2px solid #f87171; }
+
+.btn-next {
+  margin-top: 1.1rem; padding: 0.7rem 1.9rem; border-radius: 100px;
+  border: none; background: white; color: #312e81;
+  font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.95rem;
+  cursor: pointer; display: none; transition: all 0.18s;
+}
+.btn-next.on { display: inline-block; }
+.btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+.q-result { display: none; text-align: center; padding: 1.5rem 0; }
+.q-result.on { display: block; }
+.res-score { font-family: 'Fraunces', serif; font-size: 3.5rem; font-weight: 900; margin-bottom: 0.5rem; }
+.res-msg { font-size: 1.05rem; opacity: 0.88; margin-bottom: 1.5rem; font-weight: 600; }
+
+/* ════════════════════════════════
+   SUMMARY
+════════════════════════════════ */
+.summary {
+  background: #111827; border-radius: 22px;
+  padding: 2.5rem; color: white; margin-bottom: 3.5rem;
+}
+.sum-title { font-family: 'Fraunces', serif; font-size: 1.75rem; font-weight: 900; margin-bottom: 1.5rem; }
+.sum-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+@media (max-width: 600px) { .sum-grid { grid-template-columns: 1fr; } }
+.sum-card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 1.3rem; border-left: 4px solid; }
+.sum-card.g { border-color: #34d399; }
+.sum-card.r { border-color: #f87171; }
+.sum-card h4 { font-size: 0.98rem; font-weight: 800; margin-bottom: 0.65rem; }
+.sum-card.g h4 { color: #6ee7b7; }
+.sum-card.r h4 { color: #fca5a5; }
+.sum-card p { font-size: 0.88rem; opacity: 0.78; line-height: 1.65; }
+.sum-concl {
+  background: rgba(255,255,255,0.05); border-radius: 16px;
+  padding: 1.4rem; border: 1px solid rgba(255,255,255,0.13);
+  font-size: 0.95rem; line-height: 1.75; opacity: 0.88;
+}
+.sum-concl strong { color: #fbbf24; }
+
+/* ── CHART ── */
+.chart-wrap {
+  margin: 1.5rem 0 1.25rem;
+  background: rgba(255,255,255,0.05); border-radius: 16px;
+  padding: 1.25rem 1.25rem 1rem;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.chart-title {
+  font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700;
+  color: white; margin-bottom: 0.2rem;
+}
+.chart-sub {
+  font-size: 0.75rem; color: rgba(255,255,255,0.45);
+  font-weight: 600; margin-bottom: 1rem;
+}
+.chart-area { position: relative; }
+
+.chart-tip {
+  display: none; position: absolute;
+  background: #1e1b4b; border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 12px; padding: 0.85rem 1rem;
+  min-width: 200px; max-width: 240px;
+  z-index: 20; pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.chart-tip.show { display: block; }
+.chart-tip-name {
+  font-family: 'Fraunces', serif; font-size: 0.95rem;
+  font-weight: 700; color: #fbbf24; margin-bottom: 0.25rem;
+}
+.chart-tip-gini {
+  font-size: 0.72rem; font-weight: 800; color: rgba(255,255,255,0.5);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;
+}
+.chart-tip-body {
+  font-size: 0.82rem; color: rgba(255,255,255,0.82); line-height: 1.55;
+}
+
+.chart-legend {
+  display: flex; flex-wrap: wrap; gap: 0.6rem 1.1rem;
+  margin-top: 0.85rem;
+}
+.cl-item {
+  display: flex; align-items: center; gap: 0.35rem;
+  font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.6);
+}
+.cl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ─── SCALE BEAM + PAN ANIMATION ─── */
+#beam {
+  transform-origin: 250px 74px;
+  will-change: transform;
+}
+#pan-group-l, #pan-group-r { transform-origin: 0 0; }
+#pan-swing-l, #pan-swing-r { transform-origin: 0 0; }
+
+/* ─── FOOTER ─── */
+footer {
+  text-align: center; padding: 2rem;
+  color: var(--muted); font-size: 0.82rem; font-weight: 600;
+}
+
+/* ─── responsive ─── */
+@media (max-width: 640px) {
+  .quiz-shell { padding: 1.5rem; }
+  .summary { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<header class="hero">
+  <div class="hero-dots"></div>
+  <span class="hero-emoji">⚖️</span>
+  <h1>Är ojämlikhet en <span>motor</span> eller ett <span>hinder</span>?</h1>
+  <p>Utforska hur ekonomer ser på ojämlikhet – sortera faktorer, möt de stora tänkarna och testa dina kunskaper.</p>
+</header>
+
+<div class="page">
+
+  <!-- ══ 1. SCALE ══ -->
+  <div class="section-label">⚖️ Aktivitet</div>
+  <h2 class="section-title">Skapar händelsen värde – eller extraherar den det?</h2>
+  <p class="section-sub">Dra varje händelse till rätt sida. <strong>Incitament</strong> = något samhället erkänner som produktivt och aktivt uppmuntrar – t.ex. genom patent, skatteavdrag eller utbildningssatsningar. <strong>Belastning</strong> = något samhället identifierar som skadligt och försöker motverka – t.ex. genom antitrustregler, progressiv skatt eller reglering. Avslöja sedan vilket land din fördelning liknar.</p>
+
+  <div class="card scale-wrap">
+    <div class="scale-legend">
+      <div class="leg-tag inc">✅ Incitament</div>
+      <div class="leg-tag bel">🚫 Belastning</div>
+    </div>
+
+    <!-- SVG SCALE -->
+    <div class="svg-box">
+      <svg id="scale-svg" viewBox="0 0 520 280" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Left pan (green) bowl gradient -->
+          <radialGradient id="gl" cx="38%" cy="28%" r="72%">
+            <stop offset="0%"   stop-color="#6ee7b7" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#059669" stop-opacity="0.07"/>
+          </radialGradient>
+          <!-- Right pan (red) bowl gradient -->
+          <radialGradient id="gr" cx="38%" cy="28%" r="72%">
+            <stop offset="0%"   stop-color="#fca5a5" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#dc2626" stop-opacity="0.07"/>
+          </radialGradient>
+          <!-- Rim highlight gradient (shared) -->
+          <linearGradient id="rim-l" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%"   stop-color="#a7f3d0" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#059669" stop-opacity="0.4"/>
+          </linearGradient>
+          <linearGradient id="rim-r" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%"   stop-color="#fecaca" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#dc2626" stop-opacity="0.4"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Stand & pole (static) -->
+        <rect x="208" y="228" width="104" height="15" rx="7.5" fill="#374151"/>
+        <rect x="244" y="68"  width="12"  height="164" rx="6"  fill="#4b5563"/>
+
+        <!-- Pivot knob -->
+        <circle cx="250" cy="74" r="13" fill="#374151"/>
+        <circle cx="250" cy="74" r="7"  fill="#6b7280"/>
+        <circle cx="250" cy="71" r="3"  fill="#9ca3af" opacity="0.6"/>
+
+        <!-- Beam group – rotated by JS spring around (250,74) -->
+        <g id="beam">
+          <rect x="92"  y="70" width="336" height="8" rx="4" fill="#9ca3af"/>
+          <!-- Shackle rings at beam ends -->
+          <circle cx="116" cy="74" r="6" fill="#6b7280"/>
+          <circle cx="116" cy="74" r="3" fill="#374151"/>
+          <circle cx="404" cy="74" r="6" fill="#6b7280"/>
+          <circle cx="404" cy="74" r="3" fill="#374151"/>
+        </g>
+
+        <!-- ── LEFT PAN (positioned by JS, swings by JS) ── -->
+        <g id="pan-group-l" style="transform:translate(116px,74px)">
+          <g id="pan-swing-l">
+            <!-- Chain: alternating link ellipses -->
+            <ellipse cx="0" cy="10" rx="3.5" ry="5.5" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+            <ellipse cx="0" cy="21" rx="5.5" ry="3.5" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+            <ellipse cx="0" cy="32" rx="3.5" ry="5.5" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+            <ellipse cx="0" cy="43" rx="5.5" ry="3.5" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+            <ellipse cx="0" cy="54" rx="3.5" ry="5.5" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+            <!-- Central guide wire -->
+            <line x1="0" y1="6" x2="0" y2="60" stroke="#9ca3af" stroke-width="1" stroke-opacity="0.35"/>
+
+            <!-- Pan shadow (depth) -->
+            <ellipse cx="2" cy="67" rx="49" ry="9" fill="rgba(0,0,0,0.1)"/>
+            <!-- Rim shadow ring -->
+            <ellipse cx="0" cy="64" rx="50" ry="9.5" fill="url(#rim-l)" stroke="#059669" stroke-width="2.2"/>
+            <!-- Rim highlight top -->
+            <ellipse cx="0" cy="63" rx="50" ry="5" fill="#a7f3d0" fill-opacity="0.45"/>
+
+            <!-- Bowl body -->
+            <path d="M -50,64 Q -57,91 -28,99 Q -14,103 0,104 Q 14,103 28,99 Q 57,91 50,64 Z"
+              fill="url(#gl)" stroke="#059669" stroke-width="2.2" stroke-linejoin="round"/>
+            <!-- Inner bowl highlight (shine) -->
+            <ellipse cx="-12" cy="76" rx="18" ry="10" fill="white" fill-opacity="0.14" transform="rotate(-15,-12,76)"/>
+
+            <!-- Label -->
+            <text x="0" y="88" text-anchor="middle"
+              font-family="Nunito,sans-serif" font-size="10.5" font-weight="800" fill="#065f46">INCITAMENT</text>
+          </g>
+        </g>
+
+        <!-- ── RIGHT PAN ── -->
+        <g id="pan-group-r" style="transform:translate(404px,74px)">
+          <g id="pan-swing-r">
+            <ellipse cx="0" cy="10" rx="3.5" ry="5.5" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+            <ellipse cx="0" cy="21" rx="5.5" ry="3.5" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+            <ellipse cx="0" cy="32" rx="3.5" ry="5.5" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+            <ellipse cx="0" cy="43" rx="5.5" ry="3.5" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+            <ellipse cx="0" cy="54" rx="3.5" ry="5.5" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+            <line x1="0" y1="6" x2="0" y2="60" stroke="#9ca3af" stroke-width="1" stroke-opacity="0.35"/>
+
+            <ellipse cx="2" cy="67" rx="49" ry="9" fill="rgba(0,0,0,0.1)"/>
+            <ellipse cx="0" cy="64" rx="50" ry="9.5" fill="url(#rim-r)" stroke="#dc2626" stroke-width="2.2"/>
+            <ellipse cx="0" cy="63" rx="50" ry="5" fill="#fecaca" fill-opacity="0.45"/>
+
+            <path d="M -50,64 Q -57,91 -28,99 Q -14,103 0,104 Q 14,103 28,99 Q 57,91 50,64 Z"
+              fill="url(#gr)" stroke="#dc2626" stroke-width="2.2" stroke-linejoin="round"/>
+            <ellipse cx="-12" cy="76" rx="18" ry="10" fill="white" fill-opacity="0.14" transform="rotate(-15,-12,76)"/>
+
+            <text x="0" y="88" text-anchor="middle"
+              font-family="Nunito,sans-serif" font-size="10.5" font-weight="800" fill="#991b1b">BELASTNING</text>
+          </g>
+        </g>
+
+        <!-- Status label -->
+        <text id="svg-status" x="250" y="264" text-anchor="middle"
+          font-family="Nunito,sans-serif" font-size="12" font-weight="800" fill="#9ca3af">
+          Placera alla faktorer för att se resultatet
+        </text>
+      </svg>
+    </div>
+
+    <!-- Drop zones -->
+    <div class="zones">
+      <div class="zone inc-zone" id="zone-inc" data-zone="inc">
+        <div class="zone-title">✅ Incitament – samhället uppmuntrar detta</div>
+      </div>
+      <div class="zone bel-zone" id="zone-bel" data-zone="bel">
+        <div class="zone-title">🚫 Belastning – samhället försöker motverka detta</div>
+      </div>
+    </div>
+
+    <!-- Preset scenarios -->
+    <div class="presets">
+      <button class="presets-toggle" id="presets-toggle" onclick="togglePresets()">
+        <span>📖 Visa ett historiskt scenario</span>
+        <span class="presets-arrow" id="presets-arrow">▸</span>
+      </button>
+      <div class="presets-body" id="presets-body">
+        <div class="preset-btns" id="preset-btns">
+        <button class="preset-btn" onclick="loadPreset('nordic')"    disabled>🇸🇪 Sverige, rekordåren (1960–80)</button>
+        <button class="preset-btn" onclick="loadPreset('planned')"   disabled>🇷🇺 Sovjet, femårsplanerna (1928–53)</button>
+        <button class="preset-btn" onclick="loadPreset('usa2000')"   disabled>🇺🇸 USA, avregleringen (1990–2008)</button>
+        <button class="preset-btn" onclick="loadPreset('gilded')"    disabled>🇺🇸 USA, Gilded Age (1870–1900)</button>
+        <button class="preset-btn" onclick="loadPreset('laissez')"   disabled>🇧🇷 Brasilien, militärdiktaturen (1964–85)</button>
+        <button class="preset-btn" onclick="loadPreset('newdeal')"   disabled>🇺🇸 USA, New Deal (1933–45)</button>
+        <button class="preset-btn" onclick="loadPreset('thatcher')"  disabled>🇬🇧 Storbritannien, Thatcher (1979–90)</button>
+        <button class="preset-btn" onclick="loadPreset('skorea')"    disabled>🇰🇷 Sydkorea, mirakelåren (1960–90)</button>
+        <button class="preset-btn" onclick="loadPreset('china')"     disabled>🇨🇳 Kina, reformåren (1978–2010)</button>
+      </div>
+        <div class="presets-locked" id="presets-locked">
+          🔒 Tillgängliga när du har sorterat klart och kontrollerat ditt svar
+        </div>
+      </div>
+    </div>
+
+    <!-- Chip bank -->
+    <div class="bank" id="bank">
+      <div class="bank-title">📦 Händelser att sortera – dra till rätt sida:</div>
+    </div>
+
+    <div class="status-bar" id="sbar"></div>
+    <button class="btn-reveal" id="btn-reveal" onclick="revealAll()">🔍 Kontrollera svar & visa land</button>
+    <div class="country-match" id="country-match">
+      <div class="cm-top">
+        <span class="cm-flag" id="cm-flag"></span>
+        <span class="cm-name" id="cm-name"></span>
+      </div>
+      <p class="cm-why" id="cm-why"></p>
+    </div>
+
+    <!-- Chain panel – shown when a revealed chip is clicked -->
+    <div class="chain-panel" id="chain-panel">
+      <div class="chain-title">
+        <span id="chain-title-text"></span>
+        <span class="chain-hint">Klicka ett annat avslöjat kort för att byta</span>
+      </div>
+      <div class="chain-steps">
+        <div class="chain-step"><div class="chain-step-label">Händelse</div><div class="chain-step-text" id="chain-s1"></div></div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-step"><div class="chain-step-label">Mekanism</div><div class="chain-step-text" id="chain-s2"></div></div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-step"><div class="chain-step-label">Samhällseffekt</div><div class="chain-step-text" id="chain-s3"></div></div>
+      </div>
+      <div class="chain-quote" id="chain-quote"></div>
+    </div>
+
+    <button class="btn-reset" onclick="resetScale()">↺ Återställ</button>
+  </div>
+
+  <!-- ══ 2. THINKERS ══ -->
+  <div class="section-label">🧠 Tänkare</div>
+  <h2 class="section-title">De fyra ekonomerna</h2>
+  <p class="section-sub">Dessa tänkare har format debatten om ojämlikhet och ekonomisk tillväxt – på radikalt olika sätt.</p>
+
+  <div class="thinkers">
+    <div class="thinker fri">
+      <span class="thinker-ico">💰</span>
+      <div class="thinker-name">Milton Friedman</div>
+      <div class="thinker-camp">Incitamentsperspektivet</div>
+      <p class="thinker-q">"The most important single central fact about a free market is that no exchange takes place unless both parties benefit."</p>
+      <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">Capitalism and Freedom, 1962</div>
+      <div class="thinker-tldr">Ojämlikhet är okej. Den som jobbar hårt och skapar värde ska tjäna mer. Det motiverar alla att anstränga sig.</div>
+    </div>
+    <div class="thinker sch">
+      <span class="thinker-ico">⚡</span>
+      <div class="thinker-name">Joseph Schumpeter</div>
+      <div class="thinker-camp">Incitamentsperspektivet</div>
+      <p class="thinker-q">"The process of Creative Destruction is the essential fact about capitalism. It is what capitalism consists in and what every capitalist concern has got to live in."</p>
+      <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">Capitalism, Socialism and Democracy, 1942</div>
+      <div class="thinker-tldr">Nya företag måste få slå ut gamla. Det är rörigt och orättvist för stunden, men det är så ekonomin utvecklas.</div>
+    </div>
+    <div class="thinker sti">
+      <span class="thinker-ico">⚖️</span>
+      <div class="thinker-name">Joseph Stiglitz</div>
+      <div class="thinker-camp">Belastningsperspektivet</div>
+      <p class="thinker-q">"Rent seeking — getting rich by manipulating the economic and political environment rather than creating new wealth — has become a major factor in the American economy."</p>
+      <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">The Price of Inequality, 2012</div>
+      <div class="thinker-tldr">Problemet är inte att rika finns, utan att de rika kan köpa sig regler som gör dem ännu rikare på allas bekostnad.</div>
+    </div>
+    <div class="thinker pik">
+      <span class="thinker-ico">📊</span>
+      <div class="thinker-name">Thomas Piketty</div>
+      <div class="thinker-camp">Belastningsperspektivet</div>
+      <p class="thinker-q">"The entrepreneur inevitably tends to become a rentier, more and more dominant over those who own nothing but their labor. Once constituted, capital reproduces itself faster than output increases."</p>
+      <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">Capital in the Twenty-First Century, 2013</div>
+      <div class="thinker-tldr">Om pengar växer snabbare än löner vinner den som ärver, inte den som jobbar hårt. Då spelar det ingen roll hur duktig du är.</div>
+    </div>
+  </div>
+
+  <!-- ══ 3. EXAMPLES ══ -->
+  <div class="section-label">🌍 Historia</div>
+  <h2 class="section-title">Ojämlikhet i verkligheten</h2>
+  <p class="section-sub">Hur har teorin sett ut i praktiken runt om i världen och genom historien?</p>
+
+  <div class="card" style="margin-bottom:3.5rem;">
+    <div style="padding:1.5rem 1.5rem 0;">
+      <div class="ex-tabs">
+        <button class="ex-tab on"  onclick="showEx('usa1',this)">🎩 USA – Gilded Age</button>
+        <button class="ex-tab"     onclick="showEx('swe', this)">🇸🇪 Sverige – Rekordåren</button>
+        <button class="ex-tab"     onclick="showEx('bra', this)">🇧🇷 Brasilien – IMF-åren</button>
+        <button class="ex-tab"     onclick="showEx('usa2',this)">🇺🇸 USA – Finanskrisen</button>
+        <button class="ex-tab"     onclick="showEx('sov', this)">🇷🇺 Sovjet – Femårsplanerna</button>
+      </div>
+    </div>
+
+    <div class="ex-panel on" id="ex-usa1">
+      <div class="ex-head">
+        <span class="ex-flag">🎩</span>
+        <div><div class="ex-ttl">USA – Gilded Age</div><div class="ex-per">ca 1870–1900</div></div>
+      </div>
+      <span class="verdict bad">🚫 Monopolmakt och rent-seeking</span>
+      <div class="ex-stats">
+        <div class="stat-box" style="background:#fee2e2">
+          <span class="stat-val" style="color:#991b1b">~40%</span>
+          <div class="stat-lbl">
+            Inkomstandel, topp 1%
+            <button class="stat-info" tabindex="0">i</button>
+            <div class="stat-tooltip">Hur stor del av alla inkomster i landet som går till den rikaste procenten av befolkningen. 40% innebär extrem koncentration.</div>
+          </div>
+        </div>
+        <div class="stat-box" style="background:#fef3c7">
+          <span class="stat-val" style="color:#92400e">Låg</span>
+          <div class="stat-lbl">
+            Ekonomisk rörlighet
+            <button class="stat-info" tabindex="0">i</button>
+            <div class="stat-tooltip">Hur lätt det är att byta ekonomisk klass jämfört med sina föräldrar. Låg rörlighet = din bakgrund avgör din framtid.</div>
+          </div>
+        </div>
+      </div>
+      <p class="ex-body">Rockefeller, Carnegie och Morgan kontrollerade infrastruktur, stål och finans under perioden. Delar av deras förmögenheter byggde på äkta innovation, men drivkraften var i hög grad monopolistisk kontroll och politisk påverkan. Topp 1% tog ungefär 40% av den nationella inkomsten. Den politiska reaktionen kom till slut i form av Shermans antitrustlag 1890 och Roosevelts progressiva reformer på 1900-talet.</p>
+    </div>
+
+    <div class="ex-panel" id="ex-swe">
+      <div class="ex-head">
+        <span class="ex-flag">🌿</span>
+        <div><div class="ex-ttl">Sverige – Rekordåren</div><div class="ex-per">ca 1960–1980</div></div>
+      </div>
+      <span class="verdict good">✅ Balanserad tillväxt</span>
+      <div class="ex-stats">
+        <div class="stat-box" style="background:#d1fae5">
+          <span class="stat-val" style="color:#065f46">~0,27</span>
+          <div class="stat-lbl">
+            Gini-koefficient (0=jämnt, 1=en äger allt)
+            <button class="stat-info" tabindex="0">i</button>
+            <div class="stat-tooltip">Ett mått på ojämlikhet: 0 betyder att alla har exakt lika mycket, 1 att en enda person äger allt. Sverige låg runt 0,27 – bland de lägsta i världen.</div>
+          </div>
+        </div>
+        <div class="stat-box" style="background:#d1fae5">
+          <span class="stat-val" style="color:#065f46">Hög</span>
+          <div class="stat-lbl">
+            Ekonomisk rörlighet
+            <button class="stat-info" tabindex="0">i</button>
+            <div class="stat-tooltip">Hur lätt det är att byta ekonomisk klass jämfört med sina föräldrar. Hög rörlighet = hårt arbete och talang spelar roll oavsett bakgrund.</div>
+          </div>
+        </div>
+      </div>
+      <p class="ex-body">Sverige kombinerade marknadsekonomi med starka investeringar i utbildning och sjukvård, och starka fackföreningar som begränsade rent-seeking. Incitamenten för innovation bevarades via patentlagstiftning och fungerande konkurrens. Under perioden var Sverige ett av världens snabbast växande länder räknat i BNP per capita, med en Gini-koefficient runt 0,27. Modellen kallas ofta Rehn-Meidner-modellen efter de två LO-ekonomer som utformade den.</p>
+    </div>
+
+    <div class="ex-panel" id="ex-bra">
+      <div class="ex-head">
+        <span class="ex-flag">🇧🇷</span>
+        <div><div class="ex-ttl">Brasilien – Strukturanpassningen</div><div class="ex-per">ca 1985–2000</div></div>
+      </div>
+      <span class="verdict bad">🚫 Strukturell ojämlikhet</span>
+      <div class="ex-stats">
+        <div class="stat-box" style="background:#fee2e2">
+          <span class="stat-val" style="color:#991b1b">0,60</span>
+          <div class="stat-lbl">
+            Gini-koefficient (0=jämnt, 1=en äger allt)
+            <button class="stat-info" tabindex="0">i</button>
+            <div class="stat-tooltip">0,60 är extremt högt. Sverige låg på 0,27 under samma era. Piketty varnar för politisk kollaps när värdet överstiger 0,5.</div>
+          </div>
+        </div>
+        <div class="stat-box" style="background:#fee2e2">
+          <span class="stat-val" style="color:#991b1b">Kort</span>
+          <div class="stat-lbl">
+            Tillväxtperioders längd
+            <button class="stat-info" tabindex="0">i</button>
+            <div class="stat-tooltip">Hur länge ett land kan hålla igång ekonomisk tillväxt utan att hamna i kris. IMF-studier visar att ojämlika länder ofta har korta tillväxtspurter som bryts av djupa svackor.</div>
+          </div>
+        </div>
+      </div>
+      <p class="ex-body">Brasilien hade under perioden en av världens högsta Gini-koefficienter, runt 0,60. IMF:s strukturanpassningsprogram på 1980- och 1990-talen krävde avregleringar och nedskärningar i offentliga tjänster, vilket slog hårt mot ojämlikheten i möjligheter. Marklandet var och är extremt koncentrerat: 1% av markägarna kontrollerade 46% av jordbruksmarken. Ekonomin uppvisade det mönster som IMF-studier beskriver som typiskt för regionen, med korta tillväxtspurter som bryts av finansiella kriser.</p>
+    </div>
+
+    <div class="ex-panel" id="ex-usa2">
+      <div class="ex-head">
+        <span class="ex-flag">📉</span>
+        <div><div class="ex-ttl">USA – Finanskrisen</div><div class="ex-per">ca 2000–2010</div></div>
+      </div>
+      <span class="verdict mix">⚠️ Underkonsumtion och skuldbubblor</span>
+      <div class="ex-stats">
+        <div class="stat-box" style="background:#fef3c7">
+          <span class="stat-val" style="color:#92400e">~20%</span>
+          <div class="stat-lbl">
+            Inkomstandel, topp 1% (2007)
+            <button class="stat-info" tabindex="0">i</button>
+            <div class="stat-tooltip">Hur stor del av alla inkomster i landet som går till den rikaste procenten. 20% år 2007 var den högsta nivån sedan Gilded Age på 1920-talet.</div>
+          </div>
+        </div>
+        <div class="stat-box" style="background:#fef3c7">
+          <span class="stat-val" style="color:#92400e">2008</span>
+          <div class="stat-lbl">År för finanskrisens utbrott</div>
+        </div>
+      </div>
+      <p class="ex-body">Inkomstkoncentrationen i USA steg under 2000-talet tills topp 1% tog runt 20% av den nationella inkomsten. Medelklassens köpkraft stagnerade, men konsumtionen hölls uppe via bolånebaserade krediter. Finanssektorn hade under 1990- och 2000-talen drivit igenom avregleringar via intensiv lobbying. När bolånebubblan sprack 2008 utlöstes den djupaste finanskris i västvärlden sedan 1930-talet. Stiglitz beskriver det som ett direkt resultat av att ojämlikhet och rent-seeking tilläts växa utan motverkan.</p>
+    </div>
+
+    <div class="ex-panel" id="ex-sov">
+      <div class="ex-head">
+        <span class="ex-flag">🇷🇺</span>
+        <div><div class="ex-ttl">Sovjet – Femårsplanerna</div><div class="ex-per">ca 1928–1953</div></div>
+      </div>
+      <span class="verdict bad">🚫 Centralstyrd ekonomi utan incitament</span>
+      <div class="ex-stats">
+        <div class="stat-box" style="background:#dbeafe">
+          <span class="stat-val" style="color:#1e40af">Statlig</span>
+          <div class="stat-lbl">All produktion centralstyrd</div>
+        </div>
+        <div class="stat-box" style="background:#fee2e2">
+          <span class="stat-val" style="color:#991b1b">Låg</span>
+          <div class="stat-lbl">
+            Ekonomisk rörlighet
+            <button class="stat-info" tabindex="0">i</button>
+            <div class="stat-tooltip">I Sovjet bestämdes din position till stor del av partitillhörighet och politisk lojalitet, inte av produktivitet eller talang.</div>
+          </div>
+        </div>
+      </div>
+      <p class="ex-body">Under Stalins fem femårsplaner 1928 till 1953 centraliserades hela den sovjetiska ekonomin. Staten satte priser, planerade produktion och fördelade resurser utan marknadssignaler. Kortsiktig industriell tillväxt uppnåddes inom stål, kol och militär teknik. Däremot kollapsade incitamenten att innovera eller arbeta effektivt eftersom lön inte kopplades till prestation. Jordbrukssektorn drabbades av katastrofal ineffektivitet, delvis orsak till svälten 1932 till 1933. Sovjet visade att det är möjligt att bekämpa alla belastningsfaktorer och ändå misslyckas ekonomiskt, om incitamenten till värdeskapande samtidigt slås ut.</p>
+    </div>
+  </div>
+
+  <!-- ══ 5. QUIZ ══ -->
+  <div class="quiz-shell">
+    <div class="quiz-hdg">🧪 Testa dina kunskaper</div>
+    <p class="quiz-sub">Diagnostiska frågor – varje svarsalternativ avslöjar en specifik missuppfattning om du väljer fel.</p>
+
+    <div class="q-dots">
+      <div class="q-dot cur" id="d0"></div>
+      <div class="q-dot"     id="d1"></div>
+      <div class="q-dot"     id="d2"></div>
+      <div class="q-dot"     id="d3"></div>
+    </div>
+
+    <!-- Q 1 -->
+    <div class="q-block on" id="q0">
+      <div class="q-num">Fråga 1 av 4</div>
+      <div class="q-text">Piketty visar att avkastningen på kapital (r) historiskt sett har vuxit snabbare än ekonomin i stort (g). Med andra ord: pengar som ägs växer snabbare än löner för arbete. Vad blir den viktigaste konsekvensen av detta över tid?</div>
+      <div class="q-opts">
+        <button class="q-opt" onclick="answer(0,0)">A) Ekonomin växer snabbare och alla i samhället gynnas av den högre avkastningen</button>
+        <button class="q-opt" onclick="answer(0,1)">B) Den som ärver kapital blir allt rikare relativt den som arbetar, oavsett hur hårt hen jobbar</button>
+        <button class="q-opt" onclick="answer(0,2)">C) Staten får in mer i skatt och kan därför bygga ut välfärden</button>
+        <button class="q-opt" onclick="answer(0,3)">D) Fler väljer att investera och ta risker, vilket driver på innovation</button>
+      </div>
+      <div class="q-fb" id="fb0"></div>
+      <button class="btn-next" id="nx0" onclick="nextQ(1)">Nästa fråga →</button>
+    </div>
+
+    <!-- Q 2 -->
+    <div class="q-block" id="q1">
+      <div class="q-num">Fråga 2 av 4</div>
+      <div class="q-text">Stiglitz kritiserar "rent-seeking" – ett begrepp som beskriver när aktörer försöker bli rikare utan att skapa något nytt värde för samhället. Vilket av alternativen nedan är ett exempel på rent-seeking?</div>
+      <div class="q-opts">
+        <button class="q-opt" onclick="answer(1,0)">A) En hyresvärd höjer hyran eftersom fler vill bo i ett populärt område</button>
+        <button class="q-opt" onclick="answer(1,1)">B) En rik person väljer att spara mer och konsumera mindre av sin inkomst</button>
+        <button class="q-opt" onclick="answer(1,2)">C) Ett företag spenderar resurser på att påverka politiker för att få gynnsamma regler, istället för att förbättra sina produkter</button>
+        <button class="q-opt" onclick="answer(1,3)">D) Ett innovativt företag växer snabbt och tjänar stora pengar på en ny uppfinning</button>
+      </div>
+      <div class="q-fb" id="fb1"></div>
+      <button class="btn-next" id="nx1" onclick="nextQ(2)">Nästa fråga →</button>
+    </div>
+
+    <!-- Q 3 -->
+    <div class="q-block" id="q2">
+      <div class="q-num">Fråga 3 av 4</div>
+      <div class="q-text">Piketty beskriver en kritisk gräns där ojämlikheten blivit så extrem att samhället riskerar politisk kollaps eller revolution om den inte hålls på plats med förtryck. Var går denna gräns?</div>
+      <div class="q-opts">
+        <button class="q-opt" onclick="answer(2,0)">A) När den rikaste procenten tar mer än 20% av alla inkomster i landet</button>
+        <button class="q-opt" onclick="answer(2,1)">B) När den rikaste tiondelen tar mer än hälften av alla inkomster i landet</button>
+        <button class="q-opt" onclick="answer(2,2)">C) När Gini-koefficienten, ett mått på ojämlikhet, överstiger 0,35</button>
+        <button class="q-opt" onclick="answer(2,3)">D) När ekonomin växer med mer än 5% per år under en längre period</button>
+      </div>
+      <div class="q-fb" id="fb2"></div>
+      <button class="btn-next" id="nx2" onclick="nextQ(3)">Nästa fråga →</button>
+    </div>
+
+    <!-- Q 4 -->
+    <div class="q-block" id="q3">
+      <div class="q-num">Fråga 4 av 4</div>
+      <div class="q-text">Forskning av Okun och Rainwater visar att något förändras i människors ekonomiska beteende när de hamnar långt under genomsnittet i samhället – ungefär under hälften av vad andra tjänar. Vad händer?</div>
+      <div class="q-opts">
+        <button class="q-opt" onclick="answer(3,0)">A) De satsar mer på utbildning för att på sikt ta sig ur sin situation</button>
+        <button class="q-opt" onclick="answer(3,1)">B) De drar ner på konsumtionen och sparar en större del av det de tjänar</button>
+        <button class="q-opt" onclick="answer(3,2)">C) De slutar planera långsiktigt och fokuserar helt på att klara vardagen – vilket gör det svårare att ta sig ur situationen</button>
+        <button class="q-opt" onclick="answer(3,3)">D) De börjar kräva mer omfördelning från staten, vilket minskar incitamenten att arbeta för alla i samhället</button>
+      </div>
+      <div class="q-fb" id="fb3"></div>
+      <button class="btn-next" id="nx3" onclick="showResult()">Se resultat →</button>
+    </div>
+
+    <!-- Result -->
+    <div class="q-result" id="qres">
+      <div class="res-score" id="rscore"></div>
+      <div class="res-msg" id="rmsg"></div>
+      <button class="btn-next on" onclick="restartQ()">↺ Försök igen</button>
+    </div>
+  </div>
+
+  <!-- ══ 6. SUMMARY ══ -->
+  <div class="summary">
+    <div class="sum-title">Vad avgör om ojämlikhet är bra eller dålig?</div>
+    <div class="sum-grid">
+      <div class="sum-card g">
+        <h4>✅ Ojämlikhet som motor</h4>
+        <p>Så länge ojämlikheten speglar verkliga bidrag till produktionen, innovation, risktagande och kompetens, fungerar den som en drivkraft. Den kanaliserar resurser till produktiva ändamål och belönar dem som skapar nytt värde för samhället.</p>
+      </div>
+      <div class="sum-card r">
+        <h4>🚫 Ojämlikhet som broms</h4>
+        <p>Ojämlikheten blir destruktiv när den är självförstärkande: den blockerar talang (ojämlikhet i möjligheter), snedvrider politiken (rent-seeking) eller koncentrerar kapital hos arvstagare (r&gt;g) snarare än hos dem som är mest produktiva.</p>
+      </div>
+    </div>
+
+    <!-- ── CHART ── -->
+    <div class="chart-wrap">
+      <div class="chart-title">Ojämlikhet och ekonomisk hälsa – fem historiska exempel</div>
+      <div class="chart-sub">Klicka på en punkt för mer information</div>
+      <div class="chart-area" id="chart-area">
+        <svg id="ineq-chart" viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;overflow:visible;">
+          <defs>
+            <clipPath id="chart-clip"><rect x="50" y="10" width="490" height="240"/></clipPath>
+          </defs>
+
+          <!-- Grid lines -->
+          <line x1="50" y1="250" x2="540" y2="250" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <line x1="50" y1="190" x2="540" y2="190" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="50" y1="130" x2="540" y2="130" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="50" y1="70"  x2="540" y2="70"  stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="4,4"/>
+
+          <!-- Y axis -->
+          <line x1="50" y1="10" x2="50" y2="250" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <!-- X axis -->
+          <line x1="50" y1="250" x2="540" y2="250" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+
+          <!-- Axis labels -->
+          <text x="295" y="292" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-family="Nunito,sans-serif" font-size="11" font-weight="700">Ojämlikhet (Gini-koefficient, låg → hög)</text>
+          <text x="18" y="130" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-family="Nunito,sans-serif" font-size="11" font-weight="700" transform="rotate(-90,18,130)">Ekonomisk hälsa på lång sikt</text>
+
+          <!-- X tick labels -->
+          <text x="50"  y="265" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-family="Nunito,sans-serif" font-size="9">0,20</text>
+          <text x="172" y="265" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-family="Nunito,sans-serif" font-size="9">0,30</text>
+          <text x="294" y="265" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-family="Nunito,sans-serif" font-size="9">0,40</text>
+          <text x="416" y="265" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-family="Nunito,sans-serif" font-size="9">0,50</text>
+          <text x="538" y="265" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-family="Nunito,sans-serif" font-size="9">0,60</text>
+
+          <!-- Inverted-U curve: peaks around Gini 0.28-0.32, drops on both ends -->
+          <path d="M 50,235 C 100,215 140,90 200,52 C 240,28 280,28 310,38 C 360,62 400,120 450,175 C 490,215 530,238 540,242"
+            fill="none" stroke="rgba(251,191,36,0.55)" stroke-width="2.5" stroke-dasharray="6,4" clip-path="url(#chart-clip)"/>
+
+          <!-- Zone labels on curve -->
+          <text x="90"  y="210" fill="rgba(251,191,36,0.5)" font-family="Nunito,sans-serif" font-size="9" font-weight="700">För lite ojämlikhet</text>
+          <text x="90"  y="221" fill="rgba(251,191,36,0.5)" font-family="Nunito,sans-serif" font-size="9">= svaga incitament</text>
+          <text x="390" y="145" fill="rgba(251,191,36,0.5)" font-family="Nunito,sans-serif" font-size="9" font-weight="700">För mycket ojämlikhet</text>
+          <text x="390" y="156" fill="rgba(251,191,36,0.5)" font-family="Nunito,sans-serif" font-size="9">= strukturella belastningar</text>
+
+          <!-- ── DATA POINTS ── clickable -->
+          <!-- Sovjet: Gini ~0.24 (very low, centrally set), health ~35 -->
+          <circle id="pt-sov" cx="74"  cy="220" r="11" fill="#3b82f6" stroke="white" stroke-width="2" style="cursor:pointer" onclick="showChartTip('sov')"/>
+          <text x="74"  cy="220" text-anchor="middle" dominant-baseline="central" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="white" style="pointer-events:none">
+            <tspan x="74" y="220">🇷🇺</tspan>
+          </text>
+
+          <!-- Sverige: Gini ~0.27, health ~88 -->
+          <circle id="pt-swe" cx="123" cy="47"  r="11" fill="#10b981" stroke="white" stroke-width="2" style="cursor:pointer" onclick="showChartTip('swe')"/>
+          <text text-anchor="middle" dominant-baseline="central" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="white" style="pointer-events:none">
+            <tspan x="123" y="47">🇸🇪</tspan>
+          </text>
+
+          <!-- USA New Deal: Gini ~0.37, health ~72 -->
+          <circle id="pt-new" cx="264" cy="85"  r="11" fill="#22c55e" stroke="white" stroke-width="2" style="cursor:pointer" onclick="showChartTip('new')"/>
+          <text text-anchor="middle" dominant-baseline="central" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="white" style="pointer-events:none">
+            <tspan x="264" y="85">🦅</tspan>
+          </text>
+
+          <!-- USA 2000-tal: Gini ~0.45, health ~52 -->
+          <circle id="pt-usa" cx="392" cy="152" r="11" fill="#f59e0b" stroke="white" stroke-width="2" style="cursor:pointer" onclick="showChartTip('usa')"/>
+          <text text-anchor="middle" dominant-baseline="central" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="white" style="pointer-events:none">
+            <tspan x="392" y="152">🇺🇸</tspan>
+          </text>
+
+          <!-- Brasilien: Gini ~0.60, health ~28 -->
+          <circle id="pt-bra" cx="538" cy="228" r="11" fill="#ec4899" stroke="white" stroke-width="2" style="cursor:pointer" onclick="showChartTip('bra')"/>
+          <text text-anchor="middle" dominant-baseline="central" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="white" style="pointer-events:none">
+            <tspan x="538" y="228">🇧🇷</tspan>
+          </text>
+        </svg>
+
+        <!-- Tooltip panel -->
+        <div class="chart-tip" id="chart-tip">
+          <div class="chart-tip-name" id="ct-name"></div>
+          <div class="chart-tip-gini" id="ct-gini"></div>
+          <div class="chart-tip-body" id="ct-body"></div>
+        </div>
+      </div>
+      <div class="chart-legend">
+        <span class="cl-item"><span class="cl-dot" style="background:#3b82f6"></span>Sovjet, femårsplanerna</span>
+        <span class="cl-item"><span class="cl-dot" style="background:#10b981"></span>Sverige, rekordåren</span>
+        <span class="cl-item"><span class="cl-dot" style="background:#22c55e"></span>USA, New Deal</span>
+        <span class="cl-item"><span class="cl-dot" style="background:#f59e0b"></span>USA, 2000-tal</span>
+        <span class="cl-item"><span class="cl-dot" style="background:#ec4899"></span>Brasilien, 1985–2000</span>
+      </div>
+    </div>
+
+    <div class="sum-concl">
+      <strong>Kärnslutsatsen:</strong> Det råder enighet bland källorna om att ojämlikhet har ett positivt värde för tillväxt så länge den återspeglar skillnader i bidrag till produktionen. Den blir däremot en ekonomisk belastning så snart den resulterar i blockerad talangutveckling, snedvridna marknader eller politisk instabilitet. Det är inte ojämlikheten i sig, utan dess <em>källa och form</em>, som avgör dess ekonomiska roll.
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<footer>Källhänvisningar: Piketty – <em>Capital in the Twenty-First Century</em> &nbsp;·&nbsp; Stiglitz – <em>The Price of Inequality</em> &nbsp;·&nbsp; Okun – <em>Equality and Efficiency</em> &nbsp;·&nbsp; Friedman – <em>Capitalism and Freedom</em></footer>
+
+<script>
+// ════════════════════════════════════════
+// CHIP DATA – concrete events + revealed concepts
+// ════════════════════════════════════════
+const CHIPS = [
+  {
+    id:'c1', event:'🚀 Ett litet nystartat företag utmanar och konkurrerar ut ett stort etablerat bolag',
+    concept:'Innovation & risktagande', thinker:'Friedman · Schumpeter', correct:'inc', w:2,
+    chain: {
+      s1: 'Nya aktörer tar marknadsandelar från etablerade företag',
+      s2: 'Resurser och kapital flödar till mer effektiva användningar',
+      s3: 'Ekonomisk tillväxt och teknisk förnyelse accelererar',
+      quote: '"Kapitalismens drivkraft är kreativ förstörelse – det gamla måste ge plats för det nya." — Schumpeter'
+    }
+  },
+  {
+    id:'c2', event:'🎓 Den som utbildar sig mer tjänar i genomsnitt högre lön',
+    concept:'Meritokratisk belöning', thinker:'Okun · Friedman', correct:'inc', w:1,
+    chain: {
+      s1: 'Löner återspeglar utbildning och produktivitet',
+      s2: 'Individer investerar i kompetens och hårt arbete',
+      s3: 'Ekonomin utnyttjar mänskligt kapital effektivt',
+      quote: '"En viss ojämlikhet är nödvändig om marknaden ska signalera var arbetsinsatser ger mest värde." — Okun'
+    }
+  },
+  {
+    id:'c3', event:'🏛️ Stora företag lägger resurser på att påverka hur lagar och regler utformas',
+    concept:'Rent-seeking', thinker:'Stiglitz', correct:'bel', w:2,
+    chain: {
+      s1: 'Resurser används för att påverka regler – inte för att skapa värde',
+      s2: 'Lagar utformas för att gynna insiders på bekostnad av konkurrenter',
+      s3: 'Negativ-summa-ekonomi: vinsten hos vinnaren är mindre än samhällets totala förlust',
+      quote: '"Det är en avgörande skillnad på att tjäna pengar och att ta pengar från andra." — Stiglitz'
+    }
+  },
+  {
+    id:'c4', event:'📈 Pengar investerade i aktier och fastigheter har växt snabbare än genomsnittslönen',
+    concept:'r > g · Patrimoniell kapitalism', thinker:'Piketty', correct:'bel', w:2,
+    chain: {
+      s1: 'Kapitalavkastning (r) överstiger ekonomins tillväxttakt (g)',
+      s2: 'Förmögenheter ackumuleras snabbare hos kapitalägare än via arbete',
+      s3: 'Arvstagare vinner över hårt arbetande – meritokratin urholkas generationsvis',
+      quote: '"r > g är historiens normalläge, inte ett undantag. Utan aktivt motstånd dominerar ärvt kapital." — Piketty'
+    }
+  },
+  {
+    id:'c5', event:'🏡 Barn som växer upp i rika och fattiga områden får olika förutsättningar i skolan',
+    concept:'Ojämlikhet i möjligheter', thinker:'Stiglitz · Rodrik', correct:'bel', w:2,
+    chain: {
+      s1: 'Uppväxtmiljö avgör tillgång till utbildning och nätverk',
+      s2: 'Mänskligt kapital utvecklas ojämnt – talang blockeras av ekonomisk bakgrund',
+      s3: 'Samhället förlorar sin mest produktiva investering och ojämlikheten låses fast',
+      quote: '"Ojämlikhet i möjligheter är den dyraste formen av ojämlikhet – den slösar bort mänsklig potential." — Stiglitz'
+    }
+  },
+  {
+    id:'c6', event:'💳 Allt fler hushåll tar lån för att klara sina löpande utgifter',
+    concept:'Underkonsumtion & skuldbubblor', thinker:'Stiglitz · Piketty', correct:'bel', w:1,
+    chain: {
+      s1: 'Koncentrerad inkomst ger otillräcklig köpkraft hos breda befolkningslager',
+      s2: 'Ekonomin stimuleras artificiellt via skuldsättning istället för löner',
+      s3: 'Finansiella bubblor byggs upp och spricker i återkommande kriser',
+      quote: '"Skulder är ett symtom på att lönerna inte räcker – inte en lösning på problemet." — Stiglitz'
+    }
+  },
+];
+
+// ════════════════════════════════════════
+// COUNTRY PROFILES – based on what kind of society the student designs
+// burdenScore: how many burden factors does this society recognize & fight?
+// valueScore:  does this society also reward value creation?
+// ════════════════════════════════════════
+const COUNTRIES = [
+  {
+    id: 'sweden',
+    flag: '🇸🇪', name: 'Sverige / Nordiska modellen',
+    bg: '#d1fae5', border: '#10b981', text: '#065f46',
+    why: 'Ditt samhälle motverkar aktivt alla fyra belastningsfaktorer och uppmuntrar samtidigt produktivt risktagande. Det liknar den nordiska modellen, typiskt Sverige eller Danmark under 1960 till 1980-talen, med starka institutioner, universell utbildning och sjukvård och hög social rörlighet. Gini ca 0,27.'
+  },
+  {
+    id: 'overregulated',
+    flag: '🏭', name: 'Centralstyrd ekonomi',
+    bg: '#dbeafe', border: '#3b82f6', text: '#1e40af',
+    why: 'Ditt samhälle bekämpar koncentration av makt och kapital, men motverkar också det som driver innovation och produktivitet. Det liknar centralistiska system som Sovjet under Stalins femårsplaner (1928 till 1953) eller DDR, där reglering prioriterades framför dynamik och risktagande.'
+  },
+  {
+    id: 'reform',
+    flag: '🏛️', name: 'Reformkapitalism',
+    bg: '#f0fdf4', border: '#22c55e', text: '#15803d',
+    why: 'Ditt samhälle bekämpar de flesta belastningsfaktorer men accepterar viss kapitalkoncentration. Det liknar New Deal-Amerika under Roosevelt (1933 till 1945) eller Sydkoreas mirakelår (1960 till 1990), med aktiv statlig styrning och starka utbildningsinvesteringar, utan att fullt ut lösa ojämlikheten i kapitalavkastning.'
+  },
+  {
+    id: 'usa2000',
+    flag: '🇺🇸', name: 'USA, 2000-talet',
+    bg: '#fef3c7', border: '#f59e0b', text: '#78350f',
+    why: 'Ditt samhälle erkänner vissa belastningar men låter andra löpa fritt och uppmuntrar kreditexpansion. Det liknar USA under 1990 till 2008, där antitrustreglering bevarades delvis men finanslobbyism och kapitalkoncentration tilläts växa och konsumtionskrediter användes som tillväxtstimulans. Resultatet var finanskrisen 2008.'
+  },
+  {
+    id: 'gilded',
+    flag: '🎩', name: 'USA, Gilded Age (1870–1900)',
+    bg: '#fee2e2', border: '#ef4444', text: '#991b1b',
+    why: 'Ditt samhälle uppmuntrar lobbying och kapitalkoncentration men motverkar fortfarande ojämlikhet i möjligheter. Det liknar USA under Gilded Age, med Rockefeller, Carnegie och Morgan som kontrollerade järnväg, stål och finans utan reglering av monopol eller rent-seeking. Shermans antitrustlag 1890 var den första reaktionen.'
+  },
+  {
+    id: 'deregulated',
+    flag: '📉', name: 'Avreglerad kapitalism',
+    bg: '#fff7ed', border: '#f97316', text: '#c2410c',
+    why: 'Ditt samhälle uppmuntrar marknadsfrihet brett, inklusive lobbying, kapitalkoncentration och kreditexpansion. En viss grundläggande välfärd finns kvar men systemet driver strukturellt mot ökad ojämlikhet. Det liknar Thatcherismens Storbritannien (1979 till 1990), med kortsiktiga tillväxtvinster men bestående klyftor och försvagad facklig motmakt.'
+  },
+  {
+    id: 'latam',
+    flag: '🌎', name: 'Brasilien / Latinamerika, 1980 till idag',
+    bg: '#fce7f3', border: '#db2777', text: '#831843',
+    why: 'Ditt samhälle erkänner knappt några belastningar alls. Det liknar länder som Brasilien, Colombia och Honduras, med Gini-koefficienter över 0,5, systematisk ojämlikhet utan institutionell motverkan, och ett mönster av korta tillväxtspurter som bryts av djupa kriser. Snabb ekonomisk tillväxt och ett rättvist system är inte samma sak.'
+  }
+];
+
+function computeSocietyScore() {
+  let burdenScore = 0, valueScore = 0;
+  CHIPS.forEach(c => {
+    const placed = state[c.id];
+    if (placed === 'bank') return;
+    if (c.correct === 'bel') {
+      if (placed === 'bel') burdenScore += c.w;
+      else                  burdenScore -= c.w;
+    } else {
+      if (placed === 'inc') valueScore += c.w;
+      else                  valueScore -= c.w;
+    }
+  });
+  return { burdenScore, valueScore };
+}
+
+function matchCountry() {
+  const { burdenScore, valueScore } = computeSocietyScore();
+  if (burdenScore >= 5 && valueScore >= 0) return COUNTRIES.find(c => c.id === 'sweden');
+  if (burdenScore >= 5 && valueScore <  0) return COUNTRIES.find(c => c.id === 'overregulated');
+  if (burdenScore >= 3)                    return COUNTRIES.find(c => c.id === 'reform');
+  if (burdenScore >= 1)                    return COUNTRIES.find(c => c.id === 'usa2000');
+  if (burdenScore >= -1)                   return COUNTRIES.find(c => c.id === 'gilded');
+  if (burdenScore >= -3)                   return COUNTRIES.find(c => c.id === 'deregulated');
+  return COUNTRIES.find(c => c.id === 'latam');
+}
+
+const state = {}; // chipId → 'bank' | 'inc' | 'bel'
+let dragId = null;
+
+// ── Physics constants ──────────────────────
+// Beam spring
+const STIFFNESS  = 0.055;
+const DAMPING    = 0.78;
+const REST_EPS   = 0.003;
+
+// Pan pendulum
+const PAN_GRAVITY  = 0.048;   // restoring force  (lower = slower swing)
+const PAN_DAMP     = 0.87;    // energy retention (higher = more oscillation)
+const PAN_COUPLE   = 0.30;    // beam-vel → pan impulse coupling
+
+// Beam pivot and attachment offsets (SVG units)
+const PIVOT_X = 250, PIVOT_Y = 74;
+const L_OFF   = -134;   // 116 - 250
+const R_OFF   =  154;   // 404 - 250
+
+// State
+let beamAngle  = 0, beamTarget = 0, beamVel = 0, prevBeamAngle = 0;
+let lPanAngle  = 0, lPanVel   = 0;
+let rPanAngle  = 0, rPanVel   = 0;
+let beamRafId  = null;
+
+const beamEl   = document.getElementById('beam');
+const panGL    = document.getElementById('pan-group-l');
+const panGR    = document.getElementById('pan-group-r');
+const panSL    = document.getElementById('pan-swing-l');
+const panSR    = document.getElementById('pan-swing-r');
+
+function updatePanPositions() {
+  const rad = beamAngle * Math.PI / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+
+  // World position of each beam attachment
+  const lx = PIVOT_X + L_OFF * cos;
+  const ly = PIVOT_Y + L_OFF * sin;
+  const rx = PIVOT_X + R_OFF * cos;
+  const ry = PIVOT_Y + R_OFF * sin;
+
+  panGL.style.transform = `translate(${lx}px,${ly}px)`;
+  panGR.style.transform = `translate(${rx}px,${ry}px)`;
+  panSL.style.transform = `rotate(${lPanAngle}deg)`;
+  panSR.style.transform = `rotate(${rPanAngle}deg)`;
+}
+
+function springTick() {
+  // ── Beam spring ──
+  const force = (beamTarget - beamAngle) * STIFFNESS;
+  beamVel = (beamVel + force) * DAMPING;
+  beamAngle += beamVel;
+  beamEl.style.transform = `rotate(${beamAngle}deg)`;
+
+  // ── Pan pendulum: couple from beam angular velocity ──
+  const dAngle = beamAngle - prevBeamAngle;
+  prevBeamAngle = beamAngle;
+
+  // Left pan: beam going CW (positive vel) → left end lifts → pan swings CCW (negative)
+  lPanVel -= beamVel * PAN_COUPLE;
+  // Right pan: opposite
+  rPanVel += beamVel * PAN_COUPLE;
+
+  // Pendulum gravity restore + damping
+  lPanVel = (lPanVel - lPanAngle * PAN_GRAVITY) * PAN_DAMP;
+  rPanVel = (rPanVel - rPanAngle * PAN_GRAVITY) * PAN_DAMP;
+  lPanAngle += lPanVel;
+  rPanAngle += rPanVel;
+
+  // Update pan world positions
+  updatePanPositions();
+
+  // Continue loop while anything is moving
+  const stillMoving =
+    Math.abs(beamVel)   > REST_EPS   || Math.abs(beamTarget - beamAngle) > REST_EPS ||
+    Math.abs(lPanVel)   > 0.004      || Math.abs(lPanAngle) > 0.008 ||
+    Math.abs(rPanVel)   > 0.004      || Math.abs(rPanAngle) > 0.008;
+
+  if (stillMoving) {
+    beamRafId = requestAnimationFrame(springTick);
+  } else {
+    beamAngle = beamTarget;
+    lPanAngle = rPanAngle = 0;
+    beamEl.style.transform = `rotate(${beamAngle}deg)`;
+    updatePanPositions();
+    beamRafId = null;
+  }
+}
+
+function setBeamAngle(target) {
+  beamTarget = target;
+  if (!beamRafId) beamRafId = requestAnimationFrame(springTick);
+}
+
+// ════════════════════════════════════════
+// PRESET SCENARIOS
+// ════════════════════════════════════════
+const PRESETS = {
+  nordic:   { c1:'inc', c2:'inc', c3:'bel', c4:'bel', c5:'bel', c6:'bel' },
+  planned:  { c1:'bel', c2:'bel', c3:'bel', c4:'bel', c5:'bel', c6:'bel' },
+  usa2000:  { c1:'inc', c2:'inc', c3:'bel', c4:'inc', c5:'bel', c6:'inc' },
+  gilded:   { c1:'inc', c2:'inc', c3:'inc', c4:'inc', c5:'bel', c6:'bel' },
+  laissez:  { c1:'inc', c2:'inc', c3:'inc', c4:'inc', c5:'inc', c6:'inc' },
+  newdeal:  { c1:'inc', c2:'inc', c3:'bel', c4:'inc', c5:'bel', c6:'bel' },
+  thatcher: { c1:'inc', c2:'inc', c3:'inc', c4:'inc', c5:'bel', c6:'inc' },
+  skorea:   { c1:'inc', c2:'inc', c3:'inc', c4:'bel', c5:'bel', c6:'bel' },
+  china:    { c1:'inc', c2:'inc', c3:'inc', c4:'inc', c5:'inc', c6:'bel' },
+};
+
+const PRESET_CONTEXT = {
+  nordic:   null,
+  planned:  'Sovjet under Stalins femårsplaner (1928 till 1953) är läroboksexemplet på centralstyrd ekonomi. All produktion planerades centralt, priser sattes av staten och löner kopplades inte till prestation. Kortsiktiga industriella mål nåddes, men konsumentvaror och jordbruk drabbades av katastrofal ineffektivitet.',
+  usa2000:  'USA under avregleringsvågen från Clinton till Bush (1990 till 2008). Finansavreglering och konsumtionskrediter behandlades som tillväxtverktyg, inte som systemrisk. Det enda chipet som skiljer detta från Reformkapitalism är just skuldsättningen som incitament.',
+  gilded:   null,
+  laissez:  'Brasilien under militärdiktaturen (1964 till 1985) kombinerade stark ekonomisk tillväxt med extrem ojämlikhet. Marklandet var koncentrerat, fackföreningar förbjudna och välståndet stannade hos en liten elit. Gini-koefficienten låg runt 0,60. Ett tydligt exempel på att hög tillväxt och rättvisa fördelning är två skilda saker.',
+  newdeal:  'USA under Roosevelt (1933 till 1945). FDR bekämpade lobbying, ojämlikhet i möjligheter och skuldbubblor via Glass-Steagall-lagen och socialförsäkringen. Kapitalavkastning (r > g) löstes dock inte fullt ut. Det enda chipet som skiljer New Deal från Sverige-modellen är just kapitalavkastningen.',
+  thatcher: 'Storbritannien under Thatcher (1979 till 1990). Kapitalavkastning, lobbying och kreditexpansion uppmuntrades aktivt via Big Bang-avregleringen 1986 och Right to Buy. Grundläggande sjukvård bevarades men facklig motmakt krossades systematiskt. Det sista chipet, skulder som incitament, är det som skiljer Thatcher från Gilded Age-utfallet.',
+  skorea:   'Sydkorea under Park Chung-hee och efterföljarna (1961 till 1990). Massiva statliga investeringar i utbildning och export lyfte landet ur fattigdom. De täta banden mellan stat och chaebol-konglomerat som Samsung och Hyundai fungerade dock som industriell policy, vilket drog ned resultatet från Sverige-nivå till Reformkapitalism.',
+  china:    'Kina under Deng Xiaoping och efterföljarna (1978 till 2010). Innovation och privat företagande uppmuntrades explosivt. Utbildning behandlades som tillväxtverktyg snarare än social rättighet och fördelades ojämnt mellan stad och land. Kombinerat med lobbying och kapitalkoncentration utan institutionell kontroll landar detta i Latinamerika-mönstret trots explosiv BNP-tillväxt.',
+};
+
+let activePresetContext = null;
+let presetTids = [];
+
+function loadPreset(key) {
+  // Cancel any running preset animation first
+  presetTids.forEach(id => clearTimeout(id));
+  presetTids = [];
+
+  // Hard reset: remove all chips from bank and zones, rebuild from scratch
+  document.querySelectorAll('#bank .chip, #zone-inc .chip, #zone-bel .chip').forEach(el => el.remove());
+  const bank = document.getElementById('bank');
+  CHIPS.forEach(c => {
+    state[c.id] = 'bank';
+    bank.appendChild(makeChip(c));
+  });
+  setBeamAngle(0);
+  document.getElementById('btn-reveal').classList.remove('show');
+  document.getElementById('country-match').classList.remove('show');
+
+  activePresetContext = PRESET_CONTEXT[key] || null;
+  const placements = PRESETS[key];
+  const chipIds = Object.keys(placements);
+
+  document.querySelectorAll('.preset-btn').forEach(b => b.disabled = true);
+
+  // Place chips one by one with stagger – bypass dropInto to avoid side effects
+  chipIds.forEach((cid, i) => {
+    const tid = setTimeout(() => {
+      const zone = document.getElementById('zone-' + placements[cid]);
+      const chip = document.getElementById(cid);
+      if (!zone || !chip) return;
+      state[cid] = placements[cid];
+      zone.appendChild(chip);
+      chip.classList.add('pop');
+      setTimeout(() => chip.classList.remove('pop'), 320);
+      // Update scale tilt on each drop
+      let incW = 0, belW = 0;
+      CHIPS.forEach(c => {
+        if (state[c.id] === 'inc') incW += c.w;
+        if (state[c.id] === 'bel') belW += c.w;
+      });
+      setBeamAngle(Math.max(-28, Math.min(28, (belW - incW) * 5.5)));
+    }, i * 200 + 100);
+    presetTids.push(tid);
+  });
+
+  // Reveal concepts + country after all chips have landed
+  const revTid = setTimeout(() => {
+    revealAll();
+    document.querySelectorAll('.preset-btn').forEach(b => b.disabled = false);
+    presetTids = [];
+  }, chipIds.length * 200 + 600);
+  presetTids.push(revTid);
+}
+
+function togglePresets() {
+  const body  = document.getElementById('presets-body');
+  const arrow = document.getElementById('presets-arrow');
+  const open  = body.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+}
+
+function buildChips() {
+  const bank = document.getElementById('bank');
+  const lbl = bank.querySelector('.bank-title');
+  bank.innerHTML = '';
+  bank.appendChild(lbl);
+  // Also remove any chips left in drop zones (prevents duplicate IDs on reset)
+  document.querySelectorAll('#zone-inc .chip, #zone-bel .chip').forEach(el => el.remove());
+  CHIPS.forEach(c => {
+    state[c.id] = 'bank';
+    bank.appendChild(makeChip(c));
+  });
+  renderScale();
+}
+
+function makeChip(c) {
+  const el = document.createElement('div');
+  el.className = 'chip';
+  el.id = c.id;
+  el.draggable = true;
+  el.innerHTML = `<span class="chip-event">${c.event}</span><span class="chip-concept">${c.concept}<span class="chip-thinker">${c.thinker}</span></span>`;
+  el.addEventListener('dragstart', e => { dragId = c.id; el.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+  el.addEventListener('dragend', () => el.classList.remove('dragging'));
+  el.addEventListener('click', () => { if (el.classList.contains('revealed')) showChainFor(c.id); });
+  let touchClone = null;
+  el.addEventListener('touchstart', () => { dragId = c.id; }, { passive: true });
+  el.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    if (!touchClone) {
+      touchClone = el.cloneNode(true);
+      touchClone.style.cssText = 'position:fixed;pointer-events:none;opacity:0.75;z-index:9999;width:200px;border-radius:14px;padding:0.7rem;background:white;border:2px solid #e5e7eb;font-family:Nunito,sans-serif;font-size:0.85rem;font-weight:700;';
+      document.body.appendChild(touchClone);
+    }
+    touchClone.style.left = (t.clientX - 100) + 'px';
+    touchClone.style.top  = (t.clientY - 24) + 'px';
+  }, { passive: false });
+  el.addEventListener('touchend', e => {
+    if (touchClone) { document.body.removeChild(touchClone); touchClone = null; }
+    const t = e.changedTouches[0];
+    const under = document.elementFromPoint(t.clientX, t.clientY);
+    const zone = under && under.closest('.zone, #bank');
+    if (zone && dragId) dropInto(zone, dragId);
+    dragId = null;
+  });
+  return el;
+}
+
+['zone-inc','zone-bel','bank'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('over'); });
+  el.addEventListener('dragleave', () => el.classList.remove('over'));
+  el.addEventListener('drop', e => { e.preventDefault(); el.classList.remove('over'); if (dragId) dropInto(el, dragId); dragId = null; });
+});
+
+function dropInto(zoneEl, cid) {
+  const chip = document.getElementById(cid);
+  if (!chip) return;
+  const zoneName = zoneEl.dataset.zone || 'bank';
+  state[cid] = zoneName;
+  chip.classList.remove('revealed', 'shaking'); // reset reveal if moved back
+  zoneEl.appendChild(chip);
+  chip.classList.add('pop');
+  setTimeout(() => chip.classList.remove('pop'), 320);
+  renderScale();
+  checkAllPlaced();
+}
+
+function checkAllPlaced() {
+  const allPlaced = CHIPS.every(c => state[c.id] !== 'bank');
+  document.getElementById('btn-reveal').classList.toggle('show', allPlaced);
+  if (!allPlaced) document.getElementById('country-match').classList.remove('show');
+}
+
+function revealAll() {
+  CHIPS.forEach((c, i) => {
+    const chip = document.getElementById(c.id);
+    setTimeout(() => chip.classList.add('revealed'), i * 70);
+  });
+  const country = matchCountry();
+  setTimeout(() => showCountryMatch(country), 550);
+  document.getElementById('btn-reveal').classList.remove('show');
+}
+
+function showCountryMatch(country) {
+  const cm = document.getElementById('country-match');
+  cm.style.background  = country.bg;
+  cm.style.borderColor = country.border;
+  cm.style.color       = country.text;
+  document.getElementById('cm-flag').textContent = country.flag;
+  document.getElementById('cm-name').textContent = 'Din vågskål liknar: ' + country.name;
+  const baseWhy = country.why;
+  const context = activePresetContext ? ' ' + activePresetContext : '';
+  document.getElementById('cm-why').textContent = baseWhy + context;
+  activePresetContext = null;
+  cm.classList.add('show');
+  // Unlock historical scenarios now that the student has done their own sort
+  document.querySelectorAll('.preset-btn').forEach(b => b.disabled = false);
+  document.getElementById('presets-locked').classList.add('hidden');
+}
+
+function showChainFor(chipId) {
+  const c = CHIPS.find(x => x.id === chipId);
+  if (!c) return;
+  const isInc = c.correct === 'inc';
+  const color  = isInc ? 'var(--green)' : 'var(--red)';
+  const border = isInc ? 'var(--green-mid)' : 'var(--red-mid)';
+
+  const panel = document.getElementById('chain-panel');
+  panel.style.borderColor = border;
+  document.getElementById('chain-title-text').textContent = c.concept;
+  document.getElementById('chain-title-text').style.color = color;
+  document.getElementById('chain-s1').textContent = c.chain.s1;
+  document.getElementById('chain-s2').textContent = c.chain.s2;
+  document.getElementById('chain-s3').textContent = c.chain.s3;
+  const q = document.getElementById('chain-quote');
+  q.textContent = c.chain.quote;
+  q.style.borderColor = border;
+
+  // Highlight active chip
+  document.querySelectorAll('.chip.chain-active').forEach(el => el.classList.remove('chain-active'));
+  document.getElementById(chipId).classList.add('chain-active');
+
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function renderScale() {
+  let incW = 0, belW = 0;
+  CHIPS.forEach(c => {
+    if (state[c.id] === 'inc') incW += c.w;
+    if (state[c.id] === 'bel') belW += c.w;
+  });
+  const diff  = belW - incW;
+  const angle = Math.max(-28, Math.min(28, diff * 5.5));
+  setBeamAngle(angle);
+
+  const placed = CHIPS.filter(c => state[c.id] !== 'bank').length;
+  const total  = CHIPS.length;
+  const svgTxt = document.getElementById('svg-status');
+  const sbar   = document.getElementById('sbar');
+
+  if (placed === 0) {
+    svgTxt.textContent = 'Dra händelserna till rätt sida för att se effekten';
+    svgTxt.setAttribute('fill', '#9ca3af');
+    sbar.className = 'status-bar';
+    return;
+  }
+
+  if      (angle < -8) { svgTxt.textContent = '📈 Incitament dominerar'; svgTxt.setAttribute('fill','#059669'); }
+  else if (angle >  8) { svgTxt.textContent = '📉 Belastning dominerar'; svgTxt.setAttribute('fill','#dc2626'); }
+  else                 { svgTxt.textContent = '⚖️ Relativt balanserat';   svgTxt.setAttribute('fill','#d97706'); }
+
+  if (placed === total) {
+    sbar.textContent = '✅ Alla händelser placerade – klicka knappen nedan för att avslöja begreppen och se vilket land din fördelning liknar!';
+    sbar.className   = 'status-bar show ok';
+  } else {
+    sbar.textContent = `${placed} av ${total} händelser placerade – fortsätt sortera!`;
+    sbar.className   = 'status-bar show info';
+  }
+}
+
+function resetScale() {
+  buildChips();
+  document.getElementById('btn-reveal').classList.remove('show');
+  document.getElementById('country-match').classList.remove('show');
+  document.getElementById('chain-panel').classList.remove('show');
+  document.querySelectorAll('.preset-btn').forEach(b => b.disabled = true);
+  document.getElementById('presets-locked').classList.remove('hidden');
+  document.getElementById('presets-body').classList.remove('open');
+  document.getElementById('presets-arrow').classList.remove('open');
+}
+
+// ════════════════════════════════════════
+// EXAMPLES
+// ════════════════════════════════════════
+function showEx(id, btn) {
+  document.querySelectorAll('.ex-panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.ex-tab').forEach(b => b.classList.remove('on'));
+  document.getElementById('ex-' + id).classList.add('on');
+  btn.classList.add('on');
+}
+
+// ════════════════════════════════════════
+// QUIZ
+// ════════════════════════════════════════
+const QUIZ = [
+  {
+    correct: 1,
+    fb: [
+      'Inte riktigt. Om pengar (kapital) växer snabbare än ekonomin i stort, innebär det att de som redan äger kapital tar en allt större del av kakan – inte att kakan växer snabbare för alla.',
+      'Rätt! När avkastningen på kapital (r) är högre än tillväxten (g) ackumuleras förmögenheter snabbare hos kapitalägare än hos de som arbetar. Den som ärver vinner över den som jobbar, och skillnaderna ökar generationsvis.',
+      'Inte riktigt. Frågan handlar om fördelningen av välstånd mellan arbete och kapital, inte om statens skatteintäkter. Piketty oroar sig för att ojämlikheten ökar strukturellt, oavsett skattepolitik.',
+      'Inte riktigt. Hög avkastning på befintligt kapital behöver inte alls leda till mer innovation. Det kan lika gärna betyda att gamla förmögenheter växer utan att ägarna bidrar med något nytt.'
+    ]
+  },
+  {
+    correct: 2,
+    fb: [
+      'Inte riktigt. En hyresvärd som höjer hyran på grund av ökad efterfrågan reagerar på marknadssignaler – det är ett normalt marknadsbeteende, inte rent-seeking. Rent-seeking handlar om att påverka reglerna i sig.',
+      'Inte riktigt. Det du beskriver är ett sparandemönster. Rent-seeking handlar om att försöka påverka lagar och regler för att gynna sig själv, inte om hur man väljer att använda sin inkomst.',
+      'Rätt! Rent-seeking innebär att lägga resurser på att påverka politiska processer och regler för att få ekonomiska fördelar, istället för att skapa nytt värde. Resultatet är att samhället som helhet förlorar mer än vinnaren vinner.',
+      'Inte riktigt. Det du beskriver är tvärtom ett exempel på vad ekonomer ser som produktiv innovation. Stiglitz skiljer tydligt mellan att tjäna pengar på att skapa värde och att tjäna pengar på att manipulera reglerna.'
+    ]
+  },
+  {
+    correct: 1,
+    fb: [
+      'Inte riktigt. Piketty tittar på den rikaste tiondelen (10%), inte den rikaste procenten. 20% till topp 1% är dessutom en nivå USA redan passerat, utan att samhället kollapsade omedelbart.',
+      'Rätt! Piketty varnar för när den rikaste tiondelen tar mer än hälften av landets samlade inkomster. Han menar att en sådan nivå bara kan upprätthållas med extremt förtryck eller leder till politisk kris.',
+      'Inte riktigt. Gini-koefficienten på 0,35 är relativt hög men är långt ifrån Pikettys varningsgräns. Sverige under rekordåren låg runt 0,27 och det var en period av hög välstånd och social stabilitet.',
+      'Inte riktigt. Hög ekonomisk tillväxt är generellt sett positivt. Piketty varnar för ojämlikhet i fördelningen av inkomster, inte för hög tillväxttakt i sig.'
+    ]
+  },
+  {
+    correct: 2,
+    fb: [
+      'Inte riktigt. Det låter logiskt, men forskningen visar något annat. När man lever långt under samhällets genomsnitt tar överlevnad all kognitiv och ekonomisk energi. Det finns varken tid eller resurser att planera för framtiden.',
+      'Inte riktigt. Sparande kräver att man har mer än man behöver för att klara sig idag. I den situation som Okun och Rainwater beskriver finns inget utrymme att spara – tvärtom.',
+      'Rätt! Okun och Rainwater visar att individer som hamnar långt under genomsnittet slutar agera som långsiktiga ekonomiska planerare. Fokus skiftar till omedelbar överlevnad, vilket blockerar investeringar i utbildning och framtid och gör det svårare att ta sig ur situationen.',
+      'Inte riktigt. Det du beskriver handlar om politiska preferenser och opinionsbildning – inte om det konkreta beteendeförändring på individnivå som forskningen identifierar när man hamnar långt under genomsnittet.'
+    ]
+  }
+];
+
+let qScore = 0;
+let qDone = [false,false,false,false];
+
+function answer(qi, optIdx) {
+  if (qDone[qi]) return;
+  qDone[qi] = true;
+  const q = QUIZ[qi];
+  const block = document.getElementById('q' + qi);
+  const opts = block.querySelectorAll('.q-opt');
+  opts.forEach(o => o.disabled = true);
+  const isRight = optIdx === q.correct;
+  opts[optIdx].classList.add(isRight ? 'right' : 'wrong');
+  if (!isRight) opts[q.correct].classList.add('right');
+  if (isRight) qScore++;
+  const fb = document.getElementById('fb' + qi);
+  fb.textContent = (isRight ? '✅ ' : '❌ ') + q.fb[optIdx];
+  fb.className = 'q-fb on ' + (isRight ? 'ok' : 'err');
+  const nx = document.getElementById('nx' + qi);
+  nx.classList.add('on');
+  // dot
+  const dot = document.getElementById('d' + qi);
+  dot.className = 'q-dot ' + (isRight ? 'good' : 'bad');
+}
+
+function nextQ(qi) {
+  document.getElementById('q' + (qi-1)).classList.remove('on');
+  document.getElementById('q' + qi).classList.add('on');
+  const d = document.getElementById('d' + qi);
+  d.classList.add('cur');
+}
+
+function showResult() {
+  document.getElementById('q3').classList.remove('on');
+  const res = document.getElementById('qres');
+  res.classList.add('on');
+  document.getElementById('rscore').textContent = qScore + '/4';
+  const msgs = [
+    '📚 Gå tillbaka och läs faktorerna och tänkarna – sedan klarar du det!',
+    '💪 Du är på väg! Läs igenom förklaringskorten och försök igen.',
+    '🌟 Bra jobbat! Du förstår de flesta nyckelbegreppen.',
+    '🏆 Utmärkt! Du behärskar skillnaden mellan incitament och belastning fullt ut.'
+  ];
+  document.getElementById('rmsg').textContent = msgs[qScore];
+}
+
+function restartQ() {
+  qScore = 0; qDone = [false,false,false,false];
+  for (let i = 0; i < 4; i++) {
+    const b = document.getElementById('q' + i);
+    b.querySelectorAll('.q-opt').forEach(o => { o.disabled = false; o.classList.remove('right','wrong'); });
+    document.getElementById('fb' + i).className = 'q-fb';
+    document.getElementById('nx' + i).classList.remove('on');
+    document.getElementById('d' + i).className = 'q-dot' + (i === 0 ? ' cur' : '');
+  }
+  document.getElementById('qres').classList.remove('on');
+  document.getElementById('q0').classList.add('on');
+}
+
+// ════════════════════════════════════════
+// CHART TOOLTIPS
+// ════════════════════════════════════════
+const CHART_DATA = {
+  sov: {
+    name: '🇷🇺 Sovjet, femårsplanerna (1928–53)',
+    gini: 'Gini ca 0,24 · Ekonomisk hälsa: Låg',
+    body: 'Planekonomi eliminerade formell ojämlikhet men också incitamenten att arbeta effektivt. Industriell tillväxt uppnåddes tvångsvis men konsumentvaror och jordbruk kollapsade. Lång ekonomisk hälsa saknades.'
+  },
+  swe: {
+    name: '🇸🇪 Sverige, rekordåren (1960–80)',
+    gini: 'Gini ca 0,27 · Ekonomisk hälsa: Hög',
+    body: 'Starka institutioner begränsade rent-seeking. Universell utbildning och sjukvård maximerade mänskligt kapital. Marknadsincitament bevarades. En av historiens mest lyckade kombinationer av tillväxt och jämlikhet.'
+  },
+  new: {
+    name: '🦅 USA, New Deal (1933–45)',
+    gini: 'Gini ca 0,37 · Ekonomisk hälsa: God',
+    body: 'Roosevelt bekämpade monopol och finansiell koncentration via Glass-Steagall och antitrust. Ojämlikheten minskade markant. Innovation och risktagande bevarades. Landade i Reformkapitalism-kategorin.'
+  },
+  usa: {
+    name: '🇺🇸 USA, avregleringen (1990–2008)',
+    gini: 'Gini ca 0,45 · Ekonomisk hälsa: Medel',
+    body: 'Finanslobbyism och kapitalkoncentration tilläts växa utan tillräcklig reglering. Medelklassen kompenserade med lån. Kortsiktig tillväxt maskerade strukturella svagheter som blottades 2008.'
+  },
+  bra: {
+    name: '🇧🇷 Brasilien, strukturanpassningen (1985–2000)',
+    gini: 'Gini ca 0,60 · Ekonomisk hälsa: Låg',
+    body: 'Extrem markkoncentration och svaga institutioner blockerade social rörlighet. Korta tillväxtspurter bröts av djupa kriser. Gini-nivån överskred Pikettys varningsgräns för politisk instabilitet.'
+  }
+};
+
+const CHART_OFFSETS = {
+  sov: { tx: 15, ty: -10 },
+  swe: { tx: 15, ty:  10 },
+  new: { tx:-220, ty:  10 },
+  usa: { tx:-230, ty:  10 },
+  bra: { tx:-230, ty: -10 }
+};
+
+let activePt = null;
+
+function showChartTip(key) {
+  const d    = CHART_DATA[key];
+  const pt   = document.getElementById('pt-' + key);
+  const tip  = document.getElementById('chart-tip');
+  const area = document.getElementById('chart-area');
+
+  if (activePt === key) {
+    tip.classList.remove('show');
+    activePt = null;
+    return;
+  }
+  activePt = key;
+
+  document.getElementById('ct-name').textContent = d.name;
+  document.getElementById('ct-gini').textContent = d.gini;
+  document.getElementById('ct-body').textContent = d.body;
+
+  // Position tip relative to chart-area
+  const aRect = area.getBoundingClientRect();
+  const pRect = pt.getBoundingClientRect();
+  const off   = CHART_OFFSETS[key];
+  tip.style.left = (pRect.left - aRect.left + off.tx) + 'px';
+  tip.style.top  = (pRect.top  - aRect.top  + off.ty) + 'px';
+  tip.classList.add('show');
+}
+
+// Close tip on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('#chart-area')) {
+    document.getElementById('chart-tip').classList.remove('show');
+    activePt = null;
+  }
+});
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+buildChips();
+updatePanPositions();
+</script>
+</body>
+</html>
