@@ -375,9 +375,159 @@ body {
 .btn-reset:hover { border-color: var(--purple); color: var(--purple); }
 
 /* ════════════════════════════════
-   THINKERS
+   PROGRESS BAR (#4)
 ════════════════════════════════ */
-.thinkers { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.1rem; margin-bottom: 3.5rem; }
+.progress-bar {
+  background: white; border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.5rem;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.progress-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; position: relative;
+}
+.progress-inner::before {
+  content: ''; position: absolute;
+  top: 50%; left: 10%; right: 10%;
+  height: 2px; background: var(--border);
+  transform: translateY(-50%); z-index: 0;
+}
+.prog-station {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.35rem; flex: 1; position: relative; z-index: 1;
+  cursor: default;
+}
+.prog-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: white; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; transition: all 0.3s;
+}
+.prog-label {
+  font-size: 0.65rem; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  transition: color 0.3s; white-space: nowrap;
+}
+.prog-station.active .prog-dot {
+  border-color: var(--purple); background: var(--purple-light);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+  transform: scale(1.15);
+}
+.prog-station.active .prog-label { color: var(--purple); }
+.prog-station.done .prog-dot { border-color: var(--green-mid); background: var(--green-light); }
+.prog-station.done .prog-label { color: var(--green); }
+
+@media (max-width: 540px) {
+  .prog-label { display: none; }
+  .prog-dot { width: 26px; height: 26px; font-size: 0.85rem; }
+  .progress-bar { padding: 0.5rem 1rem; }
+}
+
+/* ════════════════════════════════
+   ROOM IDENTITIES (#16)
+════════════════════════════════ */
+.room-thinkers {
+  background: linear-gradient(180deg, #fffbeb 0%, #fdf6e3 100%);
+  margin: 2rem -1.5rem 0; padding: 2.5rem 1.5rem 2.5rem;
+}
+.room-history {
+  background: linear-gradient(180deg, #f0fdfa 0%, #e8f8f5 100%);
+  margin: 0 -1.5rem; padding: 2.5rem 1.5rem 2.5rem;
+}
+
+/* Room-tinted section labels */
+.section-label.amber { background: var(--amber); }
+.section-label.teal  { background: #0d9488; }
+.section-label.green { background: var(--green); }
+
+/* ════════════════════════════════
+   THINKERS FIXED GRID (#17)
+════════════════════════════════ */
+.thinkers {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.1rem; margin-bottom: 1.5rem;
+}
+@media (max-width: 580px) { .thinkers { grid-template-columns: 1fr; } }
+
+/* ════════════════════════════════
+   MINI QUIZ after thinkers (#5)
+════════════════════════════════ */
+.mini-quiz {
+  background: white; border-radius: 16px;
+  border-left: 4px solid var(--amber);
+  padding: 1.4rem 1.5rem; margin-top: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.mini-q-label {
+  font-size: 0.7rem; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--amber); margin-bottom: 0.5rem;
+}
+.mini-q-text { font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; line-height: 1.5; }
+.mini-opts { display: flex; flex-direction: column; gap: 0.5rem; }
+.mini-opt {
+  padding: 0.65rem 1rem; border-radius: 10px;
+  border: 1.5px solid var(--border); background: #f8fafc;
+  font-family: 'Nunito', sans-serif; font-weight: 600;
+  font-size: 0.88rem; cursor: pointer; text-align: left;
+  transition: all 0.18s; color: var(--text);
+}
+.mini-opt:hover:not(:disabled) { border-color: var(--amber); background: var(--amber-light); }
+.mini-opt:disabled { cursor: default; }
+.mini-opt.right { background: var(--green-light); border-color: var(--green-mid); color: var(--green); font-weight: 700; }
+.mini-opt.wrong { background: var(--red-light); border-color: var(--red-mid); color: var(--red); }
+.mini-fb {
+  display: none; margin-top: 0.85rem; padding: 0.75rem 1rem;
+  border-radius: 10px; font-size: 0.88rem; font-weight: 600; line-height: 1.55;
+}
+.mini-fb.on { display: block; }
+.mini-fb.ok  { background: var(--green-light); border: 1.5px solid var(--green-mid); color: #065f46; }
+.mini-fb.err { background: var(--red-light);   border: 1.5px solid var(--red-mid);   color: #991b1b; }
+
+/* ════════════════════════════════
+   SOCIETY NAME INPUT (#11)
+════════════════════════════════ */
+.name-input-wrap {
+  display: none; margin-top: 0.85rem;
+  background: #f8fafc; border: 2px dashed var(--border);
+  border-radius: 14px; padding: 0.85rem 1.1rem;
+}
+.name-input-wrap.show { display: block; animation: slideDown 0.3s ease; }
+.name-input-wrap label {
+  display: block; font-size: 0.78rem; font-weight: 800;
+  color: var(--muted); margin-bottom: 0.45rem; text-transform: uppercase; letter-spacing: 0.05em;
+}
+.name-input-wrap label span { font-weight: 600; text-transform: none; letter-spacing: 0; }
+.name-input-wrap input {
+  width: 100%; padding: 0.55rem 0.9rem; border-radius: 10px;
+  border: 1.5px solid var(--border); background: white;
+  font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 600;
+  color: var(--text); outline: none; transition: border-color 0.18s;
+}
+.name-input-wrap input:focus { border-color: var(--purple); }
+
+/* ════════════════════════════════
+   PRESET FLASH OVERLAY (#7)
+════════════════════════════════ */
+.preset-flash {
+  display: none; position: absolute; inset: 0;
+  background: rgba(255,255,255,0.96); backdrop-filter: blur(4px);
+  z-index: 50; border-radius: 20px;
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 0.5rem;
+  animation: fadeInOut 1.4s ease forwards;
+}
+.preset-flash.show { display: flex; }
+.preset-flash-flag { font-size: 3.5rem; line-height: 1; }
+.preset-flash-name { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 700; color: var(--navy, #1a2d45); }
+.preset-flash-period { font-size: 0.85rem; font-weight: 700; color: var(--muted); }
+@keyframes fadeInOut {
+  0%   { opacity: 0; transform: scale(0.96); }
+  20%  { opacity: 1; transform: scale(1); }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
 .thinker {
   background: white; border-radius: 20px;
   padding: 1.5rem; border-top: 5px solid;
@@ -664,14 +814,47 @@ footer {
   <p>Utforska hur ekonomer ser på ojämlikhet – sortera faktorer, möt de stora tänkarna och testa dina kunskaper.</p>
 </header>
 
+<!-- ══ PROGRESS BAR ══ -->
+<nav class="progress-bar" aria-label="Sidans stationer">
+  <div class="progress-inner">
+    <div class="prog-station active" id="ps-scale">
+      <div class="prog-dot">⚖️</div>
+      <div class="prog-label">Aktivitet</div>
+    </div>
+    <div class="prog-station" id="ps-thinkers">
+      <div class="prog-dot">🧠</div>
+      <div class="prog-label">Tänkare</div>
+    </div>
+    <div class="prog-station" id="ps-history">
+      <div class="prog-dot">🌍</div>
+      <div class="prog-label">Historia</div>
+    </div>
+    <div class="prog-station" id="ps-quiz">
+      <div class="prog-dot">🧪</div>
+      <div class="prog-label">Quiz</div>
+    </div>
+    <div class="prog-station" id="ps-summary">
+      <div class="prog-dot">💡</div>
+      <div class="prog-label">Slutsats</div>
+    </div>
+  </div>
+</nav>
+
 <div class="page">
 
   <!-- ══ 1. SCALE ══ -->
-  <div class="section-label">⚖️ Aktivitet</div>
+  <div class="section-label" id="sec-scale">⚖️ Aktivitet</div>
   <h2 class="section-title">Skapar händelsen värde – eller extraherar den det?</h2>
-  <p class="section-sub">Dra varje händelse till rätt sida. <strong>Incitament</strong> = något samhället erkänner som produktivt och aktivt uppmuntrar – t.ex. genom patent, skatteavdrag eller utbildningssatsningar. <strong>Belastning</strong> = något samhället identifierar som skadligt och försöker motverka – t.ex. genom antitrustregler, progressiv skatt eller reglering. Avslöja sedan vilket land din fördelning liknar.</p>
+  <p class="section-sub">Dra varje händelse till rätt sida. <strong>Incitament</strong> = samhället uppmuntrar detta. <strong>Belastning</strong> = samhället försöker motverka detta. Avslöja sedan vilket land din fördelning liknar.</p>
 
-  <div class="card scale-wrap">
+  <div class="card scale-wrap" style="position:relative;">
+    <!-- Preset flash overlay (#7) -->
+    <div class="preset-flash" id="preset-flash">
+      <div class="preset-flash-flag" id="pf-flag"></div>
+      <div class="preset-flash-name" id="pf-name"></div>
+      <div class="preset-flash-period" id="pf-period"></div>
+    </div>
+
     <div class="scale-legend">
       <div class="leg-tag inc">✅ Incitament</div>
       <div class="leg-tag bel">🚫 Belastning</div>
@@ -823,7 +1006,11 @@ footer {
     </div>
 
     <div class="status-bar" id="sbar"></div>
-    <button class="btn-reveal" id="btn-reveal" onclick="revealAll()">🔍 Kontrollera svar & visa land</button>
+    <div class="name-input-wrap" id="name-input-wrap">
+      <label for="society-name">Ge ditt samhälle ett namn <span>(valfritt)</span></label>
+      <input type="text" id="society-name" placeholder="t.ex. Frilandia, Välfärdsstaten..." maxlength="30">
+    </div>
+    <button class="btn-reveal" id="btn-reveal" onclick="revealAll()">🔍 Kontrollera svar &amp; visa land</button>
     <div class="country-match" id="country-match">
       <div class="cm-top">
         <span class="cm-flag" id="cm-flag"></span>
@@ -852,51 +1039,67 @@ footer {
   </div>
 
   <!-- ══ 2. THINKERS ══ -->
-  <div class="section-label">🧠 Tänkare</div>
-  <h2 class="section-title">De fyra ekonomerna</h2>
-  <p class="section-sub">Dessa tänkare har format debatten om ojämlikhet och ekonomisk tillväxt – på radikalt olika sätt.</p>
+  <div class="room-thinkers">
+    <div class="section-label amber" id="sec-thinkers">🧠 Tänkare</div>
+    <h2 class="section-title">De fyra ekonomerna</h2>
+    <p class="section-sub">Dessa tänkare har format debatten om ojämlikhet och ekonomisk tillväxt – på radikalt olika sätt.</p>
 
-  <div class="thinkers">
-    <div class="thinker fri">
-      <span class="thinker-ico">💰</span>
-      <div class="thinker-name">Milton Friedman</div>
-      <div class="thinker-camp">Incitamentsperspektivet</div>
-      <p class="thinker-q">"The most important single central fact about a free market is that no exchange takes place unless both parties benefit."</p>
-      <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">Capitalism and Freedom, 1962</div>
-      <div class="thinker-tldr">Ojämlikhet är okej. Den som jobbar hårt och skapar värde ska tjäna mer. Det motiverar alla att anstränga sig.</div>
+    <div class="thinkers">
+      <div class="thinker fri">
+        <span class="thinker-ico">💰</span>
+        <div class="thinker-name">Milton Friedman</div>
+        <div class="thinker-camp">Incitamentsperspektivet</div>
+        <p class="thinker-q">"The most important single central fact about a free market is that no exchange takes place unless both parties benefit."</p>
+        <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">Capitalism and Freedom, 1962</div>
+        <div class="thinker-tldr">Ojämlikhet är okej. Den som jobbar hårt och skapar värde ska tjäna mer. Det motiverar alla att anstränga sig. Paradoxalt nog föreslog Friedman en "negativ inkomstskatt" – direktstöd i pengar till de fattigaste, utan byråkratisk välfärdsapparat. Effektivitet framför omfördelning.</div>
+      </div>
+      <div class="thinker sch">
+        <span class="thinker-ico">⚡</span>
+        <div class="thinker-name">Joseph Schumpeter</div>
+        <div class="thinker-camp">Incitamentsperspektivet</div>
+        <p class="thinker-q">"The process of Creative Destruction is the essential fact about capitalism. It is what capitalism consists in and what every capitalist concern has got to live in."</p>
+        <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">Capitalism, Socialism and Democracy, 1942</div>
+        <div class="thinker-tldr">Nya företag måste få slå ut gamla. Det är rörigt och orättvist för stunden, men det är så ekonomin utvecklas. Schumpeter förutsåg också att kapitalismen på sikt skulle undergräva sig själv. Framgångsrika företag bygger institutioner som skyddar deras position och hämmar den kreativa förstörelse som skapade dem.</div>
+      </div>
+      <div class="thinker sti">
+        <span class="thinker-ico">⚖️</span>
+        <div class="thinker-name">Joseph Stiglitz</div>
+        <div class="thinker-camp">Belastningsperspektivet</div>
+        <p class="thinker-q">"Rent seeking — getting rich by manipulating the economic and political environment rather than creating new wealth — has become a major factor in the American economy."</p>
+        <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">The Price of Inequality, 2012</div>
+        <div class="thinker-tldr">Problemet är inte att rika finns, utan att de rika kan köpa sig regler som gör dem ännu rikare på allas bekostnad. Stiglitz fick Nobelpriset 2001 för att ha visat att marknader ofta fallerar när köpare och säljare har olika tillgång till information. Det är ett av skälen till att reglering behövs.</div>
+      </div>
+      <div class="thinker pik">
+        <span class="thinker-ico">📊</span>
+        <div class="thinker-name">Thomas Piketty</div>
+        <div class="thinker-camp">Belastningsperspektivet</div>
+        <p class="thinker-q">"The entrepreneur inevitably tends to become a rentier, more and more dominant over those who own nothing but their labor. Once constituted, capital reproduces itself faster than output increases."</p>
+        <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">Capital in the Twenty-First Century, 2013</div>
+        <div class="thinker-tldr">Om pengar växer snabbare än löner vinner den som ärver, inte den som jobbar hårt. Piketty samlade 200 år av skattedata från 20 länder för att bevisa att r>g är ett historiskt mönster, inte ett undantag. Han varnar särskilt för när den rikaste tiondelen tar mer än hälften av ett lands samlade inkomster – en gräns han kopplar till politisk instabilitet.</div>
+      </div>
     </div>
-    <div class="thinker sch">
-      <span class="thinker-ico">⚡</span>
-      <div class="thinker-name">Joseph Schumpeter</div>
-      <div class="thinker-camp">Incitamentsperspektivet</div>
-      <p class="thinker-q">"The process of Creative Destruction is the essential fact about capitalism. It is what capitalism consists in and what every capitalist concern has got to live in."</p>
-      <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">Capitalism, Socialism and Democracy, 1942</div>
-      <div class="thinker-tldr">Nya företag måste få slå ut gamla. Det är rörigt och orättvist för stunden, men det är så ekonomin utvecklas.</div>
+
+    <!-- ══ MINI-QUIZ – Rent-seeking (#5) ══ -->
+    <div class="mini-quiz" id="mini-quiz">
+      <div class="mini-q-label">🧪 Snabbkoll – Stiglitz</div>
+      <div class="mini-q-text">Stiglitz kritiserar "rent-seeking", det vill säga när aktörer försöker bli rikare utan att skapa något nytt värde. Vilket av alternativen är ett exempel på rent-seeking?</div>
+      <div class="mini-opts" id="mini-opts">
+        <button class="mini-opt" onclick="answerMini(0)">A) En hyresvärd höjer hyran eftersom fler vill bo i ett eftertraktat område</button>
+        <button class="mini-opt" onclick="answerMini(1)">B) En förmögen person väljer att spara en större del av sin inkomst</button>
+        <button class="mini-opt" onclick="answerMini(2)">C) Ett företag lägger sina resurser på att påverka lagstiftningen istället för att förbättra produkterna</button>
+        <button class="mini-opt" onclick="answerMini(3)">D) Ett nytt företag tjänar stora pengar genom att ta fram och sälja en uppfinning</button>
+      </div>
+      <div class="mini-fb" id="mini-fb"></div>
     </div>
-    <div class="thinker sti">
-      <span class="thinker-ico">⚖️</span>
-      <div class="thinker-name">Joseph Stiglitz</div>
-      <div class="thinker-camp">Belastningsperspektivet</div>
-      <p class="thinker-q">"Rent seeking — getting rich by manipulating the economic and political environment rather than creating new wealth — has become a major factor in the American economy."</p>
-      <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">The Price of Inequality, 2012</div>
-      <div class="thinker-tldr">Problemet är inte att rika finns, utan att de rika kan köpa sig regler som gör dem ännu rikare på allas bekostnad.</div>
-    </div>
-    <div class="thinker pik">
-      <span class="thinker-ico">📊</span>
-      <div class="thinker-name">Thomas Piketty</div>
-      <div class="thinker-camp">Belastningsperspektivet</div>
-      <p class="thinker-q">"The entrepreneur inevitably tends to become a rentier, more and more dominant over those who own nothing but their labor. Once constituted, capital reproduces itself faster than output increases."</p>
-      <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.75rem;font-style:italic;">Capital in the Twenty-First Century, 2013</div>
-      <div class="thinker-tldr">Om pengar växer snabbare än löner vinner den som ärver, inte den som jobbar hårt. Då spelar det ingen roll hur duktig du är.</div>
-    </div>
-  </div>
+  </div><!-- /room-thinkers -->
 
   <!-- ══ 3. EXAMPLES ══ -->
-  <div class="section-label">🌍 Historia</div>
-  <h2 class="section-title">Ojämlikhet i verkligheten</h2>
-  <p class="section-sub">Hur har teorin sett ut i praktiken runt om i världen och genom historien?</p>
+  <div class="room-history">
+    <div class="section-label teal" id="sec-history">🌍 Historia</div>
+    <h2 class="section-title">Ojämlikhet i verkligheten</h2>
+    <p class="section-sub">Hur har teorin sett ut i praktiken runt om i världen och genom historien?</p>
 
-  <div class="card" style="margin-bottom:3.5rem;">
+    <div class="card" style="margin-bottom:2.5rem;">
     <div style="padding:1.5rem 1.5rem 0;">
       <div class="ex-tabs">
         <button class="ex-tab on"  onclick="showEx('usa1',this)">🎩 USA – Gilded Age</button>
@@ -985,7 +1188,7 @@ footer {
           </div>
         </div>
       </div>
-      <p class="ex-body">Brasilien hade under perioden en av världens högsta Gini-koefficienter, runt 0,60. IMF:s strukturanpassningsprogram på 1980- och 1990-talen krävde avregleringar och nedskärningar i offentliga tjänster, vilket slog hårt mot ojämlikheten i möjligheter. Marklandet var och är extremt koncentrerat: 1% av markägarna kontrollerade 46% av jordbruksmarken. Ekonomin uppvisade det mönster som IMF-studier beskriver som typiskt för regionen, med korta tillväxtspurter som bryts av finansiella kriser.</p>
+      <p class="ex-body">Brasilien hade under perioden en av världens högsta Gini-koefficienter, runt 0,60. IMF:s strukturanpassningsprogram på 1980- och 1990-talen krävde avregleringar och nedskärningar i offentliga tjänster, vilket slog hårt mot ojämlikheten i möjligheter. Marklandet var och är extremt koncentrerat: 1% av markägarna kontrollerade 46% av jordbruksmarken. Ekonomin uppvisade det mönster som IMF-studier beskriver som typiskt för regionen, med korta tillväxtspurter som bryts av finansiella kriser. Forskning av Okun och Rainwater visar att individer som faller under ungefär hälften av samhällets genomsnittsinkomst förändrar sitt ekonomiska beteende: de slutar planera långsiktigt och fokuserar helt på kortsiktig överlevnad. I ett land med Brasiliens ojämlikhet gäller det en stor del av befolkningen.</p>
     </div>
 
     <div class="ex-panel" id="ex-usa2">
@@ -1033,10 +1236,10 @@ footer {
       </div>
       <p class="ex-body">Under Stalins fem femårsplaner 1928 till 1953 centraliserades hela den sovjetiska ekonomin. Staten satte priser, planerade produktion och fördelade resurser utan marknadssignaler. Kortsiktig industriell tillväxt uppnåddes inom stål, kol och militär teknik. Däremot kollapsade incitamenten att innovera eller arbeta effektivt eftersom lön inte kopplades till prestation. Jordbrukssektorn drabbades av katastrofal ineffektivitet, delvis orsak till svälten 1932 till 1933. Sovjet visade att det är möjligt att bekämpa alla belastningsfaktorer och ändå misslyckas ekonomiskt, om incitamenten till värdeskapande samtidigt slås ut.</p>
     </div>
-  </div>
+  </div><!-- /room-history -->
 
   <!-- ══ 5. QUIZ ══ -->
-  <div class="quiz-shell">
+  <div class="quiz-shell" id="sec-quiz">
     <div class="quiz-hdg">🧪 Testa dina kunskaper</div>
     <p class="quiz-sub">Diagnostiska frågor – varje svarsalternativ avslöjar en specifik missuppfattning om du väljer fel.</p>
 
@@ -1044,63 +1247,48 @@ footer {
       <div class="q-dot cur" id="d0"></div>
       <div class="q-dot"     id="d1"></div>
       <div class="q-dot"     id="d2"></div>
-      <div class="q-dot"     id="d3"></div>
     </div>
 
     <!-- Q 1 -->
     <div class="q-block on" id="q0">
-      <div class="q-num">Fråga 1 av 4</div>
+      <div class="q-num">Fråga 1 av 3</div>
       <div class="q-text">Piketty visar att avkastningen på kapital (r) historiskt sett har vuxit snabbare än ekonomin i stort (g). Med andra ord: pengar som ägs växer snabbare än löner för arbete. Vad blir den viktigaste konsekvensen av detta över tid?</div>
       <div class="q-opts">
-        <button class="q-opt" onclick="answer(0,0)">A) Ekonomin växer snabbare och alla i samhället gynnas av den högre avkastningen</button>
-        <button class="q-opt" onclick="answer(0,1)">B) Den som ärver kapital blir allt rikare relativt den som arbetar, oavsett hur hårt hen jobbar</button>
-        <button class="q-opt" onclick="answer(0,2)">C) Staten får in mer i skatt och kan därför bygga ut välfärden</button>
-        <button class="q-opt" onclick="answer(0,3)">D) Fler väljer att investera och ta risker, vilket driver på innovation</button>
+        <button class="q-opt" onclick="answer(0,0)">A) Ekonomin växer snabbare och alla i samhället gynnas av den ökade avkastningen</button>
+        <button class="q-opt" onclick="answer(0,1)">B) Den som ärver kapital blir rikare jämfört med den som arbetar, oavsett arbetsinsats</button>
+        <button class="q-opt" onclick="answer(0,2)">C) Staten tar in mer i skatt och kan använda överskottet till att bygga ut välfärden</button>
+        <button class="q-opt" onclick="answer(0,3)">D) Fler väljer att placera kapital och ta risker, vilket stimulerar ekonomisk innovation</button>
       </div>
       <div class="q-fb" id="fb0"></div>
       <button class="btn-next" id="nx0" onclick="nextQ(1)">Nästa fråga →</button>
     </div>
 
-    <!-- Q 2 -->
+    <!-- Q 2 (was Q3) -->
     <div class="q-block" id="q1">
-      <div class="q-num">Fråga 2 av 4</div>
-      <div class="q-text">Stiglitz kritiserar "rent-seeking" – ett begrepp som beskriver när aktörer försöker bli rikare utan att skapa något nytt värde för samhället. Vilket av alternativen nedan är ett exempel på rent-seeking?</div>
+      <div class="q-num">Fråga 2 av 3</div>
+      <div class="q-text">Piketty beskriver en kritisk gräns där ojämlikheten blivit så extrem att samhället riskerar politisk kollaps eller revolution om den inte hålls på plats med förtryck. Var går denna gräns?</div>
       <div class="q-opts">
-        <button class="q-opt" onclick="answer(1,0)">A) En hyresvärd höjer hyran eftersom fler vill bo i ett populärt område</button>
-        <button class="q-opt" onclick="answer(1,1)">B) En rik person väljer att spara mer och konsumera mindre av sin inkomst</button>
-        <button class="q-opt" onclick="answer(1,2)">C) Ett företag spenderar resurser på att påverka politiker för att få gynnsamma regler, istället för att förbättra sina produkter</button>
-        <button class="q-opt" onclick="answer(1,3)">D) Ett innovativt företag växer snabbt och tjänar stora pengar på en ny uppfinning</button>
+        <button class="q-opt" onclick="answer(1,0)">A) När den rikaste procenten av befolkningen tar mer än 20% av landets samlade inkomster</button>
+        <button class="q-opt" onclick="answer(1,1)">B) När den rikaste tiondelen av befolkningen tar mer än hälften av landets samlade inkomster</button>
+        <button class="q-opt" onclick="answer(1,2)">C) När Gini-koefficienten, ett mått på ekonomisk ojämlikhet, överstiger 0,35 i ett land</button>
+        <button class="q-opt" onclick="answer(1,3)">D) När ekonomin växer med mer än fem procent per år under en längre sammanhängande period</button>
       </div>
       <div class="q-fb" id="fb1"></div>
       <button class="btn-next" id="nx1" onclick="nextQ(2)">Nästa fråga →</button>
     </div>
 
-    <!-- Q 3 -->
+    <!-- Q 3 (was Q4) -->
     <div class="q-block" id="q2">
-      <div class="q-num">Fråga 3 av 4</div>
-      <div class="q-text">Piketty beskriver en kritisk gräns där ojämlikheten blivit så extrem att samhället riskerar politisk kollaps eller revolution om den inte hålls på plats med förtryck. Var går denna gräns?</div>
+      <div class="q-num">Fråga 3 av 3</div>
+      <div class="q-text">Forskning av Okun och Rainwater visar att något förändras i människors ekonomiska beteende när de hamnar långt under samhällets genomsnittsinkomst. Vad händer?</div>
       <div class="q-opts">
-        <button class="q-opt" onclick="answer(2,0)">A) När den rikaste procenten tar mer än 20% av alla inkomster i landet</button>
-        <button class="q-opt" onclick="answer(2,1)">B) När den rikaste tiondelen tar mer än hälften av alla inkomster i landet</button>
-        <button class="q-opt" onclick="answer(2,2)">C) När Gini-koefficienten, ett mått på ojämlikhet, överstiger 0,35</button>
-        <button class="q-opt" onclick="answer(2,3)">D) När ekonomin växer med mer än 5% per år under en längre period</button>
+        <button class="q-opt" onclick="answer(2,0)">A) De satsar mer på utbildning och långsiktig planering för att på sikt kunna klättra uppåt</button>
+        <button class="q-opt" onclick="answer(2,1)">B) De drar ner på konsumtionen och sparar en större andel av det de tjänar</button>
+        <button class="q-opt" onclick="answer(2,2)">C) De fokuserar helt på kortsiktig överlevnad och slutar investera i sin framtid</button>
+        <button class="q-opt" onclick="answer(2,3)">D) De kräver mer statlig omfördelning, vilket minskar incitamenten att arbeta för alla i samhället</button>
       </div>
       <div class="q-fb" id="fb2"></div>
-      <button class="btn-next" id="nx2" onclick="nextQ(3)">Nästa fråga →</button>
-    </div>
-
-    <!-- Q 4 -->
-    <div class="q-block" id="q3">
-      <div class="q-num">Fråga 4 av 4</div>
-      <div class="q-text">Forskning av Okun och Rainwater visar att något förändras i människors ekonomiska beteende när de hamnar långt under genomsnittet i samhället – ungefär under hälften av vad andra tjänar. Vad händer?</div>
-      <div class="q-opts">
-        <button class="q-opt" onclick="answer(3,0)">A) De satsar mer på utbildning för att på sikt ta sig ur sin situation</button>
-        <button class="q-opt" onclick="answer(3,1)">B) De drar ner på konsumtionen och sparar en större del av det de tjänar</button>
-        <button class="q-opt" onclick="answer(3,2)">C) De slutar planera långsiktigt och fokuserar helt på att klara vardagen – vilket gör det svårare att ta sig ur situationen</button>
-        <button class="q-opt" onclick="answer(3,3)">D) De börjar kräva mer omfördelning från staten, vilket minskar incitamenten att arbeta för alla i samhället</button>
-      </div>
-      <div class="q-fb" id="fb3"></div>
-      <button class="btn-next" id="nx3" onclick="showResult()">Se resultat →</button>
+      <button class="btn-next" id="nx2" onclick="showResult()">Se resultat →</button>
     </div>
 
     <!-- Result -->
@@ -1112,7 +1300,7 @@ footer {
   </div>
 
   <!-- ══ 6. SUMMARY ══ -->
-  <div class="summary">
+  <div class="summary" id="sec-summary">
     <div class="sum-title">Vad avgör om ojämlikhet är bra eller dålig?</div>
     <div class="sum-grid">
       <div class="sum-card g">
@@ -1160,6 +1348,11 @@ footer {
           <!-- Inverted-U curve: peaks around Gini 0.28-0.32, drops on both ends -->
           <path d="M 50,235 C 100,215 140,90 200,52 C 240,28 280,28 310,38 C 360,62 400,120 450,175 C 490,215 530,238 540,242"
             fill="none" stroke="rgba(251,191,36,0.55)" stroke-width="2.5" stroke-dasharray="6,4" clip-path="url(#chart-clip)"/>
+          <!-- Invisible wider hit area for the curve -->
+          <path d="M 50,235 C 100,215 140,90 200,52 C 240,28 280,28 310,38 C 360,62 400,120 450,175 C 490,215 530,238 540,242"
+            fill="none" stroke="transparent" stroke-width="16" style="cursor:pointer" onclick="showCurveTip()" clip-path="url(#chart-clip)"/>
+          <!-- Curve label -->
+          <text x="232" y="22" text-anchor="middle" fill="rgba(251,191,36,0.7)" font-family="Nunito,sans-serif" font-size="9" font-weight="700" style="cursor:pointer" onclick="showCurveTip()">Tryck på kurvan</text>
 
           <!-- Zone labels on curve -->
           <text x="90"  y="210" fill="rgba(251,191,36,0.5)" font-family="Nunito,sans-serif" font-size="9" font-weight="700">För lite ojämlikhet</text>
@@ -1205,6 +1398,11 @@ footer {
           <div class="chart-tip-gini" id="ct-gini"></div>
           <div class="chart-tip-body" id="ct-body"></div>
         </div>
+        <!-- Curve explanation tooltip -->
+        <div class="chart-tip" id="curve-tip" style="left:50%;top:30px;transform:translateX(-50%);max-width:260px;">
+          <div class="chart-tip-name" style="color:#fbbf24;">⚠️ Förenklat teoretiskt mönster</div>
+          <div class="chart-tip-body">Den streckade kurvan är inte baserad på mätdata. Den illustrerar det teoretiska resonemanget att det finns en "sweet spot": för lite ojämlikhet ger svaga incitament, för mycket skapar strukturella belastningar. I verkligheten är det inte bara nivån på ojämlikheten som avgör, utan dess källa och form. Det är vad alla fyra tänkarna egentligen är ense om.</div>
+        </div>
       </div>
       <div class="chart-legend">
         <span class="cl-item"><span class="cl-dot" style="background:#3b82f6"></span>Sovjet, femårsplanerna</span>
@@ -1216,7 +1414,7 @@ footer {
     </div>
 
     <div class="sum-concl">
-      <strong>Kärnslutsatsen:</strong> Det råder enighet bland källorna om att ojämlikhet har ett positivt värde för tillväxt så länge den återspeglar skillnader i bidrag till produktionen. Den blir däremot en ekonomisk belastning så snart den resulterar i blockerad talangutveckling, snedvridna marknader eller politisk instabilitet. Det är inte ojämlikheten i sig, utan dess <em>källa och form</em>, som avgör dess ekonomiska roll.
+      <strong>Slutsatsen:</strong> Det råder enighet bland källorna om att ojämlikhet har ett positivt värde för tillväxt så länge den återspeglar skillnader i bidrag till produktionen. Den blir däremot en ekonomisk belastning så snart den resulterar i blockerad talangutveckling, snedvridna marknader eller politisk instabilitet. Det är inte ojämlikheten i sig, utan dess <em>källa och form</em>, som avgör dess ekonomiska roll.
     </div>
   </div>
 
@@ -1489,15 +1687,35 @@ const PRESET_CONTEXT = {
   china:    'Kina under Deng Xiaoping och efterföljarna (1978 till 2010). Innovation och privat företagande uppmuntrades explosivt. Utbildning behandlades som tillväxtverktyg snarare än social rättighet och fördelades ojämnt mellan stad och land. Kombinerat med lobbying och kapitalkoncentration utan institutionell kontroll landar detta i Latinamerika-mönstret trots explosiv BNP-tillväxt.',
 };
 
+const PRESET_LABELS = {
+  nordic:   { flag:'🇸🇪', name:'Sverige, rekordåren',            period:'1960–1980' },
+  planned:  { flag:'🇷🇺', name:'Sovjet, femårsplanerna',         period:'1928–1953' },
+  usa2000:  { flag:'🇺🇸', name:'USA, avregleringen',             period:'1990–2008' },
+  gilded:   { flag:'🇺🇸', name:'USA, Gilded Age',               period:'1870–1900' },
+  laissez:  { flag:'🇧🇷', name:'Brasilien, militärdiktaturen',   period:'1964–1985' },
+  newdeal:  { flag:'🇺🇸', name:'USA, New Deal',                  period:'1933–1945' },
+  thatcher: { flag:'🇬🇧', name:'Storbritannien, Thatcher',      period:'1979–1990' },
+  skorea:   { flag:'🇰🇷', name:'Sydkorea, mirakelåren',          period:'1960–1990' },
+  china:    { flag:'🇨🇳', name:'Kina, reformåren',              period:'1978–2010' },
+};
+
 let activePresetContext = null;
 let presetTids = [];
 
 function loadPreset(key) {
-  // Cancel any running preset animation first
   presetTids.forEach(id => clearTimeout(id));
   presetTids = [];
 
-  // Hard reset: remove all chips from bank and zones, rebuild from scratch
+  // Show flash overlay with flag + name (#7)
+  const lbl = PRESET_LABELS[key];
+  document.getElementById('pf-flag').textContent   = lbl.flag;
+  document.getElementById('pf-name').textContent   = lbl.name;
+  document.getElementById('pf-period').textContent = lbl.period;
+  const flash = document.getElementById('preset-flash');
+  flash.classList.add('show');
+  setTimeout(() => flash.classList.remove('show'), 1400);
+
+  // Hard reset
   document.querySelectorAll('#bank .chip, #zone-inc .chip, #zone-bel .chip').forEach(el => el.remove());
   const bank = document.getElementById('bank');
   CHIPS.forEach(c => {
@@ -1506,6 +1724,7 @@ function loadPreset(key) {
   });
   setBeamAngle(0);
   document.getElementById('btn-reveal').classList.remove('show');
+  document.getElementById('name-input-wrap').classList.remove('show');
   document.getElementById('country-match').classList.remove('show');
 
   activePresetContext = PRESET_CONTEXT[key] || null;
@@ -1514,7 +1733,7 @@ function loadPreset(key) {
 
   document.querySelectorAll('.preset-btn').forEach(b => b.disabled = true);
 
-  // Place chips one by one with stagger – bypass dropInto to avoid side effects
+  // Delay chip animation until after flash (1.4s)
   chipIds.forEach((cid, i) => {
     const tid = setTimeout(() => {
       const zone = document.getElementById('zone-' + placements[cid]);
@@ -1524,23 +1743,21 @@ function loadPreset(key) {
       zone.appendChild(chip);
       chip.classList.add('pop');
       setTimeout(() => chip.classList.remove('pop'), 320);
-      // Update scale tilt on each drop
       let incW = 0, belW = 0;
       CHIPS.forEach(c => {
         if (state[c.id] === 'inc') incW += c.w;
         if (state[c.id] === 'bel') belW += c.w;
       });
       setBeamAngle(Math.max(-28, Math.min(28, (belW - incW) * 5.5)));
-    }, i * 200 + 100);
+    }, 1500 + i * 200);
     presetTids.push(tid);
   });
 
-  // Reveal concepts + country after all chips have landed
   const revTid = setTimeout(() => {
     revealAll();
     document.querySelectorAll('.preset-btn').forEach(b => b.disabled = false);
     presetTids = [];
-  }, chipIds.length * 200 + 600);
+  }, 1500 + chipIds.length * 200 + 600);
   presetTids.push(revTid);
 }
 
@@ -1551,14 +1768,21 @@ function togglePresets() {
   arrow.classList.toggle('open', open);
 }
 
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 function buildChips() {
   const bank = document.getElementById('bank');
   const lbl = bank.querySelector('.bank-title');
   bank.innerHTML = '';
   bank.appendChild(lbl);
-  // Also remove any chips left in drop zones (prevents duplicate IDs on reset)
   document.querySelectorAll('#zone-inc .chip, #zone-bel .chip').forEach(el => el.remove());
-  CHIPS.forEach(c => {
+  shuffle([...CHIPS]).forEach(c => {  // shuffle order each build
     state[c.id] = 'bank';
     bank.appendChild(makeChip(c));
   });
@@ -1621,6 +1845,7 @@ function dropInto(zoneEl, cid) {
 function checkAllPlaced() {
   const allPlaced = CHIPS.every(c => state[c.id] !== 'bank');
   document.getElementById('btn-reveal').classList.toggle('show', allPlaced);
+  document.getElementById('name-input-wrap').classList.toggle('show', allPlaced);
   if (!allPlaced) document.getElementById('country-match').classList.remove('show');
 }
 
@@ -1632,6 +1857,7 @@ function revealAll() {
   const country = matchCountry();
   setTimeout(() => showCountryMatch(country), 550);
   document.getElementById('btn-reveal').classList.remove('show');
+  document.getElementById('name-input-wrap').classList.remove('show');
 }
 
 function showCountryMatch(country) {
@@ -1640,13 +1866,13 @@ function showCountryMatch(country) {
   cm.style.borderColor = country.border;
   cm.style.color       = country.text;
   document.getElementById('cm-flag').textContent = country.flag;
-  document.getElementById('cm-name').textContent = 'Din vågskål liknar: ' + country.name;
+  const societyName = document.getElementById('society-name').value.trim() || 'Din vågskål';
+  document.getElementById('cm-name').textContent = societyName + ' liknar: ' + country.name;
   const baseWhy = country.why;
   const context = activePresetContext ? ' ' + activePresetContext : '';
   document.getElementById('cm-why').textContent = baseWhy + context;
   activePresetContext = null;
   cm.classList.add('show');
-  // Unlock historical scenarios now that the student has done their own sort
   document.querySelectorAll('.preset-btn').forEach(b => b.disabled = false);
   document.getElementById('presets-locked').classList.add('hidden');
 }
@@ -1717,6 +1943,8 @@ function resetScale() {
   document.getElementById('btn-reveal').classList.remove('show');
   document.getElementById('country-match').classList.remove('show');
   document.getElementById('chain-panel').classList.remove('show');
+  document.getElementById('name-input-wrap').classList.remove('show');
+  document.getElementById('society-name').value = '';
   document.querySelectorAll('.preset-btn').forEach(b => b.disabled = true);
   document.getElementById('presets-locked').classList.remove('hidden');
   document.getElementById('presets-body').classList.remove('open');
@@ -1740,19 +1968,10 @@ const QUIZ = [
   {
     correct: 1,
     fb: [
-      'Inte riktigt. Om pengar (kapital) växer snabbare än ekonomin i stort, innebär det att de som redan äger kapital tar en allt större del av kakan – inte att kakan växer snabbare för alla.',
+      'Inte riktigt. Om pengar (kapital) växer snabbare än ekonomin i stort, innebär det att de som redan äger kapital tar en allt större del av kakan. Kakan växer inte snabbare för alla.',
       'Rätt! När avkastningen på kapital (r) är högre än tillväxten (g) ackumuleras förmögenheter snabbare hos kapitalägare än hos de som arbetar. Den som ärver vinner över den som jobbar, och skillnaderna ökar generationsvis.',
       'Inte riktigt. Frågan handlar om fördelningen av välstånd mellan arbete och kapital, inte om statens skatteintäkter. Piketty oroar sig för att ojämlikheten ökar strukturellt, oavsett skattepolitik.',
       'Inte riktigt. Hög avkastning på befintligt kapital behöver inte alls leda till mer innovation. Det kan lika gärna betyda att gamla förmögenheter växer utan att ägarna bidrar med något nytt.'
-    ]
-  },
-  {
-    correct: 2,
-    fb: [
-      'Inte riktigt. En hyresvärd som höjer hyran på grund av ökad efterfrågan reagerar på marknadssignaler – det är ett normalt marknadsbeteende, inte rent-seeking. Rent-seeking handlar om att påverka reglerna i sig.',
-      'Inte riktigt. Det du beskriver är ett sparandemönster. Rent-seeking handlar om att försöka påverka lagar och regler för att gynna sig själv, inte om hur man väljer att använda sin inkomst.',
-      'Rätt! Rent-seeking innebär att lägga resurser på att påverka politiska processer och regler för att få ekonomiska fördelar, istället för att skapa nytt värde. Resultatet är att samhället som helhet förlorar mer än vinnaren vinner.',
-      'Inte riktigt. Det du beskriver är tvärtom ett exempel på vad ekonomer ser som produktiv innovation. Stiglitz skiljer tydligt mellan att tjäna pengar på att skapa värde och att tjäna pengar på att manipulera reglerna.'
     ]
   },
   {
@@ -1760,7 +1979,7 @@ const QUIZ = [
     fb: [
       'Inte riktigt. Piketty tittar på den rikaste tiondelen (10%), inte den rikaste procenten. 20% till topp 1% är dessutom en nivå USA redan passerat, utan att samhället kollapsade omedelbart.',
       'Rätt! Piketty varnar för när den rikaste tiondelen tar mer än hälften av landets samlade inkomster. Han menar att en sådan nivå bara kan upprätthållas med extremt förtryck eller leder till politisk kris.',
-      'Inte riktigt. Gini-koefficienten på 0,35 är relativt hög men är långt ifrån Pikettys varningsgräns. Sverige under rekordåren låg runt 0,27 och det var en period av hög välstånd och social stabilitet.',
+      'Inte riktigt. Gini-koefficienten på 0,35 är relativt hög men långt ifrån Pikettys varningsgräns. Sverige under rekordåren låg runt 0,27 och det var en period av högt välstånd och social stabilitet.',
       'Inte riktigt. Hög ekonomisk tillväxt är generellt sett positivt. Piketty varnar för ojämlikhet i fördelningen av inkomster, inte för hög tillväxttakt i sig.'
     ]
   },
@@ -1768,15 +1987,41 @@ const QUIZ = [
     correct: 2,
     fb: [
       'Inte riktigt. Det låter logiskt, men forskningen visar något annat. När man lever långt under samhällets genomsnitt tar överlevnad all kognitiv och ekonomisk energi. Det finns varken tid eller resurser att planera för framtiden.',
-      'Inte riktigt. Sparande kräver att man har mer än man behöver för att klara sig idag. I den situation som Okun och Rainwater beskriver finns inget utrymme att spara – tvärtom.',
-      'Rätt! Okun och Rainwater visar att individer som hamnar långt under genomsnittet slutar agera som långsiktiga ekonomiska planerare. Fokus skiftar till omedelbar överlevnad, vilket blockerar investeringar i utbildning och framtid och gör det svårare att ta sig ur situationen.',
-      'Inte riktigt. Det du beskriver handlar om politiska preferenser och opinionsbildning – inte om det konkreta beteendeförändring på individnivå som forskningen identifierar när man hamnar långt under genomsnittet.'
+      'Inte riktigt. Sparande kräver att man har mer än man behöver för att klara sig idag. I den situation Okun och Rainwater beskriver finns inget utrymme att spara. Problemet är snarare det omvända.',
+      'Rätt! Okun och Rainwater visar att individer som hamnar långt under genomsnittet slutar agera som långsiktiga ekonomiska planerare. Fokus skiftar till omedelbar överlevnad, vilket blockerar investeringar i utbildning och framtid.',
+      'Inte riktigt. Det du beskriver handlar om politiska preferenser och opinionsbildning, inte om den konkreta beteendeförändring på individnivå som forskningen identifierar.'
     ]
   }
 ];
 
+// Rent-seeking mini-quiz data (#5)
+const MINI_Q = {
+  correct: 2,
+  fb: [
+    'Inte riktigt. En hyresvärd som höjer hyran på grund av ökad efterfrågan reagerar på marknadssignaler. Det är normalt marknadsbeteende, inte rent-seeking. Rent-seeking handlar om att påverka reglerna i sig.',
+    'Inte riktigt. Det du beskriver är ett sparandemönster. Rent-seeking handlar om att försöka påverka lagar och regler för att gynna sig själv, inte om hur man väljer att använda sin inkomst.',
+    'Rätt! Rent-seeking innebär att lägga resurser på att påverka politiska processer och regler för att få ekonomiska fördelar, istället för att skapa nytt värde. Samhället som helhet förlorar mer än vinnaren vinner.',
+    'Inte riktigt. Det du beskriver är tvärtom ett exempel på produktiv innovation. Stiglitz skiljer tydligt mellan att tjäna pengar på att skapa värde och att tjäna pengar på att manipulera reglerna.'
+  ]
+};
+
+let miniDone = false;
+
+function answerMini(optIdx) {
+  if (miniDone) return;
+  miniDone = true;
+  const opts = document.querySelectorAll('.mini-opt');
+  opts.forEach(o => o.disabled = true);
+  const isRight = optIdx === MINI_Q.correct;
+  opts[optIdx].classList.add(isRight ? 'right' : 'wrong');
+  if (!isRight) opts[MINI_Q.correct].classList.add('right');
+  const fb = document.getElementById('mini-fb');
+  fb.textContent = (isRight ? '✅ ' : '❌ ') + MINI_Q.fb[optIdx];
+  fb.className = 'mini-fb on ' + (isRight ? 'ok' : 'err');
+}
+
 let qScore = 0;
-let qDone = [false,false,false,false];
+let qDone = [false, false, false];
 
 function answer(qi, optIdx) {
   if (qDone[qi]) return;
@@ -1807,13 +2052,13 @@ function nextQ(qi) {
 }
 
 function showResult() {
-  document.getElementById('q3').classList.remove('on');
+  document.getElementById('q2').classList.remove('on');
   const res = document.getElementById('qres');
   res.classList.add('on');
-  document.getElementById('rscore').textContent = qScore + '/4';
+  document.getElementById('rscore').textContent = qScore + '/3';
   const msgs = [
-    '📚 Gå tillbaka och läs faktorerna och tänkarna – sedan klarar du det!',
-    '💪 Du är på väg! Läs igenom förklaringskorten och försök igen.',
+    '📚 Gå tillbaka och läs igenom tänkarna och historikexemplen – sedan klarar du det!',
+    '💪 Du är på rätt spår! Läs igenom förklaringarna och försök igen.',
     '🌟 Bra jobbat! Du förstår de flesta nyckelbegreppen.',
     '🏆 Utmärkt! Du behärskar skillnaden mellan incitament och belastning fullt ut.'
   ];
@@ -1821,8 +2066,8 @@ function showResult() {
 }
 
 function restartQ() {
-  qScore = 0; qDone = [false,false,false,false];
-  for (let i = 0; i < 4; i++) {
+  qScore = 0; qDone = [false, false, false];
+  for (let i = 0; i < 3; i++) {
     const b = document.getElementById('q' + i);
     b.querySelectorAll('.q-opt').forEach(o => { o.disabled = false; o.classList.remove('right','wrong'); });
     document.getElementById('fb' + i).className = 'q-fb';
@@ -1900,10 +2145,19 @@ function showChartTip(key) {
   tip.classList.add('show');
 }
 
+function showCurveTip() {
+  const tip = document.getElementById('curve-tip');
+  const isOpen = tip.classList.contains('show');
+  document.getElementById('chart-tip').classList.remove('show');
+  activePt = null;
+  tip.classList.toggle('show', !isOpen);
+}
+
 // Close tip on outside click
 document.addEventListener('click', e => {
   if (!e.target.closest('#chart-area')) {
     document.getElementById('chart-tip').classList.remove('show');
+    document.getElementById('curve-tip').classList.remove('show');
     activePt = null;
   }
 });
@@ -1913,6 +2167,38 @@ document.addEventListener('click', e => {
 // ════════════════════════════════════════
 buildChips();
 updatePanPositions();
+
+// ── Progress bar – scroll position based (#4) ──
+const STATIONS = [
+  { sectionId: 'sec-scale',    stationId: 'ps-scale' },
+  { sectionId: 'sec-thinkers', stationId: 'ps-thinkers' },
+  { sectionId: 'sec-history',  stationId: 'ps-history' },
+  { sectionId: 'sec-quiz',     stationId: 'ps-quiz' },
+  { sectionId: 'sec-summary',  stationId: 'ps-summary' },
+];
+
+function updateProgressBar() {
+  const barH = document.querySelector('.progress-bar').offsetHeight;
+  const threshold = barH + 40; // px below sticky bar to trigger switch
+
+  // Find the last section whose top has scrolled above the threshold
+  let activeIdx = 0;
+  STATIONS.forEach(({ sectionId }, i) => {
+    const el = document.getElementById(sectionId);
+    if (el && el.getBoundingClientRect().top <= threshold) activeIdx = i;
+  });
+
+  STATIONS.forEach(({ stationId }, i) => {
+    const dot = document.getElementById(stationId);
+    if (!dot) return;
+    dot.classList.remove('active', 'done');
+    if (i < activeIdx)       dot.classList.add('done');
+    else if (i === activeIdx) dot.classList.add('active');
+  });
+}
+
+window.addEventListener('scroll', updateProgressBar, { passive: true });
+updateProgressBar();
 </script>
 </body>
 </html>
