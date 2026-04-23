@@ -23,6 +23,9 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 .leaflet-bar a:hover{background:rgba(212,168,67,.12)!important}
 .leaflet-control-attribution{font-size:9px!important;background:rgba(10,6,2,.7)!important;color:rgba(245,232,192,.3)!important}
 .leaflet-control-attribution a{color:rgba(245,232,192,.45)!important}
+/* Custom event tooltip */
+.ev-tip{background:rgba(10,6,2,0.96)!important;border:1px solid #7a5e18!important;border-radius:3px!important;padding:6px 10px!important;color:#f5e8c0!important;font-family:'Cormorant Garamond',serif!important;box-shadow:0 4px 20px rgba(0,0,0,.6)!important}
+.ev-tip::before{display:none!important}
 
 /* Title */
 #ttl{position:absolute;top:18px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;z-index:900}
@@ -63,54 +66,18 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 .sst{color:rgba(245,232,192,.72);font-size:.84rem;line-height:1.45}
 
 /* ── TIMELINE ── */
-#tl{
-  height:155px;
-  background:rgba(4,2,1,.98);
-  border-top:1px solid var(--brd);
-  flex-shrink:0;
-  position:relative;
-  z-index:1000;
-  display:flex;
-  flex-direction:column;
-}
-
-/* Top bar: label + zoom controls */
-#tl-topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:6px 14px 4px;
-  flex-shrink:0;
-}
+#tl{height:150px;background:rgba(4,2,1,.98);border-top:1px solid var(--brd);flex-shrink:0;position:relative;z-index:1000}
+#tl-topbar{height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 14px}
 #tl-label{font-family:'Cinzel',serif;color:rgba(212,168,67,.32);font-size:.52rem;letter-spacing:2.5px}
 #tl-zoom-controls{display:flex;align-items:center;gap:6px}
-.zc-btn{
-  background:rgba(212,168,67,.08);
-  border:1px solid rgba(122,94,24,.5);
-  color:var(--gold);
-  font-family:'Cinzel',serif;
-  font-size:.7rem;
-  width:22px;height:22px;
-  border-radius:2px;
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:background .15s;
-}
+.zc-btn{background:rgba(212,168,67,.08);border:1px solid rgba(122,94,24,.5);color:var(--gold);font-family:'Cinzel',serif;font-size:.7rem;width:22px;height:22px;border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;line-height:1}
 .zc-btn:hover{background:rgba(212,168,67,.18)}
 #tl-zoom-level{font-family:'Cinzel',serif;color:rgba(212,168,67,.5);font-size:.6rem;min-width:60px;text-align:center}
-
-/* Canvas area */
-#tl-canvases{flex:1;position:relative;padding:0 14px;}
-
-/* Main timeline canvas */
-#tlc{width:100%;height:100%;display:block;cursor:crosshair}
-
-/* Overview bar (minimap) */
-#tl-overview{height:12px;padding:0 14px 4px;flex-shrink:0;cursor:pointer}
-#ovrc{width:100%;height:8px;display:block;cursor:pointer}
-
-/* Year display */
-#yrd{font-family:'Cinzel',serif;color:var(--gold-l);font-size:1.35rem;text-align:center;letter-spacing:5px;padding:0 0 6px;flex-shrink:0}
+#tl-canvases{padding:0 14px;height:72px}
+#tlc{display:block;cursor:crosshair;width:100%;height:72px}
+#tl-overview{padding:2px 14px}
+#ovrc{display:block;cursor:pointer;width:100%;height:10px}
+#yrd{font-family:'Cinzel',serif;color:var(--gold-l);font-size:1.2rem;text-align:center;letter-spacing:5px;line-height:32px}
 
 /* Lens */
 #lens{position:absolute;background:rgba(4,2,1,.98);border:1px solid var(--gold);border-radius:3px;padding:10px 12px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:1100;min-width:228px;bottom:160px}
@@ -267,28 +234,28 @@ function initMap(){
     subdomains:'abcd',maxZoom:20,
   }).addTo(map);
 
-  // CircleMarkers — SVG-based, always render
+  // CircleMarkers — SVG-based, always interactive:true
   EVS.forEach(ev=>{
     const c=TC[ev.type];
     const cm=L.circleMarker([ev.lat,ev.lon],{
-      radius:11,
+      radius:12,
       fillColor:c,
-      color:'#fff',
-      weight:1.5,
+      color:'rgba(255,255,255,0.75)',
+      weight:2,
       fillOpacity:0,
       opacity:0,
-      interactive:false,
+      interactive:true,
+      bubblingMouseEvents:false,
     }).addTo(map);
 
-    // Tooltip with year + label
     cm.bindTooltip(
-      `<span style="font-family:Cinzel,serif;color:${c};font-size:11px">${ev.year} e.Kr.</span><br><span style="font-size:12px">${ev.label}</span>`,
-      {sticky:true,direction:'top',offset:[0,-8],opacity:1}
+      `<span style="font-family:Cinzel,serif;color:${c};font-size:11px;font-weight:600">${ev.year} e.Kr.</span><br><span style="font-size:12px">${ev.label}</span>`,
+      {sticky:true,direction:'top',offset:[0,-10],opacity:1,className:'ev-tip'}
     );
 
-    cm.on('click',()=>openPanel(ev));
-    cm.on('mouseover',function(){this.setStyle({radius:15});});
-    cm.on('mouseout',function(){this.setStyle({radius:11});});
+    cm.on('click',()=>{ if(year>=ev.year) openPanel(ev); });
+    cm.on('mouseover',function(){ if(year>=ev.year) this.setStyle({radius:17,weight:2.5}); });
+    cm.on('mouseout', function(){ this.setStyle({radius:12,weight:2}); });
     markers[ev.id]=cm;
   });
 
@@ -307,10 +274,10 @@ function updateMarkers(){
     const m=markers[ev.id];
     if(!m) return;
     const vis=year>=ev.year;
-    m.setStyle({fillOpacity:vis?.82:0,opacity:vis?1:0});
-    m.options.interactive=vis;
-    if(vis) m.on('click',()=>openPanel(ev));
-    else m.off('click');
+    m.setStyle({fillOpacity:vis?0.88:0, opacity:vis?1:0});
+    // Toggle SVG pointer-events so hidden markers don't block map clicks
+    const el=m.getElement();
+    if(el) el.style.pointerEvents=vis?'auto':'none';
   });
 }
 
@@ -452,7 +419,7 @@ let tlPanStartX=0, tlPanStartV=[FULL_START,FULL_END];
 
 function initTL(){
   tlDpr=window.devicePixelRatio||1;
-  TLW=tlc.offsetWidth; TLH=tlc.offsetHeight;
+  TLW=tlc.offsetWidth||tlc.parentElement.offsetWidth; TLH=72;
   tlc.width=TLW*tlDpr; tlc.height=TLH*tlDpr;
   tlctx.setTransform(1,0,0,1,0,0);
   tlctx.scale(tlDpr,tlDpr);
@@ -561,7 +528,7 @@ let OW=0,OH=0;
 
 function initOvr(){
   const dpr=window.devicePixelRatio||1;
-  OW=ovrc.offsetWidth; OH=ovrc.offsetHeight;
+  OW=ovrc.offsetWidth||ovrc.parentElement.offsetWidth; OH=10;
   ovrc.width=OW*dpr; ovrc.height=OH*dpr;
   ovrctx.setTransform(1,0,0,1,0,0);
   ovrctx.scale(dpr,dpr);
@@ -750,12 +717,11 @@ document.addEventListener('keydown',e=>{
 // ── INIT ──────────────────────────────────────────────
 function initAll(){
   initMap();
-  // Init canvases after layout
-  requestAnimationFrame(()=>{
+  setTimeout(()=>{
     initTL();
     initOvr();
     updateZoomLabel();
-  });
+  },50);
 }
 
 window.addEventListener('load', initAll);
