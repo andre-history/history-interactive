@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Folkvandringstiden — Interaktiv Karta</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#d4a843;--gold-l:#f0c85a;--txt:#f5e8c0;
+  --pbg:rgba(10,6,2,0.97);--brd:#7a5e18;
+  --battle:#c0392b;--pol:#d4a843;--mig:#2e86ab;--clim:#8b6be8;--sca:#2d8a4e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Garamond',serif;user-select:none}
+#app{display:flex;flex-direction:column;height:100vh}
+#mwrap{flex:1;position:relative;min-height:0}
+#map{width:100%;height:100%}
+
+/* Leaflet overrides for dark theme */
+.leaflet-container{background:#0d1a2e}
+.leaflet-bar a{background:rgba(10,6,2,0.92)!important;color:#d4a843!important;border-color:rgba(122,94,24,0.5)!important;font-family:'Cinzel',serif!important}
+.leaflet-bar a:hover{background:rgba(212,168,67,0.12)!important}
+.leaflet-control-attribution{font-size:9px!important;background:rgba(10,6,2,0.7)!important;color:rgba(245,232,192,0.35)!important}
+.leaflet-control-attribution a{color:rgba(245,232,192,0.5)!important}
+
+/* Custom marker pulse */
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.3);opacity:.4}}
+.ev-pulse{animation:pulse 2.5s ease-in-out infinite}
+
+/* TITLE */
+#ttl{position:absolute;top:18px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;z-index:900}
+#ttl h1{font-family:'Cinzel',serif;color:var(--gold-l);font-size:1.35rem;letter-spacing:5px;font-weight:600;text-shadow:0 2px 14px rgba(0,0,0,.95),0 0 40px rgba(212,168,67,.15)}
+#ttl p{color:rgba(245,232,192,0.42);font-size:0.78rem;letter-spacing:2.5px;margin-top:3px}
+
+/* LEGEND */
+#leg{position:absolute;bottom:148px;left:14px;background:rgba(10,6,2,0.92);border:1px solid var(--brd);padding:10px 14px;border-radius:3px;z-index:800}
+.li{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:.72rem;color:var(--txt);font-family:'Cinzel',serif}
+.li:last-child{margin:0}
+.ld{width:10px;height:10px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0}
+
+/* SIDE PANEL */
+#pnl{position:absolute;top:16px;right:-425px;width:385px;max-height:calc(100vh - 180px);background:var(--pbg);border:1px solid var(--brd);border-radius:3px;overflow-y:auto;transition:right .4s cubic-bezier(.25,.46,.45,.94);z-index:1000;box-shadow:-6px 0 40px rgba(0,0,0,.8)}
+#pnl.open{right:16px}
+#pnl::-webkit-scrollbar{width:4px}
+#pnl::-webkit-scrollbar-thumb{background:var(--brd)}
+.ph{padding:18px 20px 14px;border-bottom:1px solid var(--brd);position:relative}
+.py{font-family:'Cinzel',serif;color:var(--gold);font-size:.72rem;letter-spacing:3px;margin-bottom:6px}
+.pt{font-family:'Cinzel',serif;color:var(--txt);font-size:1.15rem;line-height:1.35;padding-right:28px}
+.pbadge{display:inline-block;margin-top:10px;padding:3px 9px;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:1.5px;border-radius:2px}
+.pbdy{padding:16px 20px}
+.pbdy p{color:rgba(245,232,192,.82);font-size:.98rem;line-height:1.75;margin-bottom:8px}
+.psrc{font-style:italic;color:rgba(212,168,67,.6);font-size:.84rem;border-left:2px solid var(--brd);padding-left:12px;margin-top:12px}
+.pcls{position:absolute;top:13px;right:13px;background:none;border:1px solid var(--brd);color:var(--gold);width:26px;height:26px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;border-radius:2px}
+.pcls:hover{background:rgba(212,168,67,.15)}
+
+/* SCANDINAVIA */
+#sbtn{position:absolute;top:18px;left:14px;background:rgba(10,6,2,.88);border:1px solid var(--sca);color:var(--sca);padding:7px 13px;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:1.5px;cursor:pointer;border-radius:2px;z-index:900}
+#sbtn:hover{background:rgba(45,138,78,.15)}
+#spnl{position:absolute;top:52px;left:-325px;width:298px;background:var(--pbg);border:1px solid var(--sca);border-radius:3px;z-index:900;transition:left .4s cubic-bezier(.25,.46,.45,.94)}
+#spnl.open{left:14px}
+.ssh{padding:11px 15px;border-bottom:1px solid rgba(45,138,78,.22);font-family:'Cinzel',serif;color:var(--sca);font-size:.6rem;letter-spacing:2px;display:flex;justify-content:space-between;align-items:center}
+.ssb{padding:8px 14px}
+.ssi{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(45,138,78,.1)}
+.ssi:last-child{border:none}
+.ssy{font-family:'Cinzel',serif;color:var(--sca);font-size:.64rem;min-width:52px;padding-top:2px}
+.sst{color:rgba(245,232,192,.72);font-size:.84rem;line-height:1.45}
+
+/* TIMELINE */
+#tl{height:130px;background:rgba(4,2,1,.98);border-top:1px solid var(--brd);padding:0 44px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;gap:4px;position:relative;z-index:1000}
+#tllbl{font-family:'Cinzel',serif;color:rgba(212,168,67,.32);font-size:.54rem;letter-spacing:3px;text-align:center}
+#tlc{width:100%;height:62px;cursor:crosshair;display:block}
+#yrd{font-family:'Cinzel',serif;color:var(--gold-l);font-size:1.5rem;text-align:center;letter-spacing:5px}
+
+/* LENS */
+#lens{position:absolute;background:rgba(4,2,1,.98);border:1px solid var(--gold);border-radius:3px;padding:10px 12px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:1100;min-width:228px;bottom:148px}
+#lens.show{opacity:1}
+.lh{font-family:'Cinzel',serif;color:var(--gold);font-size:.58rem;letter-spacing:2px;margin-bottom:7px}
+.lr{display:flex;gap:8px;align-items:center;padding:3px 0;font-size:.8rem;color:rgba(245,232,192,.8)}
+.lyr{font-family:'Cinzel',serif;color:var(--gold);font-size:.62rem;min-width:38px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="mwrap">
+    <div id="map"></div>
+
+    <div id="ttl">
+      <h1>FOLKVANDRINGSTIDEN</h1>
+      <p>ca. 370 – 600 e.Kr. &nbsp;·&nbsp; Navigera med tidslinjen nedan</p>
+    </div>
+
+    <button id="sbtn">⬡ SKANDINAVIEN</button>
+    <div id="spnl">
+      <div class="ssh">SKANDINAVIEN UNDER FOLKVANDRINGSTIDEN
+        <button onclick="tgScand()" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.1rem">×</button>
+      </div>
+      <div class="ssb" id="ssb"></div>
+    </div>
+
+    <div id="leg">
+      <div class="li"><div class="ld" style="background:#c0392b"></div>Slag &amp; plundring</div>
+      <div class="li"><div class="ld" style="background:#d4a843"></div>Politisk händelse</div>
+      <div class="li"><div class="ld" style="background:#2e86ab"></div>Folkrörelse</div>
+      <div class="li"><div class="ld" style="background:#8b6be8"></div>Klimat &amp; kris</div>
+      <div class="li"><div class="ld" style="background:#2d8a4e"></div>Skandinavien</div>
+    </div>
+
+    <div id="lens"><div class="lh">HÄNDELSER NÄRA</div><div id="lrows"></div></div>
+
+    <div id="pnl">
+      <div class="ph">
+        <div class="py" id="pyr"></div>
+        <div class="pt" id="ptit"></div>
+        <div class="pbadge" id="pbdg"></div>
+        <button class="pcls" onclick="closePanel()">×</button>
+      </div>
+      <div class="pbdy"><div id="pbdy"></div><div class="psrc" id="psrc"></div></div>
+    </div>
+  </div>
+
+  <div id="tl">
+    <div id="tllbl">TIDSLINJE — KLICKA ELLER DRA · TÄTA PERIODER ÄR BREDARE · PILTANGENTER NAVIGERAR</div>
+    <canvas id="tlc" height="62"></canvas>
+    <div id="yrd">370 e.Kr.</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ── DATA ──────────────────────────────────────────────
+const TC={battle:'#c0392b',politics:'#d4a843',migration:'#2e86ab',climate:'#8b6be8',scandinavia:'#2d8a4e'};
+const TL2={battle:'SLAG & PLUNDRING',politics:'POLITISK HÄNDELSE',migration:'FOLKRÖRELSE',climate:'KLIMAT & KRIS',scandinavia:'SKANDINAVIEN'};
+const TI={battle:'⚔',politics:'♔',migration:'➤',climate:'❄',scandinavia:'◈'};
+
+// Events: lat/lon are real geographic coordinates
+const EVS=[
+  {id:'hun', year:370, type:'migration', label:'Hunnerna vid Svarta havet', lat:46.2, lon:37,
+   title:'Hunnerna anländer från öster',
+   body:'Hunnerna, nomader från Centralasien, dyker upp vid Svarta havet ca 370 e.Kr. Deras framfart skapar en krusningseffekt: folk efter folk längs stäppen tvingas västerut. Det är den primära gnistan som tänder folkvandringstiden.',
+   src:'Ammianus Marcellinus, Res Gestae XXXI (ca 380 e.Kr.)'},
+  {id:'vis', year:376, type:'migration', label:'Visigoterna söker skydd vid Donau', lat:44.2, lon:28.5,
+   title:'Visigoterna passerar Donau',
+   body:'Under trycket från hunnerna tillåts visigoterna korsa Donau in i romerskt territorium. Uppskattningsvis 100 000–200 000 personer passerar gränsen. De korrupta rom-tjänstemän som ska ta hand om flyktingarna misshandlar dem grovt — med katastrofala konsekvenser.',
+   src:'Ammianus Marcellinus, Res Gestae XXXI:4'},
+  {id:'adr', year:378, type:'battle', label:'Slaget vid Adrianopel', lat:41.68, lon:26.56,
+   title:'Adrianopel — Roms öde avgörs',
+   body:'Den 9 augusti 378 möter visigoterna kejsar Valens utanför Adrianopel. Den kejserliga armén förintas och Valens faller i strid — enda gången en kejsare dödas av yttre folk på flera hundra år. Roms militära överlägsenhet är bruten en gång för alla.',
+   src:'Ammianus Marcellinus, Res Gestae XXXI:12–13'},
+  {id:'spl', year:395, type:'politics', label:'Romarriket delas permanent', lat:41.9, lon:12.5,
+   title:'Imperiet delas i öst och väst',
+   body:'Vid Theodosius I:s död delas riket: Honorius får väst (Ravenna praktisk huvudstad från 402) och Arkadios får öst (Konstantinopel). En tillfällig åtgärd som blir definitiv — halvorna driver alltmer isär kulturellt, ekonomiskt och militärt.',
+   src:'Zosimos, Historia Nova IV'},
+  {id:'rhn', year:406, type:'migration', label:'Vandalerna korsar Rhen på is', lat:50.0, lon:7.8,
+   title:'Rhen fryser — riksgränsen kollapsar',
+   body:'Vid nyåret 406/407 fryser Rhen till is. Vandaler, alaner och svever marscherar rakt in i Gallien. Det tunt spridda gränsförsvaret överväldiga på en natt. Gränsen som hållit i 400 år kollapsar.',
+   src:'Hieronymus, Epistula 123 (ca 409 e.Kr.)'},
+  {id:'ala', year:410, type:'battle', label:'Alaric plundrar Rom', lat:41.9, lon:12.5,
+   title:'Rom plundras — för första gången på 800 år',
+   body:'Visigoterna besätter Rom den 24 augusti 410. Den "eviga staden" faller för yttre folk för första gången sedan gallerna 390 f.Kr. Plundringen varar tre dagar. Augustinus skriver "Guds stad" delvis som svar på den kollektiva chocken.',
+   src:'Augustinus, De Civitate Dei (413–426 e.Kr.)'},
+  {id:'car', year:430, type:'migration', label:'Vandalerna erövrar Kartago', lat:36.85, lon:10.33,
+   title:'Vandalerna tar Roms kornkammare',
+   body:'Geiserik erövrar Kartago — en av Roms rikaste städer och central för spannmålsförsörjningen. Vandalerna kontrollerar nu matflödet till Rom och bygger en flotta som utmanar det romerska havet.',
+   src:'Victor av Vita, Historia persecutionis Africanae provinciae'},
+  {id:'cat', year:451, type:'battle', label:'Katalauniska fälten', lat:48.5, lon:4.3,
+   title:'Attila stoppas på Katalauniska fälten',
+   body:'Attilas armé drar djupt in i Gallien men möts av generalen Aetius och den visigotiske kungen Theoderik I. Slaget slutar oavgjort och Attila tvingas retirera — Roms sista stora militära prestation.',
+   src:'Jordanes, Getica 36–38 (ca 551 e.Kr.)'},
+  {id:'r55', year:455, type:'battle', label:'Vandalerna plundrar Rom', lat:41.85, lon:12.45,
+   title:'Geiseriks vandaler plundrar Rom',
+   body:'Med sin Nordafrika-flotta seglar Geiserik upp Tibern och plundrar Rom i 14 dagar. Platina-taket från Jupiterstemplet fraktas till Kartago. Episoden ger eftervärlden ordet "vandalism".',
+   src:'Prokopios, De Bello Vandalico I:5'},
+  {id:'fal', year:476, type:'politics', label:'Västroms fall — siste kejsaren avsätts', lat:44.42, lon:12.2,
+   title:'Den siste västromerske kejsaren avsätts',
+   body:'Den 4 september 476 avsätter Odoacer den unge Romulus Augustulus och sänder de kejserliga insignierna till Konstantinopel. Traditionellt slutet på antiken i väst. Germanska kungar bevarar dock latin, romersk rätt och institutioner.',
+   src:'Jordanes, Romana (ca 551 e.Kr.)'},
+  {id:'the', year:493, type:'politics', label:'Theoderik erövrar Italien', lat:44.4, lon:12.2,
+   title:'Theoderik den store — goten som var romare',
+   body:'Ostrogoten Theoderik grundar ett rike i Italien och behåller senaten och den romerska administrationen. Han anlitar Boethius och Cassiodorus i sin tjänst. Hans hov i Ravenna är ett kulturcentrum där gotisk makt möter romskt arv.',
+   src:'Cassiodorus, Variae (ca 537 e.Kr.)'},
+  {id:'clo', year:496, type:'politics', label:'Clovis konverterar till kristendomen', lat:49.1, lon:2.9,
+   title:'Clovis — frankernas kung döper sig',
+   body:'Clovis konverterar till romersk kristendom 496 e.Kr. Konversionen är politiskt briljant: den gall-romerska kyrkan ger nu stöd till hans expansion. Han lägger grunden till det framtida Frankrike och Karl den stores imperium.',
+   src:'Gregorius av Tours, Historia Francorum II (ca 575 e.Kr.)'},
+  {id:'cli', year:536, type:'climate', label:'Klimatkatastrofen 536 — Fimbulvinter', lat:51.5, lon:15,
+   title:'Solen slocknar — Fimbulvinter',
+   body:'År 536 fördunklas solen av ett mystiskt dis i 18 månader. Troligen ett vulkanutbrott. Tre missväxtår leder till hungersnöd och social oro i hela Europa och Asien. Dendrokronologiska studier bekräftar kylperioden. Historiker ser detta som ursprunget till myten om Fimbulvintern.',
+   src:'Prokopios, Historia Arcana; Büntgen et al., Science 2016'},
+  {id:'upp', year:400, type:'scandinavia', label:'Uppåkra — Skandinaviens centrum', lat:55.62, lon:13.2,
+   title:'Uppåkra — Skandinaviens mäktigaste centralplats',
+   body:'I Skåne blomstrar Uppåkra under 400–600-talen. Arkeologer har funnit ett ceremonihus (hov) i kontinuerlig användning från 200-talet till 900-talet, rikt med guldgubbar — präglade guldbleck med gudomliga figurer. Romarguld som solidi och brakteater vittnar om kontakterna med kontinenten.',
+   src:'Uppåkraprojektet, Lunds universitet (Larsson & Hårdh)'},
+  {id:'for', year:435, type:'scandinavia', label:'Fornborgar byggs i Skåne', lat:55.75, lon:13.5,
+   title:'Fornborgar — oroligheten når Norden',
+   body:'Fornborgar som Stenshuvud och Hälleberga backe i Skåne dateras till 400–550 e.Kr. Jordanes nämner i Getica (ca 551) ett tjugotal folk på "Scandza", däribland svear och daner.',
+   src:'Jordanes, Getica 3; RAÄ fornminnesregister'},
+];
+
+const SDATA=[
+  {yr:'370–500',t:'Guldinflöde: Romarguld (solidi) och brakteater strömmar in till Norden som del av tribut-ekonomin.'},
+  {yr:'400–600',t:'Uppåkra blomstrar som Skandinaviens viktigaste centralplats med hov och guldgubbar.'},
+  {yr:'430–550',t:'Fornborgar byggs i Skåne: Stenshuvud och Hälleberga backe vittnar om politisk oro.'},
+  {yr:'ca 551', t:'Jordanes nämner i Getica tjugotal folk på "Scandza" — svear, daner och skånska stammar.'},
+];
+
+// Migration paths: arrays of [lat, lon] waypoints
+const MPATHS=[
+  {col:'#8b6be8',start:370,peak:400,end:455,
+   latlngs:[[46,40],[44,38],[43,35],[43,32],[44,28],[43.5,26],[42,25],[41.7,26.6]]},
+  {col:'#2e86ab',start:376,peak:415,end:480,
+   latlngs:[[44.2,28.5],[42,27],[41.7,26.6],[41,24],[40,22],[40,20],[40,17],[41.5,15],[41.9,12.5],[41,9],[40,4],[39,-2],[40,-4]]},
+  {col:'#c0392b',start:406,peak:445,end:476,
+   latlngs:[[50,7.8],[48,4],[46,1],[43,-1],[41,-2],[38,-4],[37,-6],[36,0],[36,5],[36.85,10.33],[38,13],[41,13],[41.9,12.5]]},
+  {col:'#d4a843',start:488,peak:495,end:550,
+   latlngs:[[47,32],[46,28],[45,24],[44.5,22],[44,20],[44,18],[44,16],[44.4,12.2]]},
+  {col:'#2d8a4e',start:481,peak:498,end:560,
+   latlngs:[[51,7.5],[50,5],[49,3],[48,2],[47,1],[46,1],[44,1],[43,2]]},
+];
+
+// ── MAP INIT ─────────────────────────────────────────
+let map, year=370, scandOpen=false, tlDrag=false;
+const markerLayers={};
+const pathLayers=[];
+
+function initMap(){
+  map = L.map('map',{
+    center:[48,18], zoom:4,
+    minZoom:3, maxZoom:9,
+    zoomControl:true,
+  });
+
+  // Dark CARTO tile — no labels for clean cartographic look
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{
+    attribution:'© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com">CARTO</a>',
+    subdomains:'abcd',
+    maxZoom:20,
+  }).addTo(map);
+
+  // Build event markers (all hidden initially)
+  EVS.forEach(ev=>{
+    const c = TC[ev.type];
+    const icon = L.divIcon({
+      className:'',
+      html:`<div style="
+        width:28px;height:28px;
+        border-radius:50%;
+        background:${c}22;
+        border:2px solid ${c};
+        display:flex;align-items:center;justify-content:center;
+        font-size:11px;cursor:pointer;
+        box-shadow:0 0 12px ${c}66;
+        transition:transform .15s;
+      " title="${ev.year} e.Kr. — ${ev.label}">
+        <div style="
+          width:14px;height:14px;border-radius:50%;
+          background:${c};opacity:.88;
+          display:flex;align-items:center;justify-content:center;
+          font-size:8px;color:white;font-family:Cinzel,serif;
+        ">${TI[ev.type]||'•'}</div>
+      </div>`,
+      iconSize:[28,28],
+      iconAnchor:[14,14],
+    });
+
+    const marker = L.marker([ev.lat,ev.lon],{icon,opacity:0}).addTo(map);
+    marker.on('click',()=>openPanel(ev));
+    marker.on('mouseover',()=>{
+      marker.getElement().querySelector('div').style.transform='scale(1.3)';
+    });
+    marker.on('mouseout',()=>{
+      marker.getElement().querySelector('div').style.transform='scale(1)';
+    });
+    markerLayers[ev.id]=marker;
+  });
+
+  // Build migration path polylines (all empty initially)
+  MPATHS.forEach((mp,i)=>{
+    const line = L.polyline([],{
+      color: mp.col,
+      weight: 2.5,
+      opacity: 0,
+      dashArray: '10 7',
+      lineCap:'round',
+    }).addTo(map);
+    pathLayers.push({line, mp});
+  });
+
+  setYear(370);
+}
+
+// ── YEAR UPDATE ───────────────────────────────────────
+function setYear(y){
+  y = Math.max(370,Math.min(600,Math.round(y)));
+  if(y===year && map) return;
+  year = y;
+  document.getElementById('yrd').textContent = y+' e.Kr.';
+  updateMarkers();
+  updatePaths();
+  drawTL();
+}
+
+function updateMarkers(){
+  EVS.forEach(ev=>{
+    const m = markerLayers[ev.id];
+    if(!m) return;
+    m.setOpacity(year >= ev.year ? 1 : 0);
+    m.options.interactive = year >= ev.year;
+  });
+}
+
+function updatePaths(){
+  pathLayers.forEach(({line,mp})=>{
+    if(year < mp.start){ line.setLatLngs([]); line.setStyle({opacity:0}); return; }
+    const prog = Math.min(1,(year-mp.start)/(mp.peak-mp.start));
+    let op;
+    if(year<=mp.peak) op=prog*0.75;
+    else if(year<=mp.end) op=0.75*(1-(year-mp.peak)/(mp.end-mp.peak))*0.45+0.25;
+    else{ line.setLatLngs([]); line.setStyle({opacity:0}); return; }
+
+    // Subset of latlngs based on progress
+    const pts = mp.latlngs;
+    const total = pts.length-1;
+    const endSeg = Math.min(Math.floor(prog*total), total-1);
+    const frac = prog*total - endSeg;
+    const shown = pts.slice(0, endSeg+1);
+    if(endSeg < total){
+      const p1=pts[endSeg], p2=pts[endSeg+1];
+      shown.push([p1[0]+(p2[0]-p1[0])*frac, p1[1]+(p2[1]-p1[1])*frac]);
+    }
+    line.setLatLngs(shown);
+    line.setStyle({opacity:op});
+  });
+}
+
+// ── PANEL ─────────────────────────────────────────────
+function openPanel(ev){
+  document.getElementById('pyr').textContent=ev.year+' e.Kr.';
+  document.getElementById('ptit').textContent=ev.title;
+  const b=document.getElementById('pbdg');
+  b.textContent=TL2[ev.type];
+  b.style.cssText=`background:${TC[ev.type]}22;color:${TC[ev.type]};border:1px solid ${TC[ev.type]}55;`;
+  document.getElementById('pbdy').innerHTML='<p>'+ev.body+'</p>';
+  document.getElementById('psrc').textContent=ev.src||'';
+  document.getElementById('pnl').classList.add('open');
+}
+function closePanel(){document.getElementById('pnl').classList.remove('open');}
+window.closePanel=closePanel;
+
+// ── SCANDINAVIA ───────────────────────────────────────
+function tgScand(){
+  scandOpen=!scandOpen;
+  document.getElementById('spnl').classList.toggle('open',scandOpen);
+  document.getElementById('sbtn').textContent=scandOpen?'× SKANDINAVIEN':'⬡ SKANDINAVIEN';
+  if(scandOpen) document.getElementById('ssb').innerHTML=SDATA.map(d=>
+    `<div class="ssi"><span class="ssy">${d.yr}</span><span class="sst">${d.t}</span></div>`).join('');
+}
+window.tgScand=tgScand;
+document.getElementById('sbtn').addEventListener('click',tgScand);
+
+// ── ELASTIC TIMELINE ─────────────────────────────────
+const SEGS=[{s:370,e:420,w:2.8},{s:420,e:480,w:1.6},{s:480,e:520,w:1.9},{s:520,e:600,w:1.0}];
+const TOTW=SEGS.reduce((a,d)=>a+d.w*(d.e-d.s),0);
+function yrFrac(y){let a=0;for(const d of SEGS){if(y>=d.e)a+=d.w*(d.e-d.s);else if(y>=d.s){a+=d.w*(y-d.s);break;}}return a/TOTW;}
+function fracYr(f){const t=f*TOTW;let a=0;for(const d of SEGS){const sw=d.w*(d.e-d.s);if(a+sw>=t)return d.s+(t-a)/d.w;a+=sw;}return 600;}
+
+const tlc=document.getElementById('tlc');
+const tlctx=tlc.getContext('2d');
+let TLW=0,TLH=0;
+
+function initTL(){
+  const dpr=window.devicePixelRatio||1;
+  TLW=tlc.offsetWidth;TLH=tlc.offsetHeight;
+  tlc.width=TLW*dpr;tlc.height=TLH*dpr;
+  tlctx.setTransform(1,0,0,1,0,0);
+  tlctx.scale(dpr,dpr);
+  drawTL();
+}
+
+function yrX(y){return 44+(TLW-88)*yrFrac(y);}
+function xYr(x){return fracYr((x-44)/(TLW-88));}
+
+function drawTL(){
+  const W=TLW,H=TLH,ty=H*0.56,th=3;
+  tlctx.clearRect(0,0,W,H);
+
+  // Dense zone highlight
+  const d1=yrX(370),d2=yrX(420);
+  const dg=tlctx.createLinearGradient(d1,0,d2,0);
+  dg.addColorStop(0,'rgba(212,168,67,0)');
+  dg.addColorStop(0.4,'rgba(212,168,67,0.08)');
+  dg.addColorStop(0.6,'rgba(212,168,67,0.08)');
+  dg.addColorStop(1,'rgba(212,168,67,0)');
+  tlctx.fillStyle=dg;tlctx.fillRect(d1,0,d2-d1,ty);
+  tlctx.fillStyle='rgba(212,168,67,0.32)';
+  tlctx.font='7.5px Cinzel,serif';tlctx.textAlign='center';
+  tlctx.fillText('▼ TÄTPACKAD PERIOD',(d1+d2)/2,9);
+
+  // Track
+  const tg=tlctx.createLinearGradient(44,0,W-44,0);
+  tg.addColorStop(0,'rgba(212,168,67,0.08)');
+  tg.addColorStop(0.25,'rgba(212,168,67,0.82)');
+  tg.addColorStop(0.75,'rgba(212,168,67,0.5)');
+  tg.addColorStop(1,'rgba(212,168,67,0.08)');
+  tlctx.fillStyle=tg;tlctx.fillRect(44,ty,W-88,th);
+
+  // Event ticks + dots
+  EVS.forEach(ev=>{
+    const x=yrX(ev.year),c=TC[ev.type];
+    tlctx.globalAlpha=0.5;tlctx.fillStyle=c;tlctx.fillRect(x-1,ty-15,2,10);
+    tlctx.globalAlpha=1;
+    tlctx.beginPath();tlctx.arc(x,ty+th/2,5,0,Math.PI*2);
+    tlctx.fillStyle=year>=ev.year?c:c+'44';tlctx.fill();
+    tlctx.strokeStyle='rgba(245,232,192,0.25)';tlctx.lineWidth=1;tlctx.stroke();
+  });
+
+  // Year labels
+  [370,395,410,430,451,476,493,520,536,570,600].forEach(y=>{
+    const x=yrX(y);
+    tlctx.fillStyle='rgba(212,168,67,0.25)';tlctx.fillRect(x-.5,ty-4,1,th+8);
+    tlctx.fillStyle='rgba(212,168,67,0.55)';
+    tlctx.font='9px Cinzel,serif';tlctx.textAlign='center';
+    tlctx.fillText(y,x,ty+21);
+  });
+
+  // Scrubber
+  const sx=yrX(year);
+  tlctx.strokeStyle='#f0c85a';tlctx.lineWidth=1.8;
+  tlctx.beginPath();tlctx.moveTo(sx,0);tlctx.lineTo(sx,H);tlctx.stroke();
+  tlctx.fillStyle='#f0c85a';
+  tlctx.beginPath();
+  tlctx.moveTo(sx,ty-10);tlctx.lineTo(sx+7,ty+th/2);
+  tlctx.lineTo(sx,ty+th+10);tlctx.lineTo(sx-7,ty+th/2);
+  tlctx.closePath();tlctx.fill();
+}
+
+// Timeline interaction
+tlc.addEventListener('mousedown',()=>tlDrag=true);
+document.addEventListener('mouseup',()=>tlDrag=false);
+tlc.addEventListener('mousemove',e=>{
+  const r=tlc.getBoundingClientRect();
+  const x=e.clientX-r.left;
+  const y=Math.round(xYr(x));
+  if(tlDrag)setYear(y);
+  const near=EVS.filter(ev=>Math.abs(ev.year-y)<=12).sort((a,b)=>a.year-b.year);
+  const lens=document.getElementById('lens');
+  if(near.length>=2){
+    document.getElementById('lrows').innerHTML=near.map(ev=>
+      `<div class="lr"><span class="lyr">${ev.year}</span><span style="color:${TC[ev.type]}">●</span><span>${ev.label}</span></div>`).join('');
+    let lx=e.clientX-115;lx=Math.max(10,Math.min(window.innerWidth-245,lx));
+    lens.style.left=lx+'px';lens.classList.add('show');
+  } else lens.classList.remove('show');
+});
+tlc.addEventListener('click',e=>{
+  const r=tlc.getBoundingClientRect();
+  setYear(Math.round(xYr(e.clientX-r.left)));
+});
+tlc.addEventListener('mouseleave',()=>document.getElementById('lens').classList.remove('show'));
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight')setYear(year+5);
+  if(e.key==='ArrowLeft') setYear(year-5);
+  if(e.key==='Escape')closePanel();
+});
+
+// ── INIT ──────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  initMap();
+  initTL();
+});
+window.addEventListener('resize',()=>{
+  initTL();
+});
+</script>
+</body>
+</html>
