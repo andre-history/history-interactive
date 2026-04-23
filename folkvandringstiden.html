@@ -33,7 +33,7 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 #ttl p{color:rgba(245,232,192,.42);font-size:.78rem;letter-spacing:2.5px;margin-top:3px}
 
 /* Legend */
-#leg{position:absolute;bottom:160px;left:14px;background:rgba(10,6,2,.92);border:1px solid var(--brd);padding:10px 14px;border-radius:3px;z-index:800}
+#leg{position:absolute;bottom:30px;right:14px;background:rgba(10,6,2,.92);border:1px solid var(--brd);padding:10px 14px;border-radius:3px;z-index:800}
 .li{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:.72rem;color:var(--txt);font-family:'Cinzel',serif}
 .li:last-child{margin:0}
 .ld{width:10px;height:10px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0}
@@ -205,6 +205,26 @@ const EVS=[
    title:'Solen slocknar — Fimbulvinter',
    body:'År 536 fördunklas solen av ett mystiskt dis i 18 månader. Troligen ett vulkanutbrott. Tre missväxtår leder till hungersnöd och social oro i hela Europa och Asien. Dendrokronologiska studier bekräftar kylperioden. Historiker ser detta som ursprunget till myten om Fimbulvintern.',
    src:'Prokopios, Historia Arcana; Büntgen et al., Science 2016'},
+  {id:'aqu', year:418, type:'politics',  label:'Visigoternas rike i Aquitanien', lat:44.5, lon:0.5,
+   title:'Det första germanska riket på romersk mark',
+   body:'År 418 beviljar kejsar Honorius formellt visigoterna Aquitanien (sydvästra Gallien) som ett foederati-rike — det första permanenta germanska riket på romerskt territorium. Visigoterna fungerar officiellt som romerska allierade men är i praktiken självständiga. Det är ett historiskt vattendelare: det romerska systemet absorberar nu de folk det inte längre kan besegra.',
+   src:'Prosper av Aquitanien, Chronica (ca 455 e.Kr.)'},
+  {id:'att', year:440, type:'politics',  label:'Attila tar makten som hunnerkonung', lat:47.2, lon:20.5,
+   title:'Attila — "Guds gissel" tar tronen',
+   body:'År 440 (efter att ha mördat sin bror Bleda 445) styr Attila ensam över hunnernas rike från sin palatsstad i Pannonia. Hans rike sträcker sig från Rhen till Ural. Han utpressar det östromerska riket på enorma mängder guld — kejsar Theodosius II tvingas betala en årlig tribut som kulminerar i 2 100 pund guld per år. Attila är den dominerande politiska figuren i 440-talets Europa.',
+   src:'Priskos av Panion, Byzantinska ambassad till hunnerna (ca 448 e.Kr.)'},
+  {id:'att452', year:452, type:'battle', label:'Attila invaderar Italien — möter Leo I', lat:45.4, lon:11.8,
+   title:'Attila vid Roms portar — påve Leo räddar staden',
+   body:'År 452 korsar Attila Alperna och plundrar norra Italiens städer: Aquileia, Padua, Verona, Milano. Han marscherar mot Rom men vänder vid floden Mincio efter ett möte med påve Leo I. Exakt vad som sades är okänt — en legend menade att Leo visade Attila en syn av apostlarna Petrus och Paulus. Historiker tror att pest, hungersnöd och ett bysantinskt anfall i ryggen var de verkliga orsakerna.',
+   src:'Prosper av Aquitanien, Chronica; Jordanes, Getica 42'},
+  {id:'clov486', year:486, type:'politics', label:'Clovis erövrar norra Gallien', lat:49.0, lon:2.4,
+   title:'Clovis besegrar Syagrius — sista romanen i väst',
+   body:'År 486 besegrar Clovis Syagrius, som styrt ett isolerat "romerskt" område kring Soissons i norra Gallien — det sista territoriet under formell romersk administration i väst. Med denna seger kontrollerar Clovis praktiskt taget hela Gallien norr om Loire. Det är slutet på alla anspråk på romersk kontinuitet i väst.',
+   src:'Gregorius av Tours, Historia Francorum II:27 (ca 575 e.Kr.)'},
+  {id:'lom', year:568, type:'migration', label:'Langobarderna invaderar Italien', lat:45.6, lon:11.0,
+   title:'Langobarderna — folkvandringstidens sista akt',
+   body:'År 568 leder kung Alboin langobarderna från Pannonien (nuvarande Ungern) in i norra Italien. De erövrar snabbt Po-slättens städer och grundar ett rike som ger namn åt Lombardiet. Byzantinska kejsardömet behåller bara öar som Ravenna, Rom och södra Italien. Langobardernas invasion brukar räknas som folkvandringstidens definitiva slutpunkt — Europa är nu omformat för gott.',
+   src:'Paulus Diaconus, Historia Langobardorum (ca 790 e.Kr.)'},
 ];
 
 const SDATA=[
