@@ -27,6 +27,199 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 .ev-tip{background:rgba(10,6,2,0.96)!important;border:1px solid #7a5e18!important;border-radius:3px!important;padding:6px 10px!important;color:#f5e8c0!important;font-family:'Cormorant Garamond',serif!important;box-shadow:0 4px 20px rgba(0,0,0,.6)!important}
 .ev-tip::before{display:none!important}
 
+/* ── PEOPLES LEGEND PANEL ── */
+#ppl-btn{
+  position:absolute;bottom:30px;left:14px;
+  background:rgba(10,6,2,.88);border:1px solid var(--brd);
+  color:var(--gold);font-family:'Cinzel',serif;font-size:.58rem;
+  letter-spacing:1.5px;padding:7px 13px;cursor:pointer;
+  border-radius:2px;z-index:900;
+}
+#ppl-btn:hover{background:rgba(212,168,67,.12)}
+#ppl-panel{
+  position:absolute;bottom:64px;left:-340px;width:310px;
+  background:rgba(10,6,2,.97);border:1px solid var(--brd);
+  border-radius:3px;z-index:900;
+  transition:left .38s cubic-bezier(.25,.46,.45,.94);
+  max-height:calc(100vh - 240px);overflow-y:auto;
+}
+#ppl-panel.open{left:14px}
+#ppl-panel::-webkit-scrollbar{width:3px}
+#ppl-panel::-webkit-scrollbar-thumb{background:var(--brd)}
+.ppl-head{
+  padding:10px 14px;border-bottom:1px solid rgba(122,94,24,.3);
+  font-family:'Cinzel',serif;color:var(--gold);font-size:.6rem;
+  letter-spacing:2.5px;display:flex;justify-content:space-between;align-items:center;
+}
+.ppl-row{
+  display:flex;align-items:center;gap:11px;
+  padding:9px 14px;border-bottom:1px solid rgba(122,94,24,.12);
+  cursor:pointer;transition:background .15s;
+}
+.ppl-row:last-child{border:none}
+.ppl-row:hover{background:rgba(212,168,67,.06)}
+.ppl-row.active{background:rgba(212,168,67,.1)}
+.ppl-icon{width:36px;height:36px;flex-shrink:0}
+.ppl-info{flex:1}
+.ppl-name{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:1px;margin-bottom:3px}
+.ppl-desc{font-size:.78rem;color:rgba(245,232,192,.55);line-height:1.4}
+.ppl-reset{
+  display:block;text-align:center;padding:8px;
+  font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:2px;
+  color:rgba(212,168,67,.4);cursor:pointer;border-top:1px solid rgba(122,94,24,.2);
+}
+.ppl-reset:hover{color:var(--gold)}
+
+/* ── INTRO CARD ── */
+#intro-card{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%) scale(0.88);
+  width:340px;background:rgba(8,4,1,.98);
+  border:1px solid var(--brd);border-radius:3px;
+  z-index:4000;pointer-events:none;
+  opacity:0;transition:opacity .35s ease,transform .35s ease;
+  text-align:center;padding:24px 28px 20px;
+  box-shadow:0 8px 60px rgba(0,0,0,.8);
+}
+#intro-card.show{
+  opacity:1;transform:translate(-50%,-50%) scale(1);
+}
+#intro-icon{width:64px;height:64px;margin:0 auto 12px}
+#intro-people{font-family:'Cinzel',serif;font-size:1.05rem;letter-spacing:4px;margin-bottom:6px}
+#intro-year{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:3px;margin-bottom:14px;opacity:.55}
+#intro-divider{width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 14px}
+#intro-text{font-family:'Cormorant Garamond',serif;font-size:.98rem;line-height:1.72;color:rgba(245,232,192,.78)}
+
+/* ── FOCUS MODE ── */
+.leaflet-overlay-pane path.dimmed{opacity:0.08!important}
+
+/* ── FIMBULVINTER SEQUENCE ── */
+#fimbul-overlay{
+  position:fixed;inset:0;z-index:5000;pointer-events:none;
+  display:none;
+}
+#fimbul-flicker{
+  position:absolute;inset:0;background:#fff;opacity:0;
+}
+#fimbul-dark{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 30%, #1a1a2e 0%, #000 100%);
+  opacity:0;
+}
+#fimbul-cold{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(100,140,200,0.18) 0%,rgba(60,90,160,0.28) 100%);
+  opacity:0;mix-blend-mode:multiply;
+}
+#fimbul-canvas{
+  position:absolute;inset:0;width:100%;height:100%;opacity:0;
+}
+#fimbul-text{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;opacity:0;pointer-events:none;
+}
+#fimbul-text span{
+  display:block;font-family:'Cinzel',serif;color:rgba(200,220,255,0.9);
+  letter-spacing:8px;text-shadow:0 0 40px rgba(100,160,255,0.8);
+}
+#fimbul-text .ft-year{font-size:3.5rem;font-weight:700;margin-bottom:8px}
+#fimbul-text .ft-line{font-size:1.1rem;margin-bottom:6px}
+#fimbul-text .ft-sub{font-size:.7rem;color:rgba(160,190,255,0.55);letter-spacing:5px;margin-top:10px}
+#fimbul-sun{
+  position:absolute;top:12%;left:50%;transform:translateX(-50%);
+  width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,#fff8e0 0%,#ffd060 30%,#ff8c00 60%,transparent 100%);
+  filter:blur(2px);opacity:0;
+  box-shadow:0 0 80px 40px rgba(255,200,60,0.4);
+}
+/* ── SPLASH MODAL ── */
+#splash{
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(4,2,1,0.97);
+  display:flex;align-items:center;justify-content:center;
+  animation:splashFadeIn .6s ease;
+}
+@keyframes splashFadeIn{from{opacity:0}to{opacity:1}}
+#splash.hiding{animation:splashFadeOut .5s ease forwards}
+@keyframes splashFadeOut{from{opacity:1}to{opacity:0;pointer-events:none}}
+#splash-inner{
+  max-width:620px;width:90%;text-align:center;padding:0 20px;
+}
+#splash-eyebrow{
+  font-family:'Cinzel',serif;color:var(--gold);font-size:.7rem;
+  letter-spacing:5px;margin-bottom:18px;opacity:.7;
+}
+#splash-title{
+  font-family:'Cinzel',serif;color:var(--gold-l);
+  font-size:2.4rem;font-weight:700;letter-spacing:6px;
+  line-height:1.2;margin-bottom:10px;
+  text-shadow:0 0 60px rgba(212,168,67,.25);
+}
+#splash-sub{
+  font-family:'Cinzel',serif;color:rgba(212,168,67,.55);
+  font-size:.72rem;letter-spacing:3px;margin-bottom:28px;
+}
+#splash-divider{
+  width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:0 auto 28px;
+}
+#splash-desc{
+  font-family:'Cormorant Garamond',serif;color:rgba(245,232,192,.72);
+  font-size:1.08rem;line-height:1.8;margin-bottom:36px;max-width:480px;margin-left:auto;margin-right:auto;
+}
+#splash-keys{
+  display:flex;justify-content:center;gap:24px;flex-wrap:wrap;
+  margin-bottom:40px;
+}
+.splash-key{
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:2px;
+  color:rgba(212,168,67,.55);padding:5px 12px;
+  border:1px solid rgba(122,94,24,.4);border-radius:2px;
+}
+#splash-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.splash-btn{
+  font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:2.5px;
+  padding:13px 28px;border-radius:2px;cursor:pointer;
+  transition:all .2s;border:none;
+}
+#splash-explore{
+  background:var(--gold);color:rgba(4,2,1,.95);
+}
+#splash-explore:hover{background:var(--gold-l);transform:translateY(-1px)}
+#splash-play{
+  background:transparent;color:var(--gold);
+  border:1px solid rgba(122,94,24,.7);
+}
+#splash-play:hover{background:rgba(212,168,67,.1);transform:translateY(-1px)}
+#splash-hint{
+  margin-top:20px;font-family:'Cinzel',serif;font-size:.55rem;
+  letter-spacing:2px;color:rgba(212,168,67,.28);
+}
+
+/* ── AUTOPLAY BAR ── */
+#autoplay-bar{
+  position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:rgba(212,168,67,.15);z-index:950;pointer-events:none;
+}
+#autoplay-progress{height:100%;width:0%;background:var(--gold-l);transition:width .1s linear}
+#autoplay-btn{
+  position:absolute;top:18px;right:14px;
+  background:rgba(10,6,2,.88);border:1px solid var(--brd);
+  color:var(--gold);font-family:'Cinzel',serif;font-size:.62rem;
+  letter-spacing:1.5px;padding:7px 13px;cursor:pointer;
+  border-radius:2px;z-index:900;display:none;
+}
+#autoplay-btn:hover{background:rgba(212,168,67,.12)}
+#autoplay-toast{
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  background:rgba(10,6,2,.95);border:1px solid var(--brd);
+  font-family:'Cinzel',serif;color:var(--gold-l);font-size:.65rem;
+  letter-spacing:2px;padding:8px 18px;border-radius:2px;
+  z-index:950;opacity:0;transition:opacity .3s;pointer-events:none;
+  white-space:nowrap;
+}
+#autoplay-toast.show{opacity:1}
+
 /* Title */
 #ttl{position:absolute;top:18px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;z-index:900}
 #ttl h1{font-family:'Cinzel',serif;color:var(--gold-l);font-size:1.35rem;letter-spacing:5px;font-weight:600;text-shadow:0 2px 14px rgba(0,0,0,.95)}
@@ -89,8 +282,71 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 </head>
 <body>
 <div id="app">
+  <!-- FIMBULVINTER OVERLAY -->
+  <div id="fimbul-overlay">
+    <div id="fimbul-flicker"></div>
+    <div id="fimbul-sun"></div>
+    <div id="fimbul-dark"></div>
+    <div id="fimbul-cold"></div>
+    <canvas id="fimbul-canvas"></canvas>
+    <div id="fimbul-text">
+      <span class="ft-year">536 e.Kr.</span>
+      <span class="ft-line">Solen försvann.</span>
+      <span class="ft-line">I arton månader.</span>
+      <span class="ft-sub">FIMBULVINTERN</span>
+    </div>
+  </div>
+
+  <!-- SPLASH -->
+  <div id="splash">
+    <div id="splash-inner">
+      <div id="splash-eyebrow">HISTORIA — SENANTIKEN</div>
+      <div id="splash-title">FOLKVANDRINGS&shy;TIDEN</div>
+      <div id="splash-sub">ca. 370 – 600 e.Kr.</div>
+      <div id="splash-divider"></div>
+      <div id="splash-desc">
+        Under tvåhundra år omformades Europa för alltid. Hunner, goter, vandaler och franker rörde sig över kontinenten medan det romerska riket kollapsade inifrån och ut. Utforska händelserna på kartan — eller låt historien spela upp sig automatiskt.
+      </div>
+      <div id="splash-keys">
+        <span class="splash-key">HUNNER & ATTILA</span>
+        <span class="splash-key">ROMARRIKETS FALL</span>
+        <span class="splash-key">GERMANSKA FOLK</span>
+        <span class="splash-key">KLIMATKRIS 536</span>
+        <span class="splash-key">SKANDINAVIEN</span>
+      </div>
+      <div id="splash-btns">
+        <button class="splash-btn" id="splash-explore">UTFORSKA SJÄLV</button>
+        <button class="splash-btn" id="splash-play">▶ SPELA UPP TIDSLINJE</button>
+      </div>
+      <div id="splash-hint">KLICKA PÅ HÄNDELSER FÖR MER INFO &nbsp;·&nbsp; SCROLLA TIDSLINJEN FÖR ZOOM</div>
+    </div>
+  </div>
+
   <div id="mwrap">
     <div id="map"></div>
+    <div id="autoplay-bar"><div id="autoplay-progress"></div></div>
+    <div id="autoplay-btn">⏸ PAUSA</div>
+
+    <!-- PEOPLES LEGEND -->
+    <button id="ppl-btn">☰ FOLKSLAG</button>
+    <div id="ppl-panel">
+      <div class="ppl-head">
+        FOLKSLAG &amp; AKTÖRER
+        <button onclick="closePpl()" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.1rem">×</button>
+      </div>
+      <div id="ppl-rows"></div>
+      <div class="ppl-reset" onclick="clearPeopleFilter()">✕ RENSA FILTER</div>
+    </div>
+
+    <!-- INTRO CARD -->
+    <div id="intro-card">
+      <div id="intro-icon"></div>
+      <div id="intro-people"></div>
+      <div id="intro-year"></div>
+      <div id="intro-divider"></div>
+      <div id="intro-text"></div>
+    </div>
+    <div id="autoplay-toast"></div>
     <div id="ttl"><h1>FOLKVANDRINGSTIDEN</h1><p>ca. 370 – 600 e.Kr. &nbsp;·&nbsp; Scrolla på tidslinjen för att zooma</p></div>
     <button id="sbtn">⬡ SKANDINAVIEN</button>
     <div id="spnl">
@@ -140,6 +396,142 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-polylinedecorator/1.6.0/leaflet.polylineDecorator.min.js"></script>
 <script>
 // ── TYPE CONFIG ───────────────────────────────────────
+// ── PEOPLES ──────────────────────────────────────────
+const PEOPLES = [
+  {
+    id:'huns', name:'Hunnerna', col:'#c9623f',
+    desc:'Nomader från Centralasien som pressade folk västerut och utlöste hela folkvandringstiden. Under Attila utpressade de bägge halvorna av romarriket på guld.',
+    symbol:`<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Composite bow -->
+      <path d="M8 32 Q20 4 32 32" stroke="#c9623f" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <line x1="8" y1="32" x2="32" y2="32" stroke="#c9623f" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <!-- Arrow -->
+      <line x1="12" y1="20" x2="30" y2="14" stroke="#e8a060" stroke-width="1.8" stroke-linecap="round"/>
+      <polygon points="30,14 26,12 27,16" fill="#e8a060"/>
+      <!-- Horse silhouette -->
+      <ellipse cx="20" cy="34" rx="7" ry="2.5" fill="#c9623f" opacity="0.4"/>
+    </svg>`,
+    evIds:['hun','att','cat','att452'],
+    pathIds:['huns'],
+    intro:'Nomader från Centralasien. Deras framryckning mot väst utlöste en dominoeffekt som omformade hela Europa.',
+  },
+  {
+    id:'goths', name:'Goterna', col:'#2e86ab',
+    desc:'Delade i visigoter (väst) och ostrogoter (öst). Visigoterna plundrade Rom 410 och grundade rike i Spanien. Ostrogoterna tog Italien 493 under Theoderik den store.',
+    symbol:`<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Eagle fibula (simplified) -->
+      <ellipse cx="20" cy="22" rx="6" ry="9" fill="#2e86ab" opacity="0.85"/>
+      <!-- Wings -->
+      <path d="M14 18 Q8 14 6 20 Q10 22 14 20Z" fill="#2e86ab" opacity="0.75"/>
+      <path d="M26 18 Q32 14 34 20 Q30 22 26 20Z" fill="#2e86ab" opacity="0.75"/>
+      <!-- Head -->
+      <circle cx="20" cy="13" r="4" fill="#2e86ab"/>
+      <polygon points="20,9 22,6 18,6" fill="#4ab0d8"/>
+      <!-- Eye -->
+      <circle cx="20" cy="13" r="1.2" fill="#fff" opacity="0.8"/>
+    </svg>`,
+    evIds:['vis','adr','ala','r55','fal','the','aqu'],
+    pathIds:['vis','ost'],
+    intro:'Uppdelade i visigoter och ostrogoter. Flydde hunnerna, besegrade en kejsare och grundade riken i Rom och Spanien.',
+  },
+  {
+    id:'vandals', name:'Rhen-alliansen', col:'#c0392b',
+    desc:'Vandaler, svever och alaner korsade den frusna Rhen 406. Vandalerna tog Nordafrika och Kartago, byggde en flotta och plundrade Rom 455.',
+    symbol:`<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Ship hull -->
+      <path d="M6 26 Q20 32 34 26 L30 22 Q20 28 10 22Z" fill="#c0392b" opacity="0.85"/>
+      <!-- Sail -->
+      <line x1="20" y1="8" x2="20" y2="26" stroke="#e05040" stroke-width="1.5"/>
+      <path d="M20 10 Q30 14 28 22 L20 22Z" fill="#e05040" opacity="0.75"/>
+      <!-- Waves -->
+      <path d="M4 30 Q10 27 16 30 Q22 33 28 30 Q34 27 38 30" stroke="#c0392b" stroke-width="1.2" fill="none" opacity="0.5"/>
+    </svg>`,
+    evIds:['rhn','car','r55'],
+    pathIds:['van'],
+    intro:'Korsade den frusna Rhen 406, drog genom Gallien och Spanien till Nordafrika — och plundrade Rom från sjösidan 455.',
+  },
+  {
+    id:'franks', name:'Frankerna', col:'#2d8a4e',
+    desc:'Under Clovis enade och utvidgade frankerna sitt rike i Gallien. Konversionen till kristendomen 496 gav dem kyrkans stöd. Grunden till dagens Frankrike.',
+    symbol:`<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Francisca (throwing axe) -->
+      <path d="M14 30 L22 10 Q30 8 28 16 Q26 22 18 24Z" fill="#2d8a4e" opacity="0.9"/>
+      <line x1="14" y1="30" x2="24" y2="18" stroke="#2d8a4e" stroke-width="2"/>
+      <!-- Handle -->
+      <line x1="14" y1="30" x2="8" y2="38" stroke="#5aaa70" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Gold bee -->
+      <ellipse cx="32" cy="30" rx="3.5" ry="5" fill="#d4a843" opacity="0.7"/>
+      <line x1="29" y1="28" x2="27" y2="25" stroke="#d4a843" stroke-width="1" opacity="0.7"/>
+      <line x1="35" y1="28" x2="37" y2="25" stroke="#d4a843" stroke-width="1" opacity="0.7"/>
+    </svg>`,
+    evIds:['clo','clov486'],
+    pathIds:['fra'],
+    intro:'Klokt ledarskap och ett strategiskt religionsbyte lade grunden till det frankiska riket — och till Frankrike.',
+  },
+  {
+    id:'lombards', name:'Langobarderna', col:'#8b6be8',
+    desc:'Den sista stora folkrörelsen: intog norra Italien 568 och gav namn åt Lombardiet. Markerar folkvandringstidens definitiva slut.',
+    symbol:`<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Iron crown -->
+      <rect x="10" y="20" width="20" height="10" rx="2" fill="#8b6be8" opacity="0.85"/>
+      <!-- Crown points -->
+      <polygon points="12,20 14,12 16,20" fill="#8b6be8"/>
+      <polygon points="19,20 20,10 21,20" fill="#8b6be8"/>
+      <polygon points="24,20 26,12 28,20" fill="#8b6be8"/>
+      <!-- Cross on crown -->
+      <line x1="20" y1="14" x2="20" y2="20" stroke="#c9a0f0" stroke-width="1.5"/>
+      <line x1="17" y1="16.5" x2="23" y2="16.5" stroke="#c9a0f0" stroke-width="1.5"/>
+      <!-- Jewels -->
+      <circle cx="15" cy="25" r="2" fill="#d4a843"/>
+      <circle cx="20" cy="25" r="2" fill="#e05040"/>
+      <circle cx="25" cy="25" r="2" fill="#4ab0d8"/>
+    </svg>`,
+    evIds:['lom'],
+    pathIds:['lom'],
+    intro:'Den sista folkvandringen: langobarderna intog norra Italien 568 och satte punkt för en tvåhundraårig era av folkrörelser.',
+  },
+  {
+    id:'nordic', name:'Nordiska stammar', col:'#2d8a4e',
+    desc:'Stannade i Skandinavien men påverkades starkt: romerguld strömmade in, fornborgar byggdes i Skåne och centralplatser som Uppåkra blomstrade.',
+    symbol:`<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Bracteat (round gold medallion) -->
+      <circle cx="20" cy="20" r="13" fill="#d4a843" opacity="0.85"/>
+      <circle cx="20" cy="20" r="10" fill="none" stroke="#f0c85a" stroke-width="1"/>
+      <!-- Stylized animal (horse head) -->
+      <path d="M15 24 Q14 18 18 15 Q22 12 25 15 Q28 18 26 22 Q22 26 18 24Z" fill="#a07820" opacity="0.7"/>
+      <circle cx="25" cy="14" r="2" fill="#a07820" opacity="0.6"/>
+      <!-- Loop at top -->
+      <circle cx="20" cy="8" r="2.5" fill="none" stroke="#d4a843" stroke-width="1.5"/>
+    </svg>`,
+    evIds:['upp','for'],
+    pathIds:[],
+    intro:'Skandinavien påverkades av folkvandringstiden utan att delta direkt — via guldinflöde, fornborgar och mäktiga centralplatser.',
+  },
+  {
+    id:'rome', name:'Romarriket', col:'#8b0000',
+    desc:'Imperiet vars kollaps gav folkvandringstiden dess namn. Delades 395, förlorade väst 476. Östromerska riket (Bysans) levde vidare till 1453.',
+    symbol:`<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Aquila (eagle standard) -->
+      <!-- Staff -->
+      <line x1="20" y1="8" x2="20" y2="36" stroke="#8b0000" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Eagle body -->
+      <ellipse cx="20" cy="14" rx="5" ry="6" fill="#8b0000"/>
+      <!-- Wings spread -->
+      <path d="M15 12 Q8 8 6 14 Q10 16 15 14Z" fill="#8b0000"/>
+      <path d="M25 12 Q32 8 34 14 Q30 16 25 14Z" fill="#8b0000"/>
+      <!-- Eagle head -->
+      <circle cx="20" cy="9" r="3" fill="#a01010"/>
+      <polygon points="20,6 23,8 20,9" fill="#d4a843"/>
+      <!-- SPQR banner -->
+      <rect x="13" y="20" width="14" height="8" rx="1" fill="#8b0000" opacity="0.7"/>
+      <text x="20" y="27" text-anchor="middle" fill="#d4a843" font-size="5" font-family="Cinzel,serif" font-weight="bold">SPQR</text>
+    </svg>`,
+    evIds:['spl','fal','the'],
+    pathIds:[],
+    intro:'Det västromerska riket föll 476 — men dess lagar, latin och institutioner levde vidare i de germanska konungarikena.',
+  },
+];
+
 const TC={battle:'#c0392b',politics:'#d4a843',migration:'#2e86ab',climate:'#8b6be8',scandinavia:'#2d8a4e'};
 const TL2={battle:'SLAG & PLUNDRING',politics:'POLITISK HÄNDELSE',migration:'FOLKRÖRELSE',climate:'KLIMAT & KRIS',scandinavia:'SKANDINAVIEN'};
 const TI={battle:'⚔',politics:'♔',migration:'➤',climate:'❄',scandinavia:'◈'};
@@ -222,6 +614,10 @@ const EVS=[
    title:'Clovis besegrar Syagrius — sista romanen i väst',
    body:'År 486 besegrar Clovis Syagrius, som styrt ett isolerat "romerskt" område kring Soissons i norra Gallien — det sista territoriet under formell romersk administration i väst. Med denna seger kontrollerar Clovis praktiskt taget hela Gallien norr om Loire. Det är slutet på alla anspråk på romersk kontinuitet i väst.',
    src:'Gregorius av Tours, Historia Francorum II:27 (ca 575 e.Kr.)'},
+  {id:'pest', year:541, type:'climate', label:'Justinianska pesten', lat:41.0, lon:28.9,
+   title:'Justinianska pesten — mänsklighetens första pandemi',
+   body:'År 541 exploderar en bubonpest-epidemi i Pelusium i Egypten och sprider sig blixtsnabbt längs handelsrutter till Konstantinopel och hela Medelhavsvärlden. Kejsar Justinianus I insjuknar men överlever — därav namnet. På höjdpunkten dör uppskattningsvis 5 000 människor per dag i Konstantinopel ensamt. Totalt beräknas 25–50 miljoner människor ha dött — kanske hälften av hela Medelhavsregionens befolkning. Pesten återkommer i vågor fram till 700-talet och anses ha allvarligt undergrävt Bysans förmåga att återerövra väst, och accelererat den arabiska expansionen ett sekel senare.',
+   src:'Prokopios, Historia Arcana och De Bellis; Evagrios Scholastikos, Kyrkliga historien IV:29'},
   {id:'lom', year:568, type:'migration', label:'Langobarderna invaderar Italien', lat:45.6, lon:11.0,
    title:'Langobarderna — folkvandringstidens sista akt',
    body:'År 568 leder kung Alboin langobarderna från Pannonien (nuvarande Ungern) in i norra Italien. De erövrar snabbt Po-slättens städer och grundar ett rike som ger namn åt Lombardiet. Byzantinska kejsardömet behåller bara öar som Ravenna, Rom och södra Italien. Langobardernas invasion brukar räknas som folkvandringstidens definitiva slutpunkt — Europa är nu omformat för gott.',
@@ -236,31 +632,31 @@ const SDATA=[
 ];
 
 const MPATHS=[
-  {col:'#8b6be8',start:370,peak:400,end:455,
+  {id:'huns',col:'#8b6be8',start:370,peak:400,end:455,
    label:'Hunnernas framryckande',
    title:'Hunnernas framryckande från Centralasien',
    body:'Hunnerna rörde sig från Centralasien mot Svarta havet ca 370 e.Kr. och tryckte vidare mot Donau och Balkan. Deras expansion var den direkta utlösaren av folkvandringstiden — folk efter folk flydde undan dem västerut. Under kung Attila nådde hunnernas makt sin kulmen med razzior ner på Balkan och in i Gallien.',
    src:'Ammianus Marcellinus, Res Gestae XXXI',
    latlngs:[[46,40],[44,38],[43,35],[43,32],[44.5,28],[43.5,26],[41.7,26.6]]},
-  {col:'#2e86ab',start:376,peak:415,end:480,
+  {id:'vis',col:'#2e86ab',start:376,peak:415,end:480,
    label:'Visigoterna — från Donau till Spanien',
    title:'Visigoterna: Donau → Adrianopel → Rom → Spanien',
    body:'Visigoterna flydde hunnerna och korsade Donau 376. Efter revolten mot romarna och segern vid Adrianopel 378 vandrade de söderut. Under Alaric plundrades Rom 410. Därefter fortsatte rörelsen västerut genom Gallien och slutligen till Hispania (Spanien), där visigoterna grundade ett rike som varade till 711.',
    src:'Jordanes, Getica; Orosius, Historia adversus paganos',
    latlngs:[[44.5,28],[42,27],[41.7,26.6],[41,23],[40,20],[40,17],[41.5,15],[41.9,12.5],[41,8],[40,3],[39,-1],[38,-4],[40,-5]]},
-  {col:'#c0392b',start:406,peak:445,end:476,
+  {id:'van',col:'#c0392b',start:406,peak:445,end:476,
    label:'Vandalernas vandring',
    title:'Vandalerna: Rhen → Spanien → Nordafrika → Rom',
    body:'Vandalernas rörelse är folkvandringstidens mest episka: de korsade Rhen på is vid nyåret 406/407, drog igenom Gallien, tog sig till Spanien och slutligen till Nordafrika där de erövrade Kartago 430. Därifrån byggde de en flotta och plundrade Rom 455. En resa på nästan 5 000 km på 50 år.',
    src:'Prokopios, De Bello Vandalico; Victor av Vita',
    latlngs:[[50.1,7.6],[48,4],[46,1],[43,-1],[41,-2],[38,-4],[37,-6],[36,0],[36,5],[36.85,10.33],[38,13],[41.9,12.5]]},
-  {col:'#d4a843',start:488,peak:495,end:550,
+  {id:'ost',col:'#d4a843',start:488,peak:495,end:550,
    label:'Ostrogoterna — mot Italien',
    title:'Ostrogoterna: Pontiska stäppen → Italien',
    body:'Ostrogoterna levde under hunnernas ok tills Attilas rike kollapsade 453. Under kung Theoderik marscherade de på uppdrag av den östromerske kejsaren Zeno mot Odoacer i Italien. 493 segrade Theoderik och grundade ett ostrogotiskt rike i Italien som bevarade stora delar av den romerska civilisationen.',
    src:'Cassiodorus, Variae; Prokopios, De Bello Gothico',
    latlngs:[[47,32],[46,28],[45,24],[44.5,20],[44.5,16],[44.42,12.18]]},
-  {col:'#2d8a4e',start:481,peak:498,end:560,
+  {id:'fra',col:'#2d8a4e',start:481,peak:498,end:560,
    label:'Frankernas expansion',
    title:'Frankernas expansion under Clovis',
    body:'Till skillnad från de andra folkvandringsfolken rörde sig frankerna inte långt från sina ursprungsområden vid Rhen — de expanderade gradvis söderut och västerut in i Gallien. Under Clovis (r. 481–511) enades stammarna, norra Gallien erövrades 486 och konversionen till kristendomen 496 gav kyrkan som allierad. Frankernas rike lade grunden till det framtida Frankrike.',
@@ -330,13 +726,23 @@ function initMap(){
   updatePaths();
 }
 
+function markerOpacity(ev){
+  if(year < ev.year) return 0;
+  const age = year - ev.year;
+  // Full opacity for first 20 years, then decay to min 0.25 over 100 years
+  const MIN=0.25, FULL=20, DECAY=100;
+  if(age <= FULL) return 1;
+  const t = Math.min(1,(age-FULL)/DECAY);
+  return 1 - t*(1-MIN);
+}
+
 function updateMarkers(){
   EVS.forEach(ev=>{
     const m=markers[ev.id];
     if(!m) return;
-    const vis=year>=ev.year;
-    m.setStyle({fillOpacity:vis?0.88:0, opacity:vis?1:0});
-    // Toggle SVG pointer-events so hidden markers don't block map clicks
+    const op=markerOpacity(ev);
+    const vis=op>0;
+    m.setStyle({fillOpacity:vis?op*0.88:0, opacity:vis?op:0});
     const el=m.getElement();
     if(el) el.style.pointerEvents=vis?'auto':'none';
   });
@@ -421,6 +827,16 @@ function updatePaths(){
 
 // ── PANEL ─────────────────────────────────────────────
 function openPanel(ev){
+  if(ev.year===536&&!fimbulPlayed){
+    fimbulPlayed=true;
+    jumpToYear(ev.year);
+    triggerFimbulvinter(()=>_showPanel(ev));
+    return;
+  }
+  jumpToYear(ev.year);
+  _showPanel(ev);
+}
+function _showPanel(ev){
   document.getElementById('pyr').textContent=ev.year+' e.Kr.';
   document.getElementById('ptit').textContent=ev.title;
   const b=document.getElementById('pbdg');
@@ -434,6 +850,7 @@ function closePanel(){document.getElementById('pnl').classList.remove('open');}
 window.closePanel=closePanel;
 
 function openMigrationPanel(mp){
+  jumpToYear(mp.start);
   document.getElementById('pyr').textContent=mp.start+' – '+mp.end+' e.Kr.';
   document.getElementById('ptit').textContent=mp.title;
   const b=document.getElementById('pbdg');
@@ -820,13 +1237,35 @@ function accumToYr(a){
 }
 
 // ── GLOBAL YEAR STATE ─────────────────────────────────
+// jumpToYear: always updates timeline even if year hasn't changed
+// Used by map marker clicks so the scrubber visibly jumps
+function jumpToYear(y){
+  y=Math.max(FULL_START,Math.min(FULL_END,Math.round(y)));
+  year=y;
+  document.getElementById('yrd').textContent=y+' e.Kr.';
+
+  // Re-center view synchronously (animate=false) so vStart/vEnd are
+  // updated before drawTL is called — otherwise scrubber draws at old pos
+  const span=Math.max(60,tvEnd-tvStart);
+  setView(y-span*0.35, y+span*0.65, false);
+
+  updateMarkers();
+  updatePaths();
+
+  // Re-init canvas if dimensions got lost (e.g. iframe resize)
+  if(!TLW||TLW<10){ initTL(); initOvr(); }
+  if(activePeople) filterPeople(activePeople);
+  checkIntroCards();
+  drawTL();
+  drawOvr();
+}
+
 function setYear(y){
   y=Math.max(FULL_START,Math.min(FULL_END,Math.round(y)));
   if(y===year) return;
   year=y;
   document.getElementById('yrd').textContent=y+' e.Kr.';
 
-  // Auto-zoom: if year moves outside current view, re-center
   if(y<tvStart||y>tvEnd){
     const span=tvEnd-tvStart;
     setView(y-span*0.4,y+span*0.6);
@@ -834,6 +1273,8 @@ function setYear(y){
 
   updateMarkers();
   updatePaths();
+  if(activePeople) filterPeople(activePeople); // reapply dim if filter active
+  checkIntroCards();
   drawTL();
   drawOvr();
 }
@@ -850,12 +1291,387 @@ document.addEventListener('keydown',e=>{
 // ── INIT ──────────────────────────────────────────────
 function initAll(){
   initMap();
+  buildPplPanel();
   setTimeout(()=>{
     initTL();
     initOvr();
     updateZoomLabel();
   },50);
 }
+
+// ── PEOPLES LEGEND + INTRO CARD ─────────────────────
+let pplOpen=false, activePeople=null;
+const introPlayed=new Set();
+let introTimer=null;
+
+// Build legend rows
+function buildPplPanel(){
+  const rows=document.getElementById('ppl-rows');
+  rows.innerHTML=PEOPLES.map(p=>`
+    <div class="ppl-row" id="ppl-row-${p.id}" onclick="filterPeople('${p.id}')">
+      <div class="ppl-icon">${p.symbol}</div>
+      <div class="ppl-info">
+        <div class="ppl-name" style="color:${p.col}">${p.name}</div>
+        <div class="ppl-desc">${p.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+function togglePpl(){
+  pplOpen=!pplOpen;
+  document.getElementById('ppl-panel').classList.toggle('open',pplOpen);
+  document.getElementById('ppl-btn').textContent=pplOpen?'✕ FOLKSLAG':'☰ FOLKSLAG';
+}
+function closePpl(){
+  pplOpen=false;
+  document.getElementById('ppl-panel').classList.remove('open');
+  document.getElementById('ppl-btn').textContent='☰ FOLKSLAG';
+}
+window.closePpl=closePpl;
+document.getElementById('ppl-btn').addEventListener('click',togglePpl);
+
+// Focus/filter: dim unrelated markers + paths
+function filterPeople(id){
+  if(activePeople===id){ clearPeopleFilter(); return; }
+  activePeople=id;
+  const p=PEOPLES.find(x=>x.id===id);
+  // Update row styles
+  PEOPLES.forEach(x=>{
+    const row=document.getElementById('ppl-row-'+x.id);
+    if(row) row.classList.toggle('active',x.id===id);
+  });
+  // Dim/show markers
+  EVS.forEach(ev=>{
+    const m=markers[ev.id]; if(!m) return;
+    const el=m.getElement(); if(!el) return;
+    el.style.opacity=p.evIds.includes(ev.id)?'1':'0.1';
+  });
+  // Dim/show paths
+  pathLayers.forEach(({line,clickLine,mp})=>{
+    const show=p.pathIds.includes(mp.id);
+    line.setStyle({opacity:show?(line.options.opacity||0.6):0.04});
+    clickLine.setStyle({opacity:0.001});
+  });
+}
+
+function clearPeopleFilter(){
+  activePeople=null;
+  PEOPLES.forEach(x=>{
+    const row=document.getElementById('ppl-row-'+x.id);
+    if(row) row.classList.remove('active');
+  });
+  // Restore all — updateMarkers/Paths will fix properly
+  updateMarkers(); updatePaths();
+}
+window.clearPeopleFilter=clearPeopleFilter;
+
+// ── INTRO CARD ────────────────────────────────────────
+function showIntroCard(people, evYear){
+  if(introPlayed.has(people.id)) return;
+  introPlayed.add(people.id);
+  clearTimeout(introTimer);
+
+  const card=document.getElementById('intro-card');
+  document.getElementById('intro-icon').innerHTML=people.symbol;
+  document.getElementById('intro-icon').querySelector('svg').style.cssText=
+    'width:64px;height:64px;';
+  document.getElementById('intro-people').textContent=people.name.toUpperCase();
+  document.getElementById('intro-people').style.color=people.col;
+  document.getElementById('intro-year').textContent=evYear+' e.Kr.';
+  document.getElementById('intro-text').textContent=people.intro;
+
+  card.classList.add('show');
+  introTimer=setTimeout(()=>{
+    card.classList.remove('show');
+  },3800);
+}
+
+// Check if any people need intro when year changes
+function checkIntroCards(){
+  PEOPLES.forEach(p=>{
+    if(introPlayed.has(p.id)) return;
+    // Trigger when first event for this people becomes active
+    const firstEv=EVS.filter(e=>p.evIds.includes(e.id))
+                     .sort((a,b)=>a.year-b.year)[0];
+    if(firstEv && year>=firstEv.year){
+      // Small delay so map has updated first
+      setTimeout(()=>showIntroCard(p,firstEv.year),400);
+    }
+  });
+}
+
+// Patch setYear and jumpToYear to also check intros
+const _origSetYear=setYear;
+
+// ── PEOPLES LEGEND + INTRO CARD ─────────────────────
+// ── FIMBULVINTER SEQUENCE ────────────────────────────
+function lerp(a,b,t){return a+(b-a)*t}
+function easeInOut(t){return t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+function easeIn(t){return t*t*t}
+function easeOut(t){return 1-Math.pow(1-t,3)}
+
+function animateVal(fromV,toV,dur,easeFn,onUpdate,onDone){
+  const start=performance.now();
+  function frame(now){
+    const raw=Math.min(1,(now-start)/dur);
+    const t=easeFn?easeFn(raw):raw;
+    onUpdate(lerp(fromV,toV,t));
+    if(raw<1) requestAnimationFrame(frame);
+    else if(onDone) onDone();
+  }
+  requestAnimationFrame(frame);
+}
+
+function triggerFimbulvinter(onComplete){
+  const ov    = document.getElementById('fimbul-overlay');
+  const flick = document.getElementById('fimbul-flicker');
+  const dark  = document.getElementById('fimbul-dark');
+  const cold  = document.getElementById('fimbul-cold');
+  const sun   = document.getElementById('fimbul-sun');
+  const txt   = document.getElementById('fimbul-text');
+  const fc    = document.getElementById('fimbul-canvas');
+  const ctx   = fc.getContext('2d');
+
+  ov.style.display = 'block';
+  fc.width  = window.innerWidth;
+  fc.height = window.innerHeight;
+
+  // Reset all layers
+  [flick,dark,cold,sun,txt].forEach(el=>{
+    el.style.opacity='0'; el.style.transition='';
+  });
+  fc.style.opacity = '0';
+
+  // Ash particle system
+  const ASH = [];
+  for(let i=0;i<320;i++) ASH.push({
+    x: Math.random()*fc.width,
+    y: Math.random()*fc.height*-1,
+    r: Math.random()*2.2+0.4,
+    speed: Math.random()*0.7+0.25,
+    drift: Math.random()*0.4-0.2,
+    op: Math.random()*0.55+0.2,
+    wobble: Math.random()*Math.PI*2,
+    wobbleSpeed: Math.random()*0.015+0.005,
+  });
+  let ashRunning=false, ashOpacity=0;
+
+  function drawAsh(){
+    ctx.clearRect(0,0,fc.width,fc.height);
+    ASH.forEach(p=>{
+      p.y += p.speed;
+      p.x += p.drift + Math.sin(p.wobble)*0.3;
+      p.wobble += p.wobbleSpeed;
+      if(p.y>fc.height){ p.y=-5; p.x=Math.random()*fc.width; }
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(180,190,210,${p.op*ashOpacity})`;
+      ctx.fill();
+    });
+    if(ashRunning) requestAnimationFrame(drawAsh);
+  }
+
+  // Simple tween helper
+  function tween(el, prop, from, to, dur, easeFn, delay){
+    return new Promise(res=>{
+      setTimeout(()=>{
+        const start=performance.now();
+        function frame(now){
+          let t=Math.min(1,(now-start)/dur);
+          if(easeFn) t=easeFn(t);
+          el.style[prop]=lerp(from,to,t);
+          if(t<1) requestAnimationFrame(frame);
+          else res();
+        }
+        requestAnimationFrame(frame);
+      }, delay||0);
+    });
+  }
+
+  // Flicker helper
+  function flicker(){
+    return new Promise(res=>{
+      const times=[80,60,100,50,80,120,60,40];
+      let i=0;
+      function next(){
+        if(i>=times.length){ flick.style.opacity='0'; sun.style.opacity='0'; res(); return; }
+        flick.style.opacity = i%2===0 ? '0.88' : '0';
+        sun.style.opacity   = i%2===0 ? '0'    : '1';
+        setTimeout(()=>{ i++; next(); }, times[i]||80);
+      }
+      next();
+    });
+  }
+
+  // ── RUN SEQUENCE (flat async) ──────────────────────
+  async function run(){
+    // Phase 1: Sun glows in (0–600ms)
+    await tween(sun,'opacity',0,1,600,easeOut);
+
+    // Phase 2: Flicker sequence (600–1600ms)
+    await flicker();
+
+    // Phase 3: Darkness falls (1600–3200ms)
+    await tween(dark,'opacity',0,0.88,1400,easeIn);
+
+    // Phase 4: Cold tint + ash (3200–4400ms)
+    ashRunning=true; drawAsh();
+    const t4start=performance.now();
+    await new Promise(res=>{
+      function frame(now){
+        const t=Math.min(1,(now-t4start)/1200);
+        const v=easeInOut(t);
+        cold.style.opacity=v;
+        fc.style.opacity=v*0.9;
+        ashOpacity=v;
+        if(t<1) requestAnimationFrame(frame); else res();
+      }
+      requestAnimationFrame(frame);
+    });
+
+    // Phase 5: Text appears (4400–5600ms)
+    txt.style.transition='opacity 1.2s ease, transform 1.2s ease';
+    txt.style.transform='translate(-50%,-50%) scale(0.92)';
+    txt.style.opacity='0';
+    await new Promise(res=>requestAnimationFrame(()=>{
+      txt.style.opacity='1';
+      txt.style.transform='translate(-50%,-50%) scale(1)';
+      setTimeout(res,1200);
+    }));
+
+    // Phase 6: Hold in darkness (1600ms)
+    await new Promise(res=>setTimeout(res,1600));
+
+    // Phase 7: Text fades (800ms)
+    txt.style.transition='opacity 0.8s ease';
+    txt.style.opacity='0';
+    await new Promise(res=>setTimeout(res,850));
+
+    // Phase 8: Light slowly returns (2000ms)
+    const t8start=performance.now();
+    await new Promise(res=>{
+      function frame(now){
+        const t=Math.min(1,(now-t8start)/2000);
+        const v=1-easeInOut(t);
+        dark.style.opacity=v*0.35;
+        cold.style.opacity=v*0.4;
+        fc.style.opacity=v*0.5;
+        ashOpacity=v*0.4;
+        if(t<1) requestAnimationFrame(frame); else res();
+      }
+      requestAnimationFrame(frame);
+    });
+
+    // Cleanup
+    ashRunning=false;
+    ctx.clearRect(0,0,fc.width,fc.height);
+    ov.style.display='none';
+    [flick,dark,cold,sun,txt].forEach(el=>{el.style.opacity='0';el.style.transition='';});
+
+    if(onComplete) onComplete();
+  }
+
+  run();
+}
+
+let fimbulPlayed=false;
+
+// ── SPLASH & AUTOPLAY ────────────────────────────────
+function closeSplash(){
+  const s=document.getElementById('splash');
+  s.classList.add('hiding');
+  setTimeout(()=>s.remove(),520);
+}
+
+document.getElementById('splash-explore').addEventListener('click',()=>{
+  closeSplash();
+});
+
+document.getElementById('splash-play').addEventListener('click',()=>{
+  closeSplash();
+  setTimeout(startAutoplay, 600);
+});
+
+// Autoplay: sorted event years, step through with pauses
+const AUTOPLAY_SPEED=2500; // ms per event
+let apTimer=null, apIdx=0, apPlaying=false;
+
+function startAutoplay(){
+  const evYears=[...new Set(EVS.map(e=>e.year))].sort((a,b)=>a-b);
+  apIdx=0; apPlaying=true;
+  document.getElementById('autoplay-btn').style.display='block';
+  document.getElementById('autoplay-btn').textContent='⏸ PAUSA';
+  showToast('UPPSPELNING STARTAD — KLICKA VAR SOM HELST FÖR ATT TA ÖVER');
+
+  function step(){
+    if(!apPlaying||apIdx>=evYears.length){
+      stopAutoplay(); return;
+    }
+    const y=evYears[apIdx];
+    jumpToYear(y);
+    // Find and open panel for this year
+    const ev=EVS.find(e=>e.year===y);
+    if(ev) openPanel(ev);
+    // Progress bar
+    const prog=document.getElementById('autoplay-progress');
+    prog.style.width='0%';
+    prog.style.transition='none';
+    requestAnimationFrame(()=>{
+      prog.style.transition=`width ${AUTOPLAY_SPEED}ms linear`;
+      prog.style.width='100%';
+    });
+    apIdx++;
+    apTimer=setTimeout(step, AUTOPLAY_SPEED);
+  }
+  step();
+}
+
+function stopAutoplay(){
+  apPlaying=false;
+  clearTimeout(apTimer);
+  document.getElementById('autoplay-btn').style.display='none';
+  document.getElementById('autoplay-progress').style.width='0%';
+}
+
+function toggleAutoplay(){
+  if(apPlaying){
+    apPlaying=false;
+    clearTimeout(apTimer);
+    document.getElementById('autoplay-btn').textContent='▶ FORTSÄTT';
+  } else {
+    apPlaying=true;
+    document.getElementById('autoplay-btn').textContent='⏸ PAUSA';
+    const evYears=[...new Set(EVS.map(e=>e.year))].sort((a,b)=>a-b);
+    // Resume from current year
+    apIdx=Math.max(0,evYears.findIndex(y=>y>year));
+    const step=()=>{
+      if(!apPlaying||apIdx>=evYears.length){stopAutoplay();return;}
+      const y=evYears[apIdx];
+      jumpToYear(y);
+      const ev=EVS.find(e=>e.year===y);
+      if(ev) openPanel(ev);
+      const prog=document.getElementById('autoplay-progress');
+      prog.style.width='0%';prog.style.transition='none';
+      requestAnimationFrame(()=>{prog.style.transition=`width ${AUTOPLAY_SPEED}ms linear`;prog.style.width='100%';});
+      apIdx++;
+      apTimer=setTimeout(step,AUTOPLAY_SPEED);
+    };
+    step();
+  }
+}
+
+function showToast(msg){
+  const t=document.getElementById('autoplay-toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+document.getElementById('autoplay-btn').addEventListener('click',toggleAutoplay);
+
+// Any manual interaction stops autoplay
+['mousedown','keydown','wheel'].forEach(ev=>{
+  document.addEventListener(ev,()=>{ if(apPlaying) stopAutoplay(); },{once:false,passive:true});
+});
 
 window.addEventListener('load', initAll);
 window.addEventListener('resize',()=>{
