@@ -271,6 +271,12 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 #tl-overview{padding:2px 14px}
 #ovrc{display:block;cursor:pointer;width:100%;height:10px}
 #yrd{font-family:'Cinzel',serif;color:var(--gold-l);font-size:1.2rem;text-align:center;letter-spacing:5px;line-height:32px}
+#tl-nav{display:flex;align-items:center;justify-content:center;gap:10px;padding-bottom:2px}
+.tl-nav-btn{background:rgba(212,168,67,.08);border:1px solid rgba(122,94,24,.5);color:var(--gold);font-family:'Cinzel',serif;font-size:.72rem;padding:5px 14px;border-radius:2px;cursor:pointer;transition:background .15s;letter-spacing:1px;line-height:1}
+.tl-nav-btn:hover{background:rgba(212,168,67,.2)}
+.tl-nav-btn:disabled{opacity:.2;cursor:default}
+#tl-nav-label{font-family:'Cinzel',serif;color:var(--gold-l);font-size:1.1rem;letter-spacing:5px;min-width:90px;text-align:center}
+#tl-nav-evname{font-family:'Cormorant Garamond',serif;color:rgba(212,168,67,.5);font-size:.78rem;text-align:center;letter-spacing:1px;height:16px;padding-bottom:2px}
 
 /* Lens */
 #lens{position:absolute;background:rgba(4,2,1,.98);border:1px solid var(--gold);border-radius:3px;padding:10px 12px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:1100;min-width:228px;bottom:160px}
@@ -388,7 +394,12 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
       <canvas id="tlc"></canvas>
     </div>
     <div id="tl-overview"><canvas id="ovrc"></canvas></div>
-    <div id="yrd">370 e.Kr.</div>
+    <div id="tl-nav">
+      <button class="tl-nav-btn" id="tl-prev" title="Föregående händelse (←)">◀ FÖREGÅENDE</button>
+      <div id="tl-nav-label">370 e.Kr.</div>
+      <button class="tl-nav-btn" id="tl-next" title="Nästa händelse (→)">NÄSTA ▶</button>
+    </div>
+    <div id="tl-nav-evname"></div>
   </div>
 </div>
 
@@ -724,6 +735,8 @@ function initMap(){
 
   updateMarkers();
   updatePaths();
+  // Disable Leaflet keyboard pan so arrow keys only control timeline
+  map.keyboard.disable();
 }
 
 function markerOpacity(ev){
@@ -1242,7 +1255,7 @@ function accumToYr(a){
 function jumpToYear(y){
   y=Math.max(FULL_START,Math.min(FULL_END,Math.round(y)));
   year=y;
-  document.getElementById('yrd').textContent=y+' e.Kr.';
+  document.getElementById('tl-nav-label').textContent=y+' e.Kr.'; updateNavButtons(y);
 
   // Re-center view synchronously (animate=false) so vStart/vEnd are
   // updated before drawTL is called — otherwise scrubber draws at old pos
@@ -1264,7 +1277,7 @@ function setYear(y){
   y=Math.max(FULL_START,Math.min(FULL_END,Math.round(y)));
   if(y===year) return;
   year=y;
-  document.getElementById('yrd').textContent=y+' e.Kr.';
+  document.getElementById('tl-nav-label').textContent=y+' e.Kr.'; updateNavButtons(y);
 
   if(y<tvStart||y>tvEnd){
     const span=tvEnd-tvStart;
@@ -1280,12 +1293,48 @@ function setYear(y){
 }
 
 // Keyboard
+// Sorted unique event years for prev/next navigation
+function sortedEventYears(){
+  return [...new Set(EVS.map(e=>e.year))].sort((a,b)=>a-b);
+}
+
+function jumpToNextEvent(dir){
+  const years=sortedEventYears();
+  if(dir>0){
+    const next=years.find(y=>y>year);
+    if(next!==undefined) jumpAndOpen(next);
+  } else {
+    const prev=[...years].reverse().find(y=>y<year);
+    if(prev!==undefined) jumpAndOpen(prev);
+  }
+}
+
+function jumpAndOpen(y){
+  jumpToYear(y);
+  const ev=EVS.filter(e=>e.year===y).sort((a,b)=>a.year-b.year)[0];
+  if(ev) openPanel(ev);
+}
+
+function updateNavButtons(y){
+  const years=sortedEventYears();
+  const hasPrev=years.some(yr=>yr<y);
+  const hasNext=years.some(yr=>yr>y);
+  const prev=document.getElementById('tl-prev');
+  const next=document.getElementById('tl-next');
+  if(prev) prev.disabled=!hasPrev;
+  if(next) next.disabled=!hasNext;
+  // Show event name under year
+  const ev=EVS.filter(e=>e.year===y).sort((a,b)=>a.year-b.year)[0];
+  const nameEl=document.getElementById('tl-nav-evname');
+  if(nameEl) nameEl.textContent=ev?ev.label:'';
+}
+
 document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight') setYear(year+5);
-  if(e.key==='ArrowLeft')  setYear(year-5);
-  if(e.key==='+')          zoomBy(0.6,year);
-  if(e.key==='-')          zoomBy(1.667,year);
-  if(e.key==='Escape')     closePanel();
+  if(e.key==='ArrowRight'){ e.preventDefault(); jumpToNextEvent(1); }
+  if(e.key==='ArrowLeft'){  e.preventDefault(); jumpToNextEvent(-1); }
+  if(e.key==='+')           zoomBy(0.6,year);
+  if(e.key==='-')           zoomBy(1.667,year);
+  if(e.key==='Escape')      closePanel();
 });
 
 // ── INIT ──────────────────────────────────────────────
@@ -1673,7 +1722,13 @@ document.getElementById('autoplay-btn').addEventListener('click',toggleAutoplay)
   document.addEventListener(ev,()=>{ if(apPlaying) stopAutoplay(); },{once:false,passive:true});
 });
 
-window.addEventListener('load', initAll);
+window.addEventListener('load',()=>{
+  initAll();
+  document.getElementById('tl-prev').addEventListener('click',()=>jumpToNextEvent(-1));
+  document.getElementById('tl-next').addEventListener('click',()=>jumpToNextEvent(1));
+  // Init button states
+  setTimeout(()=>updateNavButtons(year), 200);
+});
 window.addEventListener('resize',()=>{
   initTL();
   initOvr();
