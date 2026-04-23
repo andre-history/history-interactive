@@ -137,6 +137,7 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-polylinedecorator/1.6.0/leaflet.polylineDecorator.min.js"></script>
 <script>
 // ── TYPE CONFIG ───────────────────────────────────────
 const TC={battle:'#c0392b',politics:'#d4a843',migration:'#2e86ab',climate:'#8b6be8',scandinavia:'#2d8a4e'};
@@ -235,11 +236,36 @@ const SDATA=[
 ];
 
 const MPATHS=[
-  {col:'#8b6be8',start:370,peak:400,end:455,latlngs:[[46,40],[44,38],[43,35],[43,32],[44.5,28],[43.5,26],[41.7,26.6]]},
-  {col:'#2e86ab',start:376,peak:415,end:480,latlngs:[[44.5,28],[42,27],[41.7,26.6],[41,23],[40,20],[40,17],[41.5,15],[41.9,12.5],[41,8],[40,3],[39,-1],[38,-4],[40,-5]]},
-  {col:'#c0392b',start:406,peak:445,end:476,latlngs:[[50.1,7.6],[48,4],[46,1],[43,-1],[41,-2],[38,-4],[37,-6],[36,0],[36,5],[36.85,10.33],[38,13],[41.9,12.5]]},
-  {col:'#d4a843',start:488,peak:495,end:550,latlngs:[[47,32],[46,28],[45,24],[44.5,20],[44.5,16],[44.42,12.18]]},
-  {col:'#2d8a4e',start:481,peak:498,end:560,latlngs:[[51,7.5],[50,5],[49,3],[48,2],[47,1],[44,1],[43,2]]},
+  {col:'#8b6be8',start:370,peak:400,end:455,
+   label:'Hunnernas framryckande',
+   title:'Hunnernas framryckande från Centralasien',
+   body:'Hunnerna rörde sig från Centralasien mot Svarta havet ca 370 e.Kr. och tryckte vidare mot Donau och Balkan. Deras expansion var den direkta utlösaren av folkvandringstiden — folk efter folk flydde undan dem västerut. Under kung Attila nådde hunnernas makt sin kulmen med razzior ner på Balkan och in i Gallien.',
+   src:'Ammianus Marcellinus, Res Gestae XXXI',
+   latlngs:[[46,40],[44,38],[43,35],[43,32],[44.5,28],[43.5,26],[41.7,26.6]]},
+  {col:'#2e86ab',start:376,peak:415,end:480,
+   label:'Visigoterna — från Donau till Spanien',
+   title:'Visigoterna: Donau → Adrianopel → Rom → Spanien',
+   body:'Visigoterna flydde hunnerna och korsade Donau 376. Efter revolten mot romarna och segern vid Adrianopel 378 vandrade de söderut. Under Alaric plundrades Rom 410. Därefter fortsatte rörelsen västerut genom Gallien och slutligen till Hispania (Spanien), där visigoterna grundade ett rike som varade till 711.',
+   src:'Jordanes, Getica; Orosius, Historia adversus paganos',
+   latlngs:[[44.5,28],[42,27],[41.7,26.6],[41,23],[40,20],[40,17],[41.5,15],[41.9,12.5],[41,8],[40,3],[39,-1],[38,-4],[40,-5]]},
+  {col:'#c0392b',start:406,peak:445,end:476,
+   label:'Vandalernas vandring',
+   title:'Vandalerna: Rhen → Spanien → Nordafrika → Rom',
+   body:'Vandalernas rörelse är folkvandringstidens mest episka: de korsade Rhen på is vid nyåret 406/407, drog igenom Gallien, tog sig till Spanien och slutligen till Nordafrika där de erövrade Kartago 430. Därifrån byggde de en flotta och plundrade Rom 455. En resa på nästan 5 000 km på 50 år.',
+   src:'Prokopios, De Bello Vandalico; Victor av Vita',
+   latlngs:[[50.1,7.6],[48,4],[46,1],[43,-1],[41,-2],[38,-4],[37,-6],[36,0],[36,5],[36.85,10.33],[38,13],[41.9,12.5]]},
+  {col:'#d4a843',start:488,peak:495,end:550,
+   label:'Ostrogoterna — mot Italien',
+   title:'Ostrogoterna: Pontiska stäppen → Italien',
+   body:'Ostrogoterna levde under hunnernas ok tills Attilas rike kollapsade 453. Under kung Theoderik marscherade de på uppdrag av den östromerske kejsaren Zeno mot Odoacer i Italien. 493 segrade Theoderik och grundade ett ostrogotiskt rike i Italien som bevarade stora delar av den romerska civilisationen.',
+   src:'Cassiodorus, Variae; Prokopios, De Bello Gothico',
+   latlngs:[[47,32],[46,28],[45,24],[44.5,20],[44.5,16],[44.42,12.18]]},
+  {col:'#2d8a4e',start:481,peak:498,end:560,
+   label:'Frankernas expansion',
+   title:'Frankernas expansion under Clovis',
+   body:'Till skillnad från de andra folkvandringsfolken rörde sig frankerna inte långt från sina ursprungsområden vid Rhen — de expanderade gradvis söderut och västerut in i Gallien. Under Clovis (r. 481–511) enades stammarna, norra Gallien erövrades 486 och konversionen till kristendomen 496 gav kyrkan som allierad. Frankernas rike lade grunden till det framtida Frankrike.',
+   src:'Gregorius av Tours, Historia Francorum',
+   latlngs:[[51,7.5],[50,5],[49,3],[48,2],[47,1],[44,1],[43,2]]},
 ];
 
 // ── LEAFLET MAP ───────────────────────────────────────
@@ -279,10 +305,25 @@ function initMap(){
     markers[ev.id]=cm;
   });
 
-  // Migration paths
+  // Migration paths: visible dashed line + fat click target + polylineDecorator arrows
   MPATHS.forEach(mp=>{
-    const line=L.polyline([],{color:mp.col,weight:2.5,opacity:0,dashArray:'10 6',lineCap:'round'}).addTo(map);
-    pathLayers.push({line,mp});
+    const line=L.polyline([],{
+      color:mp.col,weight:2.5,opacity:0,dashArray:'10 6',lineCap:'round',interactive:false
+    }).addTo(map);
+
+    // Fat transparent polyline for easy clicking/hovering
+    const clickLine=L.polyline([],{
+      color:mp.col,weight:20,opacity:0.001,interactive:true,bubblingMouseEvents:false
+    }).addTo(map);
+    clickLine.bindTooltip(
+      `<span style="font-family:Cinzel,serif;color:${mp.col};font-size:11px;font-weight:600">${mp.label}</span><br><span style="font-size:11px;color:rgba(245,232,192,.7)">Klicka för mer info</span>`,
+      {sticky:true,direction:'top',offset:[0,-6],opacity:1,className:'ev-tip'}
+    );
+    clickLine.on('click',()=>openMigrationPanel(mp));
+    clickLine.on('mouseover',()=>line.setStyle({weight:4,opacity:Math.min(1,line.options.opacity*1.3)}));
+    clickLine.on('mouseout', ()=>line.setStyle({weight:2.5}));
+
+    pathLayers.push({line,clickLine,arrows:[],mp});
   });
 
   updateMarkers();
@@ -301,19 +342,80 @@ function updateMarkers(){
   });
 }
 
+// Bearing between two [lat,lon] points
+function calcBearing(p1,p2){
+  const toR=Math.PI/180;
+  const lat1=p1[0]*toR,lat2=p2[0]*toR,dLon=(p2[1]-p1[1])*toR;
+  const y=Math.sin(dLon)*Math.cos(lat2);
+  const x=Math.cos(lat1)*Math.sin(lat2)-Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
+  return Math.atan2(y,x)*180/Math.PI;
+}
+
+// Return {latlng,bearing} at fraction f (0-1) along shown path
+function pointAlongPath(pts,f){
+  if(pts.length<2) return null;
+  const total=pts.length-1;
+  const t=Math.min(f*total, total-0.001);
+  const seg=Math.floor(t), fr=t-seg;
+  const p1=pts[seg],p2=pts[Math.min(seg+1,total)];
+  return {
+    latlng:[p1[0]+(p2[0]-p1[0])*fr, p1[1]+(p2[1]-p1[1])*fr],
+    bearing:calcBearing(p1,p2)
+  };
+}
+
+// Create a rotated arrow Leaflet marker (rotation baked into SVG, not CSS)
+function makeArrow(latlng, bearing, col, op){
+  const icon=L.divIcon({
+    className:'',
+    html:`<svg width="18" height="18" viewBox="-9 -9 18 18" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,-8 6,6 0,2 -6,6" fill="${col}" opacity="${op}"
+               transform="rotate(${Math.round(bearing)})"/>
+    </svg>`,
+    iconSize:[18,18], iconAnchor:[9,9],
+  });
+  return L.marker(latlng,{icon,interactive:false,zIndexOffset:600});
+}
+
 function updatePaths(){
-  pathLayers.forEach(({line,mp})=>{
-    if(year<mp.start){line.setLatLngs([]);line.setStyle({opacity:0});return;}
+  pathLayers.forEach(obj=>{
+    const {line,clickLine,mp}=obj;
+    // Remove old arrow markers
+    if(obj.arrows){ obj.arrows.forEach(a=>map.removeLayer(a)); obj.arrows=[]; }
+
+    if(year<mp.start){
+      line.setLatLngs([]);line.setStyle({opacity:0});clickLine.setLatLngs([]); return;
+    }
     const prog=Math.min(1,(year-mp.start)/(mp.peak-mp.start));
     let op=year<=mp.peak?prog*0.75:year<=mp.end?0.75*(1-(year-mp.peak)/(mp.end-mp.peak))*0.45+0.25:0;
-    if(op<=0.01){line.setLatLngs([]);line.setStyle({opacity:0});return;}
+    if(op<=0.01){
+      line.setLatLngs([]);line.setStyle({opacity:0});clickLine.setLatLngs([]); return;
+    }
+
     const pts=mp.latlngs,total=pts.length-1;
     const endSeg=Math.min(Math.floor(prog*total),total-1);
     const frac=prog*total-endSeg;
     const shown=pts.slice(0,endSeg+1);
-    if(endSeg<total){const p1=pts[endSeg],p2=pts[endSeg+1];shown.push([p1[0]+(p2[0]-p1[0])*frac,p1[1]+(p2[1]-p1[1])*frac]);}
+    if(endSeg<total){
+      const p1=pts[endSeg],p2=pts[endSeg+1];
+      shown.push([p1[0]+(p2[0]-p1[0])*frac, p1[1]+(p2[1]-p1[1])*frac]);
+    }
+
     line.setLatLngs(shown);
     line.setStyle({opacity:op});
+    clickLine.setLatLngs(shown);
+
+    // Place arrows at 35% and 75% of visible path (skip if path too short)
+    obj.arrows=[];
+    if(shown.length>=3){
+      [0.35, 0.75].forEach(f=>{
+        const pt=pointAlongPath(shown,f);
+        if(pt) obj.arrows.push(makeArrow(pt.latlng,pt.bearing,mp.col,op).addTo(map));
+      });
+    } else if(shown.length===2){
+      const pt=pointAlongPath(shown,0.5);
+      if(pt) obj.arrows.push(makeArrow(pt.latlng,pt.bearing,mp.col,op).addTo(map));
+    }
   });
 }
 
@@ -330,6 +432,17 @@ function openPanel(ev){
 }
 function closePanel(){document.getElementById('pnl').classList.remove('open');}
 window.closePanel=closePanel;
+
+function openMigrationPanel(mp){
+  document.getElementById('pyr').textContent=mp.start+' – '+mp.end+' e.Kr.';
+  document.getElementById('ptit').textContent=mp.title;
+  const b=document.getElementById('pbdg');
+  b.textContent='FOLKRÖRELSE';
+  b.style.cssText='background:'+mp.col+'22;color:'+mp.col+';border:1px solid '+mp.col+'55;';
+  document.getElementById('pbdy').innerHTML='<p>'+mp.body+'</p>';
+  document.getElementById('psrc').textContent=mp.src||'';
+  document.getElementById('pnl').classList.add('open');
+}
 
 // ── SCANDINAVIA ───────────────────────────────────────
 let scandOpen2=false;
