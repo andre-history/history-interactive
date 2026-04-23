@@ -102,6 +102,27 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 /* ── FOCUS MODE ── */
 .leaflet-overlay-pane path.dimmed{opacity:0.08!important}
 
+/* ── FROST VIGNETTE (lingers after 536) ── */
+#frost-vignette{
+  position:absolute;inset:0;pointer-events:none;z-index:400;
+  background:radial-gradient(ellipse at 50% 50%,
+    transparent 40%,
+    rgba(80,120,200,0.10) 70%,
+    rgba(40,70,160,0.22) 100%);
+  opacity:0;transition:opacity 2.5s ease;
+}
+#frost-vignette.active{opacity:1}
+
+/* Pulsing ring on 536 marker */
+@keyframes fimbul-pulse{
+  0%{transform:scale(1);opacity:0.9}
+  50%{transform:scale(1.6);opacity:0.3}
+  100%{transform:scale(1);opacity:0.9}
+}
+.fimbul-marker-ring{
+  animation:fimbul-pulse 2.2s ease-in-out infinite;
+}
+
 /* ── FIMBULVINTER SEQUENCE ── */
 #fimbul-overlay{
   position:fixed;inset:0;z-index:5000;pointer-events:none;
@@ -339,6 +360,7 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 
   <div id="mwrap">
     <div id="map"></div>
+    <div id="frost-vignette"></div>
     <div id="autoplay-bar"><div id="autoplay-progress"></div></div>
     <div id="autoplay-btn">⏸ PAUSA</div>
 
@@ -850,12 +872,6 @@ function updatePaths(){
 
 // ── PANEL ─────────────────────────────────────────────
 function openPanel(ev){
-  if(ev.year===536&&!fimbulPlayed){
-    fimbulPlayed=true;
-    jumpToYear(ev.year);
-    triggerFimbulvinter(()=>_showPanel(ev));
-    return;
-  }
   jumpToYear(ev.year);
   _showPanel(ev);
 }
@@ -1452,7 +1468,50 @@ function showIntroCard(people, evYear){
 }
 
 // Check if any people need intro when year changes
+function activateFrostMark(){
+  // Frost vignette lingers on map
+  document.getElementById('frost-vignette').classList.add('active');
+
+  // Boost the 536 circle marker: larger, icy color, pulsing outer ring
+  const m=markers['cli'];
+  if(!m) return;
+  m.setStyle({
+    radius:16,
+    fillColor:'#5588dd',
+    color:'rgba(160,200,255,0.9)',
+    weight:2.5,
+    fillOpacity:0.75,
+  });
+  // Add a second pulsing ring marker on top
+  const ringIcon=L.divIcon({
+    className:'',
+    html:`<div class="fimbul-marker-ring" style="
+      width:44px;height:44px;border-radius:50%;
+      border:2px solid rgba(120,180,255,0.7);
+      box-shadow:0 0 18px rgba(80,140,255,0.5);
+      background:transparent;
+    "></div>`,
+    iconSize:[44,44],iconAnchor:[22,22],
+  });
+  L.marker([51.0,14.5],{icon:ringIcon,interactive:false,zIndexOffset:550}).addTo(map);
+}
+
+// Fimbulvinter triggers when year reaches 536, independent of panel
+function checkSpecialEvents(){
+  if(year>=536 && !fimbulPlayed){
+    fimbulPlayed=true;
+    const ev536=EVS.find(e=>e.year===536);
+    setTimeout(()=>{
+      triggerFimbulvinter(()=>{
+        activateFrostMark();
+        if(ev536) _showPanel(ev536);
+      });
+    },300);
+  }
+}
+
 function checkIntroCards(){
+  checkSpecialEvents();
   PEOPLES.forEach(p=>{
     if(introPlayed.has(p.id)) return;
     // Trigger when first event for this people becomes active
@@ -1460,7 +1519,8 @@ function checkIntroCards(){
                      .sort((a,b)=>a.year-b.year)[0];
     if(firstEv && year>=firstEv.year){
       // Small delay so map has updated first
-      setTimeout(()=>showIntroCard(p,firstEv.year),400);
+      const delay=fimbulPlayed&&year===536?11000:400;
+      setTimeout(()=>showIntroCard(p,firstEv.year),delay);
     }
   });
 }
