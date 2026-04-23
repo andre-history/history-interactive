@@ -145,6 +145,38 @@
         .toggle-btn.inactive .btn-line { opacity: 0.3; }
         .toggle-btn:hover { filter: brightness(0.95); }
 
+        /* Toggle bar wrapper */
+        #toggle-bar-wrapper {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 16px;
+            margin: 14px 0 6px;
+        }
+        #toggle-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            flex: 1;
+        }
+        #btn-hide-all {
+            flex-shrink: 0;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px dashed #aaa;
+            background: transparent;
+            color: #888;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            align-self: center;
+        }
+        #btn-hide-all:hover { border-color: #555; color: #333; background: #f5f5f5; }
+        #btn-hide-all.show-mode { border-color: #007bff; color: #007bff; border-style: solid; }
+
         /* Floating button tooltip */
         #btn-tooltip {
             position: fixed;
@@ -193,7 +225,10 @@
             <canvas id="mainChart"></canvas>
         </div>
         
-        <div id="toggle-bar"></div>
+        <div id="toggle-bar-wrapper">
+            <div id="toggle-bar"></div>
+            <button id="btn-hide-all" onclick="toggleAll()">Dölj allt</button>
+        </div>
 
         <div class="footer">
             Datakällor: US Census Bureau, Världsbanken, BLS, Raj Chetty (Opportunity Insights) och historiska rekonstruktioner.
@@ -217,13 +252,16 @@
         const rawIncome = [12, 13, 15, 16, 11, 18, 25, 35, 45, 55, 58, 62, 63, 63, 64, 66, 72, 73, 74, 75, 77, 76, 78, 78.5];
         const rawMobility = [null, null, null, null, null, null, null, null, null, null, 90, 85, 82, 79, 70, 62, 61, 50, 50, 50, 50, 50, 50, 50];
         const rawHealth = [null, null, null, null, null, null, null, null, null, null, 0.96, 0.95, 0.95, 0.95, 0.94, 0.92, 0.89, 0.85, 0.84, 0.84, 0.83, 0.83, 0.83, 0.83];
+        // BNP/capita, PPP, fasta 2017 USD (Maddison Project / Världsbanken)
+        const rawGDP = [6200, 6800, 8700, 8500, 5800, 8200, 12400, 11000, 14400, 19200, 19800, 22000, 21000, 24000, 27500, 32000, 42000, 45000, 50000, 52000, 58000, 59000, 64000, 66000];
 
         const macroDatasets = [
             { label: 'Gini-koefficient (inverterad)', data: rawGini.map(v => normalize(v, 32, 52, true)), borderColor: '#000000', borderWidth: 3, tension: 0.3, tooltipDesc: "Mäter ojämlikhet (0 = alla lika, 100 = en person äger allt). Inverterad: högre = mer jämlikhet.", tooltipFull: "Gini-koefficienten mäter hur ojämnt inkomster fördelas – 0 innebär att alla tjänar exakt lika, 100 att en person äger allt. USA:s värde har stigit stadigt sedan 1970-talet, vilket speglar en växande klyfta mellan rika och fattiga. Grafen är inverterad: ett högt värde här betyder alltså låg ojämlikhet." },
             { label: 'Palma-kvot (inverterad)', data: rawPalma.map(v => normalize(v, 0.8, 2.5, true)), borderColor: '#d62728', borderDash: [5, 5], borderWidth: 2, tension: 0.3, tooltipDesc: "De rikaste 10% inkomstandel / de fattigaste 40%. Inverterad: högre = mer jämlikhet.", tooltipFull: "Palma-kvoten jämför de rikaste 10 procentens inkomstandel med de fattigaste 40 procentens. Det är ett känsligare mått på extrema ojämlikheter än Gini, eftersom det fokuserar på topp och botten snarare än mitten. En kvot på 1,0 innebär att de två grupperna delar lika på inkomsterna." },
             { label: 'Real medianinkomst', data: rawIncome.map(v => normalize(v, 0, 90)), borderColor: '#2ca02c', borderWidth: 4, tension: 0.3, tooltipDesc: "Typisk hushållsinkomst justerad för inflation. Tillväxten döljer att individuella löner stagnerat.", tooltipFull: "Medianinkomsten visar vad ett typiskt amerikanskt hushåll faktiskt köper för – justerat för inflation. Att den ökat beror till stor del på att fler hushåll numera har två inkomster. Det gör måttet tveeggat: tillväxten kan dölja att varje enskild löntagare inte fått det bättre." },
             { label: 'Social rörlighet', data: rawMobility.map(v => normalize(v, 30, 100)), borderColor: '#9467bd', borderWidth: 4, borderDash: [10, 5], tension: 0.3, tooltipDesc: "Chansen att ett barn från en fattig familj klättrar uppåt ekonomiskt som vuxen.", tooltipFull: "Social rörlighet mäter hur stor chans ett barn från en fattig familj har att klättra uppåt ekonomiskt som vuxen. Raj Chettys forskning visar att den sjunkit dramatiskt i USA under 1900-talet. Idag är det faktiskt ovanligare att byta ekonomisk klass i USA än i t.ex. Sverige eller Danmark." },
-            { label: 'Hälsojämlikhet', data: rawHealth.map(v => normalize(v, 0.75, 1.0)), borderColor: '#ff7f0e', borderWidth: 4, borderDash: [2, 2], tension: 0.3, tooltipDesc: "Hur jämnt fördelad livslängd och hälsa är mellan olika grupper i USA.", tooltipFull: "Det här måttet visar hur jämnt fördelad hälsa och livslängd är mellan olika grupper i USA. En kvot nära 1,0 innebär liten skillnad; lägre värden visar växande hälsoklyftor beroende på inkomst, ras och geografi. USA är ovanligt ojämlikt i detta avseende jämfört med andra rika länder." }
+            { label: 'Hälsojämlikhet', data: rawHealth.map(v => normalize(v, 0.75, 1.0)), borderColor: '#ff7f0e', borderWidth: 4, borderDash: [2, 2], tension: 0.3, tooltipDesc: "Hur jämnt fördelad livslängd och hälsa är mellan olika grupper i USA.", tooltipFull: "Det här måttet visar hur jämnt fördelad hälsa och livslängd är mellan olika grupper i USA. En kvot nära 1,0 innebär liten skillnad; lägre värden visar växande hälsoklyftor beroende på inkomst, ras och geografi. USA är ovanligt ojämlikt i detta avseende jämfört med andra rika länder." },
+            { label: 'BNP per capita (PPP)', data: rawGDP.map(v => normalize(v, 0, 70000)), borderColor: '#17becf', borderWidth: 3, borderDash: [4, 2], tension: 0.3, tooltipDesc: "USA:s ekonomiska produktion per person, köpkraftsjusterad (fasta 2017-dollar). Mäter ekonomisk styrka relativt befolkningsstorlek.", tooltipFull: "BNP per capita (PPP) visar hur mycket ett land producerar ekonomiskt per invånare, justerat för vad pengar faktiskt köper lokalt. Det är det vanligaste måttet för att jämföra länders ekonomiska styrka rättvist. USA ligger bland världens allra högsta – men kurvan visar också att den ekonomiska tillväxten inte automatiskt förbättrat de andra sociala måtten." }
         ];
 
         // --- 2. LABOR DATASET ---
@@ -247,9 +285,12 @@
         // --- PRESIDENTS ---
         const presidents = [{"start": 1913, "end": 1921, "name": "Wilson", "party": "D"}, {"start": 1921, "end": 1923, "name": "Harding", "party": "R"}, {"start": 1923, "end": 1929, "name": "Coolidge", "party": "R"}, {"start": 1929, "end": 1933, "name": "Hoover", "party": "R"}, {"start": 1933, "end": 1945, "name": "F.D. Roosevelt", "party": "D"}, {"start": 1945, "end": 1953, "name": "Truman", "party": "D"}, {"start": 1953, "end": 1961, "name": "Eisenhower", "party": "R"}, {"start": 1961, "end": 1963, "name": "Kennedy", "party": "D"}, {"start": 1963, "end": 1969, "name": "Johnson", "party": "D"}, {"start": 1969, "end": 1974, "name": "Nixon", "party": "R"}, {"start": 1974, "end": 1977, "name": "Ford", "party": "R"}, {"start": 1977, "end": 1981, "name": "Carter", "party": "D"}, {"start": 1981, "end": 1989, "name": "Reagan", "party": "R"}, {"start": 1989, "end": 1993, "name": "G.H.W. Bush", "party": "R"}, {"start": 1993, "end": 2001, "name": "Clinton", "party": "D"}, {"start": 2001, "end": 2009, "name": "G.W. Bush", "party": "R"}, {"start": 2009, "end": 2017, "name": "Obama", "party": "D"}, {"start": 2017, "end": 2021, "name": "Trump I", "party": "R"}, {"start": 2021, "end": 2025, "name": "Biden", "party": "D"}, {"start": 2025, "end": 2029, "name": "Trump II", "party": "R"}];
 
+        let showPresidents = true;
+
         const presidentialPlugin = {
             id: 'presidentialPlugin',
             beforeDraw: (chart) => {
+                if (!showPresidents) return;
                 const { ctx, chartArea: { top, bottom, right, left }, scales: { x } } = chart;
                 const minYear = chart.data.labels[0];
                 const maxYear = chart.data.labels[chart.data.labels.length - 1];
@@ -325,7 +366,7 @@
 
         // --- AXIS BANNER UPDATER (A) ---
         const axisConfigs = {
-            macro:  { left: { text: 'Y-axel: 0 → 1 \u00a0(Sämst → Bäst, normaliserat)', color: '#555' }, right: null },
+            macro:  { left: { text: 'Y-axel: 0 → 1 \u00a0(Sämst → Bäst, normaliserat) · BNP/capita: 0–70 000 USD PPP', color: '#555' }, right: null },
             labor:  { left: { text: 'Vänster axel: Index 1970 = 100 \u00a0(skala 90–140)', color: '#2ca02c' },
                       right: { text: 'Höger axel: Andel hushåll med dubbel inkomst (%)', color: '#9467bd' } },
             prices: { left: { text: 'Y-axel: Prisindex 1980 = 100 \u00a0(skala 0–1 000)', color: '#555' }, right: null }
@@ -488,12 +529,72 @@
 
                 bar.appendChild(btn);
             });
+
+            // Politiskt styre-knapp i samma stil
+            const pBtn = document.createElement('div');
+            pBtn.id = 'btn-presidents';
+            pBtn.className = 'toggle-btn ' + (showPresidents ? 'active' : 'inactive');
+            pBtn.style.setProperty('--btn-color', '#888');
+
+            const pLine = document.createElement('div');
+            pLine.className = 'btn-line';
+            pLine.style.borderTopColor = '#888';
+            pLine.style.borderTopStyle = 'solid';
+
+            pBtn.appendChild(pLine);
+            pBtn.appendChild(document.createTextNode('Politiskt styre'));
+            pBtn.onclick = togglePresidents;
+            bar.appendChild(pBtn);
+        }
+
+        function syncPresidentsBtn() {
+            const btn = document.getElementById('btn-presidents');
+            if (!btn) return;
+            btn.className = 'toggle-btn ' + (showPresidents ? 'active' : 'inactive');
+        }
+
+        function togglePresidents() {
+            showPresidents = !showPresidents;
+            syncPresidentsBtn();
+            myChart.update();
         }
 
         function buildUI() {
             hiddenDatasets.clear();
+            showPresidents = true;
             buildLegend();
             buildToggleBar();
+            document.getElementById('btn-hide-all').classList.remove('show-mode');
+            document.getElementById('btn-hide-all').textContent = 'Dölj allt';
+            syncPresidentsBtn();
+        }
+
+        function toggleAll() {
+            const btn = document.getElementById('btn-hide-all');
+            const total = myChart.data.datasets.length;
+            const allHidden = hiddenDatasets.size === total && !showPresidents;
+
+            if (allHidden) {
+                // Visa allt
+                hiddenDatasets.clear();
+                for (let i = 0; i < total; i++) myChart.show(i);
+                showPresidents = true;
+                btn.classList.remove('show-mode');
+                btn.textContent = 'Dölj allt';
+            } else {
+                // Dölj allt
+                for (let i = 0; i < total; i++) {
+                    hiddenDatasets.add(i);
+                    myChart.hide(i);
+                }
+                showPresidents = false;
+                btn.classList.add('show-mode');
+                btn.textContent = 'Visa allt';
+            }
+            syncLegend();
+            syncToggleBar();
+            syncPresidentsBtn();
+            myChart.update();
         }
 
         // --- VIEW TOGGLER ---
