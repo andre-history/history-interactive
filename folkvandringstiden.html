@@ -82,13 +82,22 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
   box-shadow:0 8px 60px rgba(0,0,0,.8);
 }
 #intro-card.show{
-  opacity:1;transform:translate(-50%,-50%) scale(1);
+  opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:all;
 }
 #intro-icon{width:64px;height:64px;margin:0 auto 12px}
 #intro-people{font-family:'Cinzel',serif;font-size:1.05rem;letter-spacing:4px;margin-bottom:6px}
 #intro-year{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:3px;margin-bottom:14px;opacity:.55}
 #intro-divider{width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 14px}
 #intro-text{font-family:'Cormorant Garamond',serif;font-size:.98rem;line-height:1.72;color:rgba(245,232,192,.78)}
+#intro-close{
+  position:absolute;top:10px;right:10px;
+  background:none;border:1px solid rgba(122,94,24,.5);
+  color:var(--gold);width:24px;height:24px;
+  border-radius:2px;cursor:pointer;font-size:.95rem;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:all;line-height:1;
+}
+#intro-close:hover{background:rgba(212,168,67,.15)}
 
 /* ── FOCUS MODE ── */
 .leaflet-overlay-pane path.dimmed{opacity:0.08!important}
@@ -346,6 +355,7 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 
     <!-- INTRO CARD -->
     <div id="intro-card">
+      <button id="intro-close" onclick="dismissIntroCard()">×</button>
       <div id="intro-icon"></div>
       <div id="intro-people"></div>
       <div id="intro-year"></div>
@@ -1415,6 +1425,12 @@ function clearPeopleFilter(){
 window.clearPeopleFilter=clearPeopleFilter;
 
 // ── INTRO CARD ────────────────────────────────────────
+function dismissIntroCard(){
+  clearTimeout(introTimer);
+  document.getElementById('intro-card').classList.remove('show');
+}
+window.dismissIntroCard=dismissIntroCard;
+
 function showIntroCard(people, evYear){
   if(introPlayed.has(people.id)) return;
   introPlayed.add(people.id);
@@ -1432,7 +1448,7 @@ function showIntroCard(people, evYear){
   card.classList.add('show');
   introTimer=setTimeout(()=>{
     card.classList.remove('show');
-  },3800);
+  },6500);
 }
 
 // Check if any people need intro when year changes
