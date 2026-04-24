@@ -21,58 +21,7 @@
         .chart-container.fading { opacity: 0; }
         .footer { margin-top: 20px; font-size: 0.9em; color: #888; text-align: center; }
         
-        /* Legend moved to top-left corner */
-        .custom-legend {
-            position: absolute;
-            top: 20px;
-            left: 50px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.85);
-            padding: 12px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            position: relative;
-            font-size: 12px;
-            color: #444;
-            transition: color 0.2s;
-            font-weight: 500;
-        }
-        .legend-item:hover { color: #000; }
-        .legend-color-box {
-            width: 25px;
-            height: 0;
-            margin-right: 8px;
-            border-top-style: solid;
-        }
-        .legend-item.hidden-dataset { text-decoration: line-through; opacity: 0.4; }
-        .tooltip-text {
-            visibility: hidden;
-            width: 220px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 8px;
-            position: absolute;
-            z-index: 20;
-            left: 110%;
-            top: 0;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 11px;
-            pointer-events: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            font-weight: normal;
-        }
-        .legend-item:hover .tooltip-text { visibility: visible; opacity: 1; }
+
 
         /* Axis banner */
         #axis-banner {
@@ -221,7 +170,6 @@
         </div>
 
         <div class="chart-container">
-            <div id="customLegend" class="custom-legend"></div>
             <canvas id="mainChart"></canvas>
         </div>
         
@@ -256,30 +204,30 @@
         const rawGDP = [6200, 6800, 8700, 8500, 5800, 8200, 12400, 11000, 14400, 19200, 19800, 22000, 21000, 24000, 27500, 32000, 42000, 45000, 50000, 52000, 58000, 59000, 64000, 66000];
 
         const macroDatasets = [
-            { label: 'Gini-koefficient (inverterad)', data: rawGini.map(v => normalize(v, 32, 52, true)), borderColor: '#000000', borderWidth: 3, tension: 0.3, tooltipDesc: "Mäter ojämlikhet (0 = alla lika, 100 = en person äger allt). Inverterad: högre = mer jämlikhet.", tooltipFull: "Gini-koefficienten mäter hur ojämnt inkomster fördelas – 0 innebär att alla tjänar exakt lika, 100 att en person äger allt. USA:s värde har stigit stadigt sedan 1970-talet, vilket speglar en växande klyfta mellan rika och fattiga. Grafen är inverterad: ett högt värde här betyder alltså låg ojämlikhet." },
-            { label: 'Palma-kvot (inverterad)', data: rawPalma.map(v => normalize(v, 0.8, 2.5, true)), borderColor: '#d62728', borderDash: [5, 5], borderWidth: 2, tension: 0.3, tooltipDesc: "De rikaste 10% inkomstandel / de fattigaste 40%. Inverterad: högre = mer jämlikhet.", tooltipFull: "Palma-kvoten jämför de rikaste 10 procentens inkomstandel med de fattigaste 40 procentens. Det är ett känsligare mått på extrema ojämlikheter än Gini, eftersom det fokuserar på topp och botten snarare än mitten. En kvot på 1,0 innebär att de två grupperna delar lika på inkomsterna." },
-            { label: 'Real medianinkomst', data: rawIncome.map(v => normalize(v, 0, 90)), borderColor: '#2ca02c', borderWidth: 4, tension: 0.3, tooltipDesc: "Typisk hushållsinkomst justerad för inflation. Tillväxten döljer att individuella löner stagnerat.", tooltipFull: "Medianinkomsten visar vad ett typiskt amerikanskt hushåll faktiskt köper för – justerat för inflation. Att den ökat beror till stor del på att fler hushåll numera har två inkomster. Det gör måttet tveeggat: tillväxten kan dölja att varje enskild löntagare inte fått det bättre." },
-            { label: 'Social rörlighet', data: rawMobility.map(v => normalize(v, 30, 100)), borderColor: '#9467bd', borderWidth: 4, borderDash: [10, 5], tension: 0.3, tooltipDesc: "Chansen att ett barn från en fattig familj klättrar uppåt ekonomiskt som vuxen.", tooltipFull: "Social rörlighet mäter hur stor chans ett barn från en fattig familj har att klättra uppåt ekonomiskt som vuxen. Raj Chettys forskning visar att den sjunkit dramatiskt i USA under 1900-talet. Idag är det faktiskt ovanligare att byta ekonomisk klass i USA än i t.ex. Sverige eller Danmark." },
-            { label: 'Hälsojämlikhet', data: rawHealth.map(v => normalize(v, 0.75, 1.0)), borderColor: '#ff7f0e', borderWidth: 4, borderDash: [2, 2], tension: 0.3, tooltipDesc: "Hur jämnt fördelad livslängd och hälsa är mellan olika grupper i USA.", tooltipFull: "Det här måttet visar hur jämnt fördelad hälsa och livslängd är mellan olika grupper i USA. En kvot nära 1,0 innebär liten skillnad; lägre värden visar växande hälsoklyftor beroende på inkomst, ras och geografi. USA är ovanligt ojämlikt i detta avseende jämfört med andra rika länder." },
-            { label: 'BNP per capita (PPP)', data: rawGDP.map(v => normalize(v, 0, 70000)), borderColor: '#17becf', borderWidth: 3, borderDash: [4, 2], tension: 0.3, tooltipDesc: "USA:s ekonomiska produktion per person, köpkraftsjusterad (fasta 2017-dollar). Mäter ekonomisk styrka relativt befolkningsstorlek.", tooltipFull: "BNP per capita (PPP) visar hur mycket ett land producerar ekonomiskt per invånare, justerat för vad pengar faktiskt köper lokalt. Det är det vanligaste måttet för att jämföra länders ekonomiska styrka rättvist. USA ligger bland världens allra högsta – men kurvan visar också att den ekonomiska tillväxten inte automatiskt förbättrat de andra sociala måtten." }
+            { label: 'Gini-koefficient (inverterad)', data: rawGini.map(v => normalize(v, 32, 52, true)), borderColor: '#1B2A4A', borderWidth: 3, tension: 0.3, tooltipDesc: "Mäter ojämlikhet (0 = alla lika, 100 = en person äger allt). Inverterad: högre = mer jämlikhet.", tooltipFull: "Gini-koefficienten mäter hur ojämnt inkomster fördelas – 0 innebär att alla tjänar exakt lika, 100 att en person äger allt. USA:s värde har stigit stadigt sedan 1970-talet, vilket speglar en växande klyfta mellan rika och fattiga. Grafen är inverterad: ett högt värde här betyder alltså låg ojämlikhet." },
+            { label: 'Palma-kvot (inverterad)', data: rawPalma.map(v => normalize(v, 0.8, 2.5, true)), borderColor: '#C1292E', borderDash: [5, 5], borderWidth: 2, tension: 0.3, tooltipDesc: "De rikaste 10% inkomstandel / de fattigaste 40%. Inverterad: högre = mer jämlikhet.", tooltipFull: "Palma-kvoten jämför de rikaste 10 procentens inkomstandel med de fattigaste 40 procentens. Det är ett känsligare mått på extrema ojämlikheter än Gini, eftersom det fokuserar på topp och botten snarare än mitten. En kvot på 1,0 innebär att de två grupperna delar lika på inkomsterna." },
+            { label: 'Real medianinkomst', data: rawIncome.map(v => normalize(v, 0, 90)), borderColor: '#1B7F6E', borderWidth: 4, tension: 0.3, tooltipDesc: "Typisk hushållsinkomst justerad för inflation. Tillväxten döljer att individuella löner stagnerat.", tooltipFull: "Medianinkomsten visar vad ett typiskt amerikanskt hushåll faktiskt köper för – justerat för inflation. Att den ökat beror till stor del på att fler hushåll numera har två inkomster. Det gör måttet tveeggat: tillväxten kan dölja att varje enskild löntagare inte fått det bättre." },
+            { label: 'Social rörlighet', data: rawMobility.map(v => normalize(v, 30, 100)), borderColor: '#6B3FA0', borderWidth: 4, borderDash: [10, 5], tension: 0.3, tooltipDesc: "Chansen att ett barn från en fattig familj klättrar uppåt ekonomiskt som vuxen.", tooltipFull: "Social rörlighet mäter hur stor chans ett barn från en fattig familj har att klättra uppåt ekonomiskt som vuxen. Raj Chettys forskning visar att den sjunkit dramatiskt i USA under 1900-talet. Idag är det faktiskt ovanligare att byta ekonomisk klass i USA än i t.ex. Sverige eller Danmark." },
+            { label: 'Hälsojämlikhet', data: rawHealth.map(v => normalize(v, 0.75, 1.0)), borderColor: '#D9632A', borderWidth: 4, borderDash: [2, 2], tension: 0.3, tooltipDesc: "Hur jämnt fördelad livslängd och hälsa är mellan olika grupper i USA.", tooltipFull: "Det här måttet visar hur jämnt fördelad hälsa och livslängd är mellan olika grupper i USA. En kvot nära 1,0 innebär liten skillnad; lägre värden visar växande hälsoklyftor beroende på inkomst, ras och geografi. USA är ovanligt ojämlikt i detta avseende jämfört med andra rika länder." },
+            { label: 'BNP per capita (PPP)', data: rawGDP.map(v => normalize(v, 0, 70000)), borderColor: '#0A7EBD', borderWidth: 3, borderDash: [4, 2], tension: 0.3, tooltipDesc: "USA:s ekonomiska produktion per person, köpkraftsjusterad (fasta 2017-dollar). Mäter ekonomisk styrka relativt befolkningsstorlek.", tooltipFull: "BNP per capita (PPP) visar hur mycket ett land producerar ekonomiskt per invånare, justerat för vad pengar faktiskt köper lokalt. Det är det vanligaste måttet för att jämföra länders ekonomiska styrka rättvist. USA ligger bland världens allra högsta – men kurvan visar också att den ekonomiska tillväxten inte automatiskt förbättrat de andra sociala måtten." }
         ];
 
         // --- 2. LABOR DATASET ---
         const laborLabels = [1970, 1980, 1990, 2000, 2010, 2020];
         const laborDatasets = [
-            { label: 'Real medianhushållsinkomst (index)', data: [100, 108, 115, 122, 118, 128], borderColor: '#2ca02c', borderWidth: 4, yAxisID: 'y', tension: 0.3, tooltipDesc: "Hushållets samlade inkomst justerad för inflation. Tillväxten drivs nästan helt av att fler hushåll har två löntagare.", tooltipFull: "Hushållets totala inkomst, justerad för inflation och indexerad till 1970=100. Den har ökat med drygt 25% sedan 1970 – men det beror nästan helt på att fler hushåll har två löntagare, inte på att lönerna faktiskt höjts. Det är en av de mest missvisande statistikerna i populärdebatten." },
-            { label: 'Real medianindividlön (index)', data: [100, 97, 95, 102, 95, 98], borderColor: '#1f77b4', borderWidth: 4, borderDash: [5, 5], yAxisID: 'y', tension: 0.3, tooltipDesc: "En enskild löntagares medianlön justerad för inflation. I princip oförändrad sedan 1970.", tooltipFull: "En enskild löntagares medianinkomst, justerad för inflation och indexerad till 1970=100. Trots 50 år av ekonomisk tillväxt är individuella reallöner nästan exakt desamma som 1970. Det är en av de mest chockerande statistikerna i modern ekonomisk historia." },
-            { label: 'Tvåinkomsthushåll (%)', data: [38, 51, 58, 60, 58, 63], borderColor: '#9467bd', borderWidth: 3, yAxisID: 'y1', tension: 0.3, tooltipDesc: "Andel gifta par där båda partners förvärvsarbetar. Höger axel.", tooltipFull: "Andelen gifta par där båda partners förvärvsarbetar har stigit från 38% till över 60% sedan 1970. Det är den viktigaste faktorn bakom att hushållsinkomster ser ut att ha ökat. Familjer 'köpte' sig högre inkomst med fler arbetstimmar – inte med högre löner." }
+            { label: 'Real medianhushållsinkomst (index)', data: [100, 108, 115, 122, 118, 128], borderColor: '#1B7F6E', borderWidth: 4, yAxisID: 'y', tension: 0.3, tooltipDesc: "Hushållets samlade inkomst justerad för inflation. Tillväxten drivs nästan helt av att fler hushåll har två löntagare.", tooltipFull: "Hushållets totala inkomst, justerad för inflation och indexerad till 1970=100. Den har ökat med drygt 25% sedan 1970 – men det beror nästan helt på att fler hushåll har två löntagare, inte på att lönerna faktiskt höjts. Det är en av de mest missvisande statistikerna i populärdebatten." },
+            { label: 'Real medianindividlön (index)', data: [100, 97, 95, 102, 95, 98], borderColor: '#0A7EBD', borderWidth: 4, borderDash: [5, 5], yAxisID: 'y', tension: 0.3, tooltipDesc: "En enskild löntagares medianlön justerad för inflation. I princip oförändrad sedan 1970.", tooltipFull: "En enskild löntagares medianinkomst, justerad för inflation och indexerad till 1970=100. Trots 50 år av ekonomisk tillväxt är individuella reallöner nästan exakt desamma som 1970. Det är en av de mest chockerande statistikerna i modern ekonomisk historia." },
+            { label: 'Tvåinkomsthushåll (%)', data: [38, 51, 58, 60, 58, 63], borderColor: '#6B3FA0', borderWidth: 3, yAxisID: 'y1', tension: 0.3, tooltipDesc: "Andel gifta par där båda partners förvärvsarbetar. Höger axel.", tooltipFull: "Andelen gifta par där båda partners förvärvsarbetar har stigit från 38% till över 60% sedan 1970. Det är den viktigaste faktorn bakom att hushållsinkomster ser ut att ha ökat. Familjer 'köpte' sig högre inkomst med fler arbetstimmar – inte med högre löner." }
         ];
 
         // --- 3. PRICE DATASET ---
         const priceLabels = [1980, 1990, 2000, 2010, 2020];
         const priceDatasets = [
-            { label: 'Högskoleavgifter', data: [100, 240, 400, 650, 900], borderColor: '#d62728', borderWidth: 4, yAxisID: 'y', tension: 0.3, tooltipDesc: "Kostnaden för högskolestudier har stigit nästan tio gånger sedan 1980 – långt snabbare än lönerna.", tooltipFull: "Högskolekostnader i USA har stigit nästan tio gånger sedan 1980 – långt snabbare än löner eller inflation. Det har skapat en studentskuldskris på över 1,7 biljoner dollar. Till skillnad från bostad och sjukvård är detta relativt unikt för USA – i de flesta rika länder är högskoleutbildning avgiftsfri eller mycket billigare." },
-            { label: 'Sjukvård', data: [100, 210, 350, 520, 700], borderColor: '#ff7f0e', borderWidth: 4, yAxisID: 'y', tension: 0.3, tooltipDesc: "USA har världens högsta sjukvårdskostnader trots sämre genomsnittliga hälsoutfall än jämförbara länder.", tooltipFull: "Sjukvårdskostnader i USA är de högsta i världen – trots sämre genomsnittliga hälsoutfall än många jämförbara länder. Denna kostnadsutveckling är den enskilt vanligaste orsaken till personlig konkurs i USA. En stor del av skillnaden mot andra länder förklaras av det privatiserade systemets administrativa kostnader." },
-            { label: 'Boendekostnader', data: [100, 165, 230, 310, 450], borderColor: '#8c564b', borderWidth: 4, yAxisID: 'y', tension: 0.3, tooltipDesc: "Kostnaden för att köpa eller hyra bostad – mer än fyrdubblad sedan 1980.", tooltipFull: "Bostadskostnader har mer än fyrdubblats sedan 1980, långt snabbare än löner och allmän inflation. Kombinationen av stadsplanering, brist på nybyggnation och ökad efterfrågan har gjort att unga amerikaners möjlighet att äga sin bostad minskat dramatiskt sedan föräldragenerationen." },
-            { label: 'Genomsnittlig inflation (KPI)', data: [100, 158, 208, 263, 314], borderColor: '#000000', borderWidth: 4, borderDash: [10, 5], yAxisID: 'y', tension: 0.3, tooltipDesc: "Konsumentprisindex – det officiella inflationsmåttet. Döljer hur ojämnt prisökningar slår.", tooltipFull: "Konsumentprisindex (KPI) mäter den genomsnittliga prisutvecklingen för en bred korg av varor och tjänster. Det används som det officiella inflationsmåttet men missar hur ojämnt prisökningarna slår. Eftersom billiga konsumentvaror ingår i korgen döljer KPI hur kraftigt nödvändigheter som bostad, sjukvård och utbildning stiger." },
-            { label: 'Fabriksvaror (TV, leksaker)', data: [100, 110, 95, 70, 50], borderColor: '#1f77b4', borderWidth: 3, yAxisID: 'y', tension: 0.3, tooltipDesc: "Massproducerade varor har blivit billigare tack vare globalisering – vilket döljer skenande kärnkostnader.", tooltipFull: "Fabrikstillverkade varor som elektronik, leksaker och kläder har faktiskt blivit billigare sedan 1980, tack vare globalisering och billig arbetskraft. Den fallande prisutvecklingen drar ner genomsnittet i KPI och skapar en illusion av hanterbar inflation – medan kärnkostnader för ett stabilt liv skenar." }
+            { label: 'Högskoleavgifter', data: [100, 240, 400, 650, 900], borderColor: '#C1292E', borderWidth: 4, yAxisID: 'y', tension: 0.3, tooltipDesc: "Kostnaden för högskolestudier har stigit nästan tio gånger sedan 1980 – långt snabbare än lönerna.", tooltipFull: "Högskolekostnader i USA har stigit nästan tio gånger sedan 1980 – långt snabbare än löner eller inflation. Det har skapat en studentskuldskris på över 1,7 biljoner dollar. Till skillnad från bostad och sjukvård är detta relativt unikt för USA – i de flesta rika länder är högskoleutbildning avgiftsfri eller mycket billigare." },
+            { label: 'Sjukvård', data: [100, 210, 350, 520, 700], borderColor: '#D9632A', borderWidth: 4, yAxisID: 'y', tension: 0.3, tooltipDesc: "USA har världens högsta sjukvårdskostnader trots sämre genomsnittliga hälsoutfall än jämförbara länder.", tooltipFull: "Sjukvårdskostnader i USA är de högsta i världen – trots sämre genomsnittliga hälsoutfall än många jämförbara länder. Denna kostnadsutveckling är den enskilt vanligaste orsaken till personlig konkurs i USA. En stor del av skillnaden mot andra länder förklaras av det privatiserade systemets administrativa kostnader." },
+            { label: 'Boendekostnader', data: [100, 165, 230, 310, 450], borderColor: '#7A4E2D', borderWidth: 4, yAxisID: 'y', tension: 0.3, tooltipDesc: "Kostnaden för att köpa eller hyra bostad – mer än fyrdubblad sedan 1980.", tooltipFull: "Bostadskostnader har mer än fyrdubblats sedan 1980, långt snabbare än löner och allmän inflation. Kombinationen av stadsplanering, brist på nybyggnation och ökad efterfrågan har gjort att unga amerikaners möjlighet att äga sin bostad minskat dramatiskt sedan föräldragenerationen." },
+            { label: 'Genomsnittlig inflation (KPI)', data: [100, 158, 208, 263, 314], borderColor: '#1B2A4A', borderWidth: 4, borderDash: [10, 5], yAxisID: 'y', tension: 0.3, tooltipDesc: "Konsumentprisindex – det officiella inflationsmåttet. Döljer hur ojämnt prisökningar slår.", tooltipFull: "Konsumentprisindex (KPI) mäter den genomsnittliga prisutvecklingen för en bred korg av varor och tjänster. Det används som det officiella inflationsmåttet men missar hur ojämnt prisökningarna slår. Eftersom billiga konsumentvaror ingår i korgen döljer KPI hur kraftigt nödvändigheter som bostad, sjukvård och utbildning stiger." },
+            { label: 'Fabriksvaror (TV, leksaker)', data: [100, 110, 95, 70, 50], borderColor: '#0A7EBD', borderWidth: 3, yAxisID: 'y', tension: 0.3, tooltipDesc: "Massproducerade varor har blivit billigare tack vare globalisering – vilket döljer skenande kärnkostnader.", tooltipFull: "Fabrikstillverkade varor som elektronik, leksaker och kläder har faktiskt blivit billigare sedan 1980, tack vare globalisering och billig arbetskraft. Den fallande prisutvecklingen drar ner genomsnittet i KPI och skapar en illusion av hanterbar inflation – medan kärnkostnader för ett stabilt liv skenar." }
         ];
 
         // --- PRESIDENTS ---
@@ -349,8 +297,7 @@
                     ctx.restore();
                 };
 
-                drawTag('← Index (vänster axel)', '#2ca02c', left + 6, 'left');
-                drawTag('Tvåinkomsthushåll % (höger axel) →', '#9467bd', right - 6, 'right');
+
             }
         };
 
@@ -367,8 +314,8 @@
         // --- AXIS BANNER UPDATER (A) ---
         const axisConfigs = {
             macro:  { left: { text: 'Y-axel: 0 → 1 \u00a0(Sämst → Bäst, normaliserat) · BNP/capita: 0–70 000 USD PPP', color: '#555' }, right: null },
-            labor:  { left: { text: 'Vänster axel: Index 1970 = 100 \u00a0(skala 90–140)', color: '#2ca02c' },
-                      right: { text: 'Höger axel: Andel hushåll med dubbel inkomst (%)', color: '#9467bd' } },
+            labor:  { left: { text: 'Vänster axel: Index 1970 = 100 \u00a0(skala 90–140)', color: '#1B7F6E' },
+                      right: { text: 'Höger axel: Andel hushåll med dubbel inkomst (%)', color: '#6B3FA0' } },
             prices: { left: { text: 'Y-axel: Prisindex 1980 = 100 \u00a0(skala 0–1 000)', color: '#555' }, right: null }
         };
 
@@ -405,6 +352,9 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                elements: {
+                    point: { radius: 0, hoverRadius: 4, hitRadius: 10 }
+                },
                 plugins: {
                     legend: { display: false },
                     tooltip: { mode: 'index', intersect: false }
@@ -431,15 +381,7 @@
                 hiddenDatasets.add(index);
                 myChart.hide(index);
             }
-            syncLegend();
             syncToggleBar();
-        }
-
-        function syncLegend() {
-            const items = document.querySelectorAll('#customLegend .legend-item');
-            items.forEach((item, i) => {
-                item.style.display = hiddenDatasets.has(i) ? 'none' : 'flex';
-            });
         }
 
         function syncToggleBar() {
@@ -447,33 +389,6 @@
             btns.forEach((btn, i) => {
                 btn.classList.toggle('active', !hiddenDatasets.has(i));
                 btn.classList.toggle('inactive', hiddenDatasets.has(i));
-            });
-        }
-
-        function buildLegend() {
-            const legendContainer = document.getElementById('customLegend');
-            legendContainer.innerHTML = '';
-            myChart.data.datasets.forEach((dataset, index) => {
-                const item = document.createElement('div');
-                item.className = 'legend-item';
-                item.style.display = hiddenDatasets.has(index) ? 'none' : 'flex';
-
-                const colorBox = document.createElement('div');
-                colorBox.className = 'legend-color-box';
-                colorBox.style.borderTopWidth = dataset.borderWidth + 'px';
-                colorBox.style.borderTopColor = dataset.borderColor;
-                if (dataset.borderDash) colorBox.style.borderTopStyle = 'dashed';
-
-                const tooltip = document.createElement('span');
-                tooltip.className = 'tooltip-text';
-                tooltip.innerText = dataset.tooltipDesc;
-
-                item.appendChild(colorBox);
-                item.appendChild(document.createTextNode(dataset.label));
-                item.appendChild(tooltip);
-                // Legend click also routes through toggleDataset for sync
-                item.onclick = () => toggleDataset(index);
-                legendContainer.appendChild(item);
             });
         }
 
@@ -562,7 +477,6 @@
         function buildUI() {
             hiddenDatasets.clear();
             showPresidents = true;
-            buildLegend();
             buildToggleBar();
             document.getElementById('btn-hide-all').classList.remove('show-mode');
             document.getElementById('btn-hide-all').textContent = 'Dölj allt';
@@ -591,7 +505,6 @@
                 btn.classList.add('show-mode');
                 btn.textContent = 'Visa allt';
             }
-            syncLegend();
             syncToggleBar();
             syncPresidentsBtn();
             myChart.update();
