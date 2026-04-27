@@ -72,8 +72,8 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
 
 /* ── INTRO CARD ── */
 #intro-card{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%) scale(0.88);
+  position:absolute;left:14px;top:14px;
+  transform:scale(0.88);transform-origin:top left;
   width:340px;background:rgba(8,4,1,.98);
   border:1px solid var(--brd);border-radius:3px;
   z-index:4000;pointer-events:none;
@@ -82,13 +82,19 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
   box-shadow:0 8px 60px rgba(0,0,0,.8);
 }
 #intro-card.show{
-  opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:all;
+  opacity:1;transform:scale(1);transform-origin:top left;pointer-events:all;
 }
 #intro-icon{width:64px;height:64px;margin:0 auto 12px}
 #intro-people{font-family:'Cinzel',serif;font-size:1.05rem;letter-spacing:4px;margin-bottom:6px}
 #intro-year{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:3px;margin-bottom:14px;opacity:.55}
 #intro-divider{width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 14px}
 #intro-text{font-family:'Cormorant Garamond',serif;font-size:.98rem;line-height:1.72;color:rgba(245,232,192,.78)}
+#intro-origin{
+  font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:2px;
+  color:rgba(212,168,67,.55);margin-bottom:12px;
+  border:1px solid rgba(122,94,24,.25);border-radius:2px;
+  padding:5px 10px;display:inline-block;
+}
 #intro-close{
   position:absolute;top:10px;right:10px;
   background:none;border:1px solid rgba(122,94,24,.5);
@@ -382,6 +388,7 @@ body{background:#080f1e;overflow:hidden;height:100vh;font-family:'Cormorant Gara
       <div id="intro-people"></div>
       <div id="intro-year"></div>
       <div id="intro-divider"></div>
+      <div id="intro-origin"></div>
       <div id="intro-text"></div>
     </div>
     <div id="autoplay-toast"></div>
@@ -445,36 +452,49 @@ const PEOPLES = [
     id:'huns', name:'Hunnerna', col:'#c9623f',
     desc:'Nomader från Centralasien som pressade folk västerut och utlöste hela folkvandringstiden. Under Attila utpressade de bägge halvorna av romarriket på guld.',
     symbol:`<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Composite bow -->
-      <path d="M8 32 Q20 4 32 32" stroke="#c9623f" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <line x1="8" y1="32" x2="32" y2="32" stroke="#c9623f" stroke-width="1.5" stroke-dasharray="3 2"/>
-      <!-- Arrow -->
-      <line x1="12" y1="20" x2="30" y2="14" stroke="#e8a060" stroke-width="1.8" stroke-linecap="round"/>
-      <polygon points="30,14 26,12 27,16" fill="#e8a060"/>
-      <!-- Horse silhouette -->
-      <ellipse cx="20" cy="34" rx="7" ry="2.5" fill="#c9623f" opacity="0.4"/>
+      <!-- Composite recurve bow — characteristic double-curved Hun shape -->
+      <path d="M28 4 Q24 7 22 11" stroke="#c9623f" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M22 11 Q14 14 13 20" stroke="#c9623f" stroke-width="2.5" fill="none"/>
+      <path d="M13 20 Q14 26 22 29" stroke="#c9623f" stroke-width="2.5" fill="none"/>
+      <path d="M22 29 Q24 33 28 36" stroke="#c9623f" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <!-- Bowstring -->
+      <line x1="28" y1="4" x2="28" y2="36" stroke="#e8a060" stroke-width="1.2"/>
+      <!-- Arrow nocked and drawn -->
+      <line x1="28" y1="20" x2="8" y2="20" stroke="#e8a060" stroke-width="1.8" stroke-linecap="round"/>
+      <polygon points="8,20 15,17 15,23" fill="#e8a060"/>
+      <path d="M27 20 Q30 17 28 18.5" stroke="#e8a060" stroke-width="1.2" fill="none"/>
+      <path d="M27 20 Q30 23 28 21.5" stroke="#e8a060" stroke-width="1.2" fill="none"/>
     </svg>`,
     evIds:['hun','att','cat','att452'],
     pathIds:['huns'],
+    origin:'Nutidens Kazakstan & Mongoliet',
     intro:'Nomader från Centralasien. Deras framryckning mot väst utlöste en dominoeffekt som omformade hela Europa.',
   },
   {
     id:'goths', name:'Goterna', col:'#2e86ab',
     desc:'Delade i visigoter (väst) och ostrogoter (öst). Visigoterna plundrade Rom 410 och grundade rike i Spanien. Ostrogoterna tog Italien 493 under Theoderik den store.',
     symbol:`<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Eagle fibula (simplified) -->
-      <ellipse cx="20" cy="22" rx="6" ry="9" fill="#2e86ab" opacity="0.85"/>
-      <!-- Wings -->
-      <path d="M14 18 Q8 14 6 20 Q10 22 14 20Z" fill="#2e86ab" opacity="0.75"/>
-      <path d="M26 18 Q32 14 34 20 Q30 22 26 20Z" fill="#2e86ab" opacity="0.75"/>
-      <!-- Head -->
-      <circle cx="20" cy="13" r="4" fill="#2e86ab"/>
-      <polygon points="20,9 22,6 18,6" fill="#4ab0d8"/>
+      <!-- Gothic eagle fibula — head left, wings sweep downward -->
+      <!-- Body, vertical -->
+      <path d="M17 10 Q20 8 23 10 L24 28 Q20 31 16 28Z" fill="#2e86ab"/>
+      <!-- Head at top, facing left -->
+      <circle cx="25" cy="8" r="4.5" fill="#2e86ab"/>
+      <!-- Large hooked beak pointing left -->
+      <path d="M22 6 L8 10 L10 14 L22 10Z" fill="#2e86ab"/>
       <!-- Eye -->
-      <circle cx="20" cy="13" r="1.2" fill="#fff" opacity="0.8"/>
+      <circle cx="26.5" cy="7" r="1.5" fill="#fff" opacity="0.9"/>
+      <!-- Left wing sweeping DOWN and out -->
+      <path d="M17 14 L1 27 L4 33 L17 22Z" fill="#2e86ab"/>
+      <!-- Right wing sweeping DOWN and out -->
+      <path d="M23 14 L38 26 L35 32 L23 21Z" fill="#2e86ab"/>
+      <!-- Tail feathers straight down -->
+      <line x1="17" y1="28" x2="15" y2="37" stroke="#2e86ab" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="20" y1="29" x2="20" y2="38" stroke="#2e86ab" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="23" y1="28" x2="25" y2="37" stroke="#2e86ab" stroke-width="2.2" stroke-linecap="round"/>
     </svg>`,
     evIds:['vis','adr','ala','r55','fal','the','aqu'],
     pathIds:['vis','ost'],
+    origin:'Nutidens Polen (Wisła-regionen)',
     intro:'Uppdelade i visigoter och ostrogoter. Flydde hunnerna, besegrade en kejsare och grundade riken i Rom och Spanien.',
   },
   {
@@ -491,24 +511,35 @@ const PEOPLES = [
     </svg>`,
     evIds:['rhn','car','r55'],
     pathIds:['van'],
+    origin:'Nutidens Polen & Schlesien',
     intro:'Korsade den frusna Rhen 406, drog genom Gallien och Spanien till Nordafrika — och plundrade Rom från sjösidan 455.',
   },
   {
     id:'franks', name:'Frankerna', col:'#2d8a4e',
     desc:'Under Clovis enade och utvidgade frankerna sitt rike i Gallien. Konversionen till kristendomen 496 gav dem kyrkans stöd. Grunden till dagens Frankrike.',
     symbol:`<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Francisca (throwing axe) -->
-      <path d="M14 30 L22 10 Q30 8 28 16 Q26 22 18 24Z" fill="#2d8a4e" opacity="0.9"/>
-      <line x1="14" y1="30" x2="24" y2="18" stroke="#2d8a4e" stroke-width="2"/>
-      <!-- Handle -->
-      <line x1="14" y1="30" x2="8" y2="38" stroke="#5aaa70" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- Gold bee -->
-      <ellipse cx="32" cy="30" rx="3.5" ry="5" fill="#d4a843" opacity="0.7"/>
-      <line x1="29" y1="28" x2="27" y2="25" stroke="#d4a843" stroke-width="1" opacity="0.7"/>
-      <line x1="35" y1="28" x2="37" y2="25" stroke="#d4a843" stroke-width="1" opacity="0.7"/>
+      <!-- Merovingian golden bee — found in Childeric I's tomb, symbol of Frankish royalty -->
+      <!-- Wings — translucent, angled back -->
+      <ellipse cx="12" cy="18" rx="8" ry="3.5" fill="rgba(212,168,67,0.22)" stroke="#d4a843" stroke-width="1.2" transform="rotate(-20 12 18)"/>
+      <ellipse cx="28" cy="18" rx="8" ry="3.5" fill="rgba(212,168,67,0.22)" stroke="#d4a843" stroke-width="1.2" transform="rotate(20 28 18)"/>
+      <!-- Abdomen — striped -->
+      <ellipse cx="20" cy="28" rx="4.5" ry="7" fill="#d4a843"/>
+      <line x1="15.6" y1="24" x2="24.4" y2="24" stroke="#7a5010" stroke-width="1.5" opacity="0.55"/>
+      <line x1="15.3" y1="28" x2="24.7" y2="28" stroke="#7a5010" stroke-width="1.5" opacity="0.55"/>
+      <line x1="15.6" y1="32" x2="24.4" y2="32" stroke="#7a5010" stroke-width="1.5" opacity="0.55"/>
+      <!-- Thorax -->
+      <ellipse cx="20" cy="18" rx="4" ry="4" fill="#d4a843"/>
+      <!-- Head -->
+      <circle cx="20" cy="11" r="3.5" fill="#d4a843"/>
+      <!-- Antennae -->
+      <line x1="18.5" y1="8" x2="14" y2="4" stroke="#d4a843" stroke-width="1.3" stroke-linecap="round"/>
+      <line x1="21.5" y1="8" x2="26" y2="4" stroke="#d4a843" stroke-width="1.3" stroke-linecap="round"/>
+      <circle cx="13.5" cy="3.5" r="1.3" fill="#d4a843"/>
+      <circle cx="26.5" cy="3.5" r="1.3" fill="#d4a843"/>
     </svg>`,
     evIds:['clo','clov486'],
     pathIds:['fra'],
+    origin:'Nutidens Belgien, Nederländerna & västra Tyskland',
     intro:'Klokt ledarskap och ett strategiskt religionsbyte lade grunden till det frankiska riket — och till Frankrike.',
   },
   {
@@ -531,6 +562,7 @@ const PEOPLES = [
     </svg>`,
     evIds:['lom'],
     pathIds:['lom'],
+    origin:'Nutidens norra Tyskland (Elbregionen)',
     intro:'Den sista folkvandringen: langobarderna intog norra Italien 568 och satte punkt för en tvåhundraårig era av folkrörelser.',
   },
   {
@@ -548,29 +580,40 @@ const PEOPLES = [
     </svg>`,
     evIds:['upp','for'],
     pathIds:[],
+    origin:'Nutidens Sverige, Norge & Danmark',
     intro:'Skandinavien påverkades av folkvandringstiden utan att delta direkt — via guldinflöde, fornborgar och mäktiga centralplatser.',
   },
   {
     id:'rome', name:'Romarriket', col:'#8b0000',
     desc:'Imperiet vars kollaps gav folkvandringstiden dess namn. Delades 395, förlorade väst 476. Östromerska riket (Bysans) levde vidare till 1453.',
     symbol:`<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Aquila (eagle standard) -->
-      <!-- Staff -->
-      <line x1="20" y1="8" x2="20" y2="36" stroke="#8b0000" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- Eagle body -->
-      <ellipse cx="20" cy="14" rx="5" ry="6" fill="#8b0000"/>
-      <!-- Wings spread -->
-      <path d="M15 12 Q8 8 6 14 Q10 16 15 14Z" fill="#8b0000"/>
-      <path d="M25 12 Q32 8 34 14 Q30 16 25 14Z" fill="#8b0000"/>
-      <!-- Eagle head -->
-      <circle cx="20" cy="9" r="3" fill="#a01010"/>
-      <polygon points="20,6 23,8 20,9" fill="#d4a843"/>
+      <!-- Roman Aquila — wings sweep dramatically upward, triumphant pose -->
+      <!-- Left wing curving up and out to tip -->
+      <path d="M17 22 Q10 17 3 8 Q1 4 5 4 Q8 8 12 15 L17 23Z" fill="#8b0000"/>
+      <!-- Right wing curving up and out -->
+      <path d="M23 22 Q30 17 37 8 Q39 4 35 4 Q32 8 28 15 L23 23Z" fill="#8b0000"/>
+      <!-- Wing shoulder bulk -->
+      <path d="M5 4 L2 8 L5 10Z" fill="#a01010" opacity="0.7"/>
+      <path d="M35 4 L38 8 L35 10Z" fill="#a01010" opacity="0.7"/>
+      <!-- Body compact, central -->
+      <ellipse cx="20" cy="23" rx="4.5" ry="5" fill="#a01010"/>
+      <!-- Head facing left, strong -->
+      <circle cx="17" cy="15" r="4.5" fill="#a01010"/>
+      <!-- Large hooked beak pointing left -->
+      <path d="M14 13.5 Q7 16 9.5 19.5" stroke="#d4a843" stroke-width="2.3" fill="none" stroke-linecap="round"/>
+      <!-- Eye -->
+      <circle cx="15.5" cy="13.5" r="1.5" fill="#d4a843" opacity="0.95"/>
+      <!-- Tail feathers -->
+      <line x1="18" y1="27.5" x2="16" y2="31" stroke="#a01010" stroke-width="2" stroke-linecap="round"/>
+      <line x1="20" y1="28" x2="20" y2="32" stroke="#a01010" stroke-width="2" stroke-linecap="round"/>
+      <line x1="22" y1="27.5" x2="24" y2="31" stroke="#a01010" stroke-width="2" stroke-linecap="round"/>
       <!-- SPQR banner -->
-      <rect x="13" y="20" width="14" height="8" rx="1" fill="#8b0000" opacity="0.7"/>
-      <text x="20" y="27" text-anchor="middle" fill="#d4a843" font-size="5" font-family="Cinzel,serif" font-weight="bold">SPQR</text>
+      <rect x="11" y="31" width="18" height="8" rx="1" fill="#8b0000" opacity="0.9"/>
+      <text x="20" y="37.5" text-anchor="middle" fill="#d4a843" font-size="5" font-family="Cinzel,serif" font-weight="bold">SPQR</text>
     </svg>`,
     evIds:['spl','fal','the'],
     pathIds:[],
+    origin:'Nutidens Italien',
     intro:'Det västromerska riket föll 476 — men dess lagar, latin och institutioner levde vidare i de germanska konungarikena.',
   },
 ];
@@ -1459,6 +1502,7 @@ function showIntroCard(people, evYear){
   document.getElementById('intro-people').textContent=people.name.toUpperCase();
   document.getElementById('intro-people').style.color=people.col;
   document.getElementById('intro-year').textContent=evYear+' e.Kr.';
+  document.getElementById('intro-origin').textContent='📍 Ursprung: '+people.origin;
   document.getElementById('intro-text').textContent=people.intro;
 
   card.classList.add('show');
@@ -1718,8 +1762,18 @@ document.getElementById('splash-play').addEventListener('click',()=>{
 });
 
 // Autoplay: sorted event years, step through with pauses
-const AUTOPLAY_SPEED=2500; // ms per event
+const AUTOPLAY_SPEED=2500;       // ms per event (normal)
+const AUTOPLAY_SPEED_INTRO=7000; // ms when a new people intro card pops up
 let apTimer=null, apIdx=0, apPlaying=false;
+
+// Returns true if jumping to year y will trigger a new peoples intro card
+function introCardWillShow(y){
+  return PEOPLES.some(p=>{
+    if(introPlayed.has(p.id)) return false;
+    const firstEv=EVS.filter(e=>p.evIds.includes(e.id)).sort((a,b)=>a.year-b.year)[0];
+    return firstEv && firstEv.year===y;
+  });
+}
 
 function startAutoplay(){
   const evYears=[...new Set(EVS.map(e=>e.year))].sort((a,b)=>a-b);
@@ -1733,6 +1787,7 @@ function startAutoplay(){
       stopAutoplay(); return;
     }
     const y=evYears[apIdx];
+    const delay=introCardWillShow(y) ? AUTOPLAY_SPEED_INTRO : AUTOPLAY_SPEED;
     jumpToYear(y);
     // Find and open panel for this year
     const ev=EVS.find(e=>e.year===y);
@@ -1742,11 +1797,11 @@ function startAutoplay(){
     prog.style.width='0%';
     prog.style.transition='none';
     requestAnimationFrame(()=>{
-      prog.style.transition=`width ${AUTOPLAY_SPEED}ms linear`;
+      prog.style.transition=`width ${delay}ms linear`;
       prog.style.width='100%';
     });
     apIdx++;
-    apTimer=setTimeout(step, AUTOPLAY_SPEED);
+    apTimer=setTimeout(step, delay);
   }
   step();
 }
@@ -1772,14 +1827,15 @@ function toggleAutoplay(){
     const step=()=>{
       if(!apPlaying||apIdx>=evYears.length){stopAutoplay();return;}
       const y=evYears[apIdx];
+      const delay=introCardWillShow(y) ? AUTOPLAY_SPEED_INTRO : AUTOPLAY_SPEED;
       jumpToYear(y);
       const ev=EVS.find(e=>e.year===y);
       if(ev) openPanel(ev);
       const prog=document.getElementById('autoplay-progress');
       prog.style.width='0%';prog.style.transition='none';
-      requestAnimationFrame(()=>{prog.style.transition=`width ${AUTOPLAY_SPEED}ms linear`;prog.style.width='100%';});
+      requestAnimationFrame(()=>{prog.style.transition=`width ${delay}ms linear`;prog.style.width='100%';});
       apIdx++;
-      apTimer=setTimeout(step,AUTOPLAY_SPEED);
+      apTimer=setTimeout(step,delay);
     };
     step();
   }
