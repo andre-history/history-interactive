@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Världens äldsta civilisationer, 3500–2000 f.Kr.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #12100d;
+  --bg2: #1c1812;
+  --bg3: #24201a;
+  --border: #3a3025;
+  --border2: #4e4030;
+  --text: #e2d9c5;
+  --text2: #b0a086;
+  --text3: #6e5e46;
+  --meso: #c0701e;
+  --meso-l: #e09040;
+  --egypt: #c9a030;
+  --egypt-l: #e8c050;
+  --indus: #3e8f84;
+  --indus-l: #52b0a4;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.75;
+  min-height: 100vh;
+}
+
+/* Stone texture via CSS pattern */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.012) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.008) 40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 64px 40px 80px;
+}
+
+/* ── HEADER ── */
+header {
+  text-align: center;
+  margin-bottom: 72px;
+}
+
+.eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--egypt);
+  margin-bottom: 18px;
+}
+
+h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(24px, 3.5vw, 44px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 18px;
+  color: var(--text);
+}
+
+.subtitle {
+  font-style: italic;
+  color: var(--text2);
+  font-size: 1.05em;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.header-rule {
+  width: 220px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--egypt), transparent);
+  margin: 28px auto 0;
+}
+
+/* ── SECTION TITLES ── */
+.section-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 24px;
+}
+
+/* ── TIMELINE ── */
+.timeline-wrap {
+  margin-bottom: 56px;
+}
+
+.date-ruler {
+  position: relative;
+  height: 36px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+  margin-left: 0;
+}
+
+.date-tick {
+  position: absolute;
+  transform: translateX(-50%);
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.date-tick-line {
+  width: 1px;
+  height: 10px;
+  background: var(--border2);
+}
+
+.date-tick-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  color: var(--text3);
+  white-space: nowrap;
+  position: absolute;
+  bottom: 14px;
+  transform: translateX(-50%);
+}
+
+/* ── CIVILISATION ROWS ── */
+.civ-block {
+  margin-bottom: 6px;
+}
+
+.arrow-row {
+  position: relative;
+  height: 52px;
+  margin-bottom: 10px;
+}
+
+.arrow-band {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+}
+
+.arrow-body {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-radius: 3px 0 0 3px;
+  min-width: 0;
+}
+
+.arrow-head-shape {
+  flex-shrink: 0;
+  width: 0;
+  height: 0;
+  align-self: center;
+}
+
+.civ-name-on-arrow {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.88);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── TOPIC BUTTONS ── */
+.topic-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.topic-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.18s;
+}
+
+.topic-btn:hover {
+  color: var(--text);
+  border-color: var(--text3);
+}
+
+.topic-btn.active {
+  color: #fff;
+}
+
+/* ── EXPANDABLE STONE TABLET ── */
+.tablet-wrap {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), margin 0.3s;
+  margin-top: 0;
+}
+
+.tablet-wrap.open {
+  max-height: 560px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.tablet {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 26px 30px 28px;
+  position: relative;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 6px 24px rgba(0,0,0,0.5);
+}
+
+.tablet-top-bar {
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+}
+
+.tablet-title {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tablet-content {
+  color: var(--text2);
+  font-size: 0.97em;
+  line-height: 1.82;
+}
+
+.tablet-content p { margin-bottom: 12px; }
+.tablet-content p:last-child { margin-bottom: 0; }
+.tablet-content strong { color: var(--text); font-weight: 600; }
+.tablet-content em { color: var(--text); }
+
+.callout {
+  border-left: 3px solid;
+  padding: 11px 18px;
+  margin: 16px 0;
+  background: rgba(255,255,255,0.025);
+  font-style: italic;
+  color: #c4b89a;
+  border-radius: 0 2px 2px 0;
+}
+
+.civ-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 22px 0 24px;
+  opacity: 0.5;
+}
+
+/* ── COMPARISON TABLE ── */
+.comparison-section { margin-top: 60px; }
+
+.comp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  gap: 1px;
+  background: var(--border);
+}
+
+.comp-col {
+  background: var(--bg2);
+  padding: 22px 20px;
+}
+
+.comp-col-head {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid;
+}
+
+.comp-item { margin-bottom: 13px; }
+
+.comp-lbl {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 2px;
+}
+
+.comp-val {
+  font-size: 0.9em;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+/* ── KNOWLEDGE GAPS ── */
+.gaps-section { margin-top: 56px; }
+
+.gap-note {
+  font-style: italic;
+  color: var(--text3);
+  font-size: 0.88em;
+  margin-bottom: 22px;
+}
+
+.gap-row {
+  display: grid;
+  grid-template-columns: 220px 1fr 44px 200px;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 13px;
+}
+
+.gap-label-txt {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  color: var(--text2);
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+
+.gap-track {
+  height: 11px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.gap-fill {
+  height: 100%;
+  border-radius: 1px;
+  opacity: 0.85;
+  width: 0;
+  transition: width 1.2s ease;
+}
+
+.gap-pct {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  color: var(--text3);
+  text-align: right;
+}
+
+.gap-note-txt {
+  font-style: italic;
+  color: var(--text3);
+  font-size: 0.82em;
+}
+
+/* ── FOOTER ── */
+footer {
+  margin-top: 80px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text3);
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+/* ── HEADER IMAGE ── */
+.header-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin-bottom: 48px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.header-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0.7;
+  transition: opacity 0.4s;
+}
+
+.header-img-wrap img:hover { opacity: 0.85; }
+
+.header-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(18,16,13,0.1) 0%, rgba(18,16,13,0.75) 100%);
+  pointer-events: none;
+}
+
+/* ── PLACEHOLDER (visas när ingen bild finns) ── */
+.img-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--bg3);
+  border: 1px dashed var(--border2);
+  border-radius: 3px;
+  color: var(--text3);
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.img-placeholder .ph-icon {
+  font-size: 28px;
+  opacity: 0.35;
+  line-height: 1;
+}
+
+.img-placeholder .ph-name {
+  opacity: 0.6;
+}
+
+.img-placeholder .ph-dims {
+  font-size: 9px;
+  opacity: 0.35;
+  letter-spacing: 1px;
+}
+
+/* ── TABLET IMAGES ── */
+.tablet-img-wrap {
+  width: 100%;
+  height: 180px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.tablet-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0.75;
+  transition: opacity 0.4s;
+}
+
+.tablet-img-wrap img:hover { opacity: 0.9; }
+
+/* ── TAB NAVIGATION ── */
+.tab-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+
+.tab-nav-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  gap: 0;
+}
+
+.tab-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text3);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 18px 24px 16px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  margin-bottom: -1px;
+  white-space: nowrap;
+}
+
+.tab-btn:hover { color: var(--text2); }
+
+.tab-btn.active {
+  color: var(--egypt-l);
+  border-bottom-color: var(--egypt);
+}
+
+/* ── TAB PANELS ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.empty-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 16px;
+  text-align: center;
+}
+
+.empty-panel-icon {
+  font-size: 32px;
+  opacity: 0.15;
+  line-height: 1;
+}
+
+.empty-panel-title {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.empty-panel-sub {
+  font-style: italic;
+  color: var(--text3);
+  font-size: 0.9em;
+}
+
+@media (max-width: 680px) {
+  .wrap { padding: 40px 20px 60px; }
+  .gap-row { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+  .gap-label-txt { grid-column: 1 / -1; }
+  .gap-note-txt { display: none; }
+  .comp-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<nav class="tab-nav">
+  <div class="tab-nav-inner">
+    <button class="tab-btn active" data-tab="1">Världens äldsta civilisationer</button>
+    <button class="tab-btn" data-tab="2">Tab 2</button>
+    <button class="tab-btn" data-tab="3">Tab 3</button>
+  </div>
+</nav>
+
+<div class="tab-panel active" id="panel-1">
+<div class="wrap">
+
+  <header>
+    <!-- Header image: images/header-civilisationer.webp, 1440×500px -->
+    <div class="header-img-wrap" style="height:220px;margin-bottom:40px;">
+      <img
+        src="images/header-civilisationer.webp"
+        alt="Artefakter från Mesopotamien, Egypten och Indusdalen"
+        onerror="this.style.display='none';this.parentElement.classList.add('img-placeholder');"
+      >
+      <div class="header-img-overlay"></div>
+    </div>
+    <script>
+      (function(){
+        var hw = document.querySelector('.header-img-wrap');
+        if (hw.classList.contains('img-placeholder')) {
+          hw.innerHTML = '<div class="ph-icon">◻</div><div class="ph-name">header-civilisationer.webp</div><div class="ph-dims">1440 × 500 px</div>';
+        }
+      })();
+    </script>
+
+    <div class="eyebrow">Historiens vagga · Oberoende uppkomst · Tre kontinenter</div>
+    <h1>Världens äldsta civilisationer</h1>
+    <p class="subtitle">Hur städer, skrift och styre uppstod oberoende av varandra på tre kontinenter</p>
+    <div class="header-rule"></div>
+  </header>
+
+  <section class="timeline-wrap">
+    <div class="section-label">Kronologisk tidslinje · Klicka på ett ämne för att utforska</div>
+    <div class="date-ruler" id="dateRuler"></div>
+    <div id="civRows"></div>
+  </section>
+
+  <section class="comparison-section">
+    <div class="section-label">Jämförelse · Politisk organisation</div>
+    <div class="comp-grid">
+      <div class="comp-col" id="comp-meso"></div>
+      <div class="comp-col" id="comp-egypt"></div>
+      <div class="comp-col" id="comp-indus"></div>
+    </div>
+  </section>
+
+  <section class="gaps-section">
+    <div class="section-label">Kunskapsluckor · Hur mycket vet vi egentligen?</div>
+    <p class="gap-note">Pedagogisk uppskattning, inte exakta tal, av hur stor del av historien vi kan rekonstruera</p>
+    <div id="gapBars"></div>
+  </section>
+
+  <footer>
+    Baserat på arkeologiska och historiska källor &middot; Gymnasium Historia 1b &middot; andre-history.github.io
+  </footer>
+</div>
+</div>
+
+<div class="tab-panel" id="panel-2">
+  <div class="wrap empty-panel">
+    <div class="empty-panel-icon">◻</div>
+    <div class="empty-panel-title">Tab 2</div>
+    <p class="empty-panel-sub">Innehåll under uppbyggnad</p>
+  </div>
+</div>
+
+<div class="tab-panel" id="panel-3">
+  <div class="wrap empty-panel">
+    <div class="empty-panel-icon">◻</div>
+    <div class="empty-panel-title">Tab 3</div>
+    <p class="empty-panel-sub">Innehåll under uppbyggnad</p>
+  </div>
+</div>
+
+<script>
+const START = 3500, END = 2000, RANGE = START - END;
+const pct = y => ((START - y) / RANGE * 100).toFixed(3) + '%';
+
+const civs = [
+  {
+    id: 'meso',
+    img: 'images/civ-mesopotamien.webp',
+    imgAlt: 'Kilskriftstavla från Sumer, ca 3000 f.Kr.',
+    name: 'Mesopotamien / Sumer',
+    startYear: 3500,
+    color: '#c0701e',
+    colorL: '#e09040',
+    topics: [
+      {
+        label: 'Uppkomst',
+        title: 'Uppkomst: Uruk och de första städerna',
+        html: `<p>Sumer var hem för världens äldsta kända städer. <strong>Uruk</strong> (nutidens Warka i södra Irak) växte fram omkring <strong>3500–3000 f.Kr.</strong> till en metropol med uppskattningsvis 50 000 invånare. Det var en av mänsklighetens första verkligt urbana miljöer.</p>
+        <div class="callout" style="border-color:#c0701e">De alluviala slätterna kring Tigris och Eufrat var otroligt bördiga men krävde storskalig samverkan: bevattningskanaler och flödeskontroll som ingen enskild by klarade ensam; städerna var en lösning på ett ingenjörsproblem.</div>
+        <p>Det unika med Sumer var att <strong>inte en enda stad</strong> dominerade hela regionen. Istället uppstod ett tätt nätverk av rivaliserande stadsstater: Ur, Uruk, Lagash, Nippur och Eridu, var och en med egna skyddsgudar och egna dynastier.</p>`
+      },
+      {
+        label: 'Politisk struktur',
+        title: 'Styre: från tempel till lugal',
+        html: `<p>Makten i de mesopotamiska städerna var från början <strong>religiös</strong>. Stadens resurser: jord, boskap och säd, som betraktades som gudens egendom. Prästerskapet administrerade det gudomliga hushållet åt gudens räkning.</p>
+        <div class="callout" style="border-color:#c0701e">Denna "teokratiska socialism" var ingen ideologi utan ett administrativt system. Templet var stadens bank, skattemyndighet och arbetsförmedling i ett.</div>
+        <p>Med ökad konflikt mellan städer uppstod <em>lugalen</em>, bokstavligen "den store mannen", en militärledare som successivt tog kontroll över det religiösa och sekulära. Mesopotamien pendlade aldrig mot en centraliserad enhetsstat; rivaliteten var inbyggd i systemets DNA.</p>`
+      },
+      {
+        label: 'Kilskriften',
+        title: 'Skrift: kilskriftens uppkomst',
+        html: `<p>Kilskriften uppstod ur ett system med <strong>lertokens</strong>, små figurer av lera som symboliserade korn, boskap och oljekrus. Dessa tokens trycktes in i ett kuvert av lera. Logiken var enkel: om man ändå tryckte in symbolerna, varför inte göra utan kuvertet?</p>
+        <div class="callout" style="border-color:#c0701e">Skriften uppfanns inte som ett konstnärligt projekt; den uppfanns för att hålla koll på vete och getter. Litteraturen kom som bieffekt.</div>
+        <p>Yrket skrivare (<em>dubsar</em>) var högt ansett och krävde år av utbildning i "tavelhuset" <em>edubba</em>. Den <strong>konformade rationsskålen</strong>, massproducerad för att dela ut dagliga ransoner, är beviset på att byråkratin föregick litteraturen.</p>`
+      },
+      {
+        label: 'Vardagsliv',
+        title: 'Vardagsliv: rationsskålar och trånga gränder',
+        html: `<p>Den enklaste arkeologiska symbolen för Sumer är den <strong>konformade rationsskålen</strong>: massproducerad, standardiserad, utan estetiska ambitioner. Den delades ut till tusentals tempelarbetare som fick sin dagliga ranson korn och olja.</p>
+        <p>Stadsmiljön var tät och livlig. Hus pressades tätt mot varandra längs smala gränder. Familjeliv, handel och religiösa ceremonier samsades om samma ytor.</p>
+        <div class="callout" style="border-color:#c0701e">Skriften berättar nästan ingenting om vanliga människors liv; tavlorna handlar om transaktioner och gudstjänster. Det vi vet om vardagen kommer mestadels från det arkeologerna hittar i sopgropar och under husens golv.</div>`
+      },
+      {
+        label: 'Kunskapsluckor',
+        title: 'Kunskapsluckor: vad vi inte vet',
+        html: `<p>Trots tusentals bevarade lertavlor är bilden fragmentarisk. De tidiga bosättningslagren från 4000–3000 f.Kr. ligger begravda under <strong>meters tjockt slam</strong> som ackumulerats i årtusenden, och under den moderna grundvattennivån.</p>
+        <p>Lertavlornas dominans som källa snedvrider bilden: vi vet mycket om tempelekonomin och kungadynastierna, men nästan ingenting om vad vanliga hushåll tänkte, trodde och kände. <strong>Skriften var inte ett demokratiskt medium.</strong></p>
+        <div class="callout" style="border-color:#c0701e">En avgörande fråga förblir öppen: hur fungerade beslutsfattandet i de tidiga städerna, innan lugalen uppstod? Inskrifterna är tydliga på resultat men tysta om processen.</div>`
+      }
+    ]
+  },
+  {
+    id: 'egypt',
+    img: 'images/civ-egypten.webp',
+    imgAlt: 'Hieroglyfer i relief, Karnak-templet',
+    name: 'Forndynastiska Egypten',
+    startYear: 3100,
+    color: '#c9a030',
+    colorL: '#e8c050',
+    topics: [
+      {
+        label: 'Uppkomst',
+        title: 'Uppkomst: Narmers enande ca 3100 f.Kr.',
+        html: `<p>Omkring <strong>3100 f.Kr.</strong> enades Övre och Nedre Egypten under en enda härskare, traditionellt identifierad som <em>Narmer</em>, vars segerpaletta är ett av forntidens mest kända arkeologiska föremål.</p>
+        <div class="callout" style="border-color:#c9a030">Nilen var inte bara en flod; den var Egyptens ryggrad, kommunikationsled, kalendersystem och religiösa centrum i ett. Varje år upprepades skapelsen: floden drog sig tillbaka, lämnade bördigt slam, och livet återvände.</div>
+        <p>Till skillnad från Mesopotamiens krig mellan stadsstater valde Egypten en annan väg: ett <strong>sammanhållet land</strong> längs hela Nilens sträcka. Geografin möjliggjorde det: floden gjorde transporten snabb och tillförlitlig.</p>`
+      },
+      {
+        label: 'Politisk struktur',
+        title: 'Styre: faraon som levande gud och Ma\'at',
+        html: `<p>Faraon var inte bara en konung; han var en <strong>levande gud</strong>, personifieringen av Horus i livet och Osiris i döden. Denna ideologi var inte bara religiös; den var statsideologi i sin renaste form.</p>
+        <p>Centralt i det egyptiska världssynsättet var begreppet <em>Ma'at</em>, den kosmiska ordningen, rättvisan och balansen. Faraons uppgift var att upprätthålla Ma'at. Kaos (<em>isfet</em>) var det yttersta hotet.</p>
+        <div class="callout" style="border-color:#c9a030">Den egyptiska centralstaten var historiens mest uthålliga politiska konstruktion. Med ett par undantag styrde faraonerna ett sammanhållet Egypten i nästan 3 000 år, längre än det kristna tideräkningens hela historia.</div>`
+      },
+      {
+        label: 'Hieroglyferna',
+        title: 'Skrift: hieroglyfer, papyrus och det dubbla systemet',
+        html: `<p>Det egyptiska skriftsystemet var dualt: <strong>hieroglyferna</strong> var monumentalskriften, huggen i sten och målad i gravar, medan den kursiva <em>hieratiska</em> stilen användes för administrativ prosa på papyrus.</p>
+        <div class="callout" style="border-color:#c9a030">Papyrus var ett revolutionerande skrivmaterial: lätt, relativt billigt och portabelt. Det möjliggjorde en rörlig byråkrati som kunde följa med armén och administratörerna ut i fälten.</div>
+        <p>Men papyrus är organiskt och förgängligt. Det enorma lejonparten av Egyptens litterära produktion har ruttnat bort i fuktig jord. Det vi har kvar är det som hamnade i ökensanden: ett <strong>geografiskt urval</strong> snarare än ett representativt urval.</p>`
+      },
+      {
+        label: 'Vardagsliv',
+        title: 'Vardagsliv: bönder, korvée och pyramidbygge',
+        html: `<p>För de allra flesta egyptier, uppskattningsvis 90 % av befolkningen, handlade livet om jordbruk längs Nilen. Bönder betalade skatt i naturaprodukter och var underkastade <em>corvée</em>: obligatoriskt arbete åt staten.</p>
+        <p>Pyramiderna byggdes inte av slavar; det är en seglivad myt. De byggdes av <strong>organiserade skift av betalda och försörjda arbetare</strong>, rekryterade under översvämningssäsongen när fälten stod under vatten.</p>
+        <div class="callout" style="border-color:#c9a030">Arkeologer har hittat arbetarnas egna gravar nära pyramiderna. De var välnärda, fick medicinsk vård, och begravdes med heder, ett tecken på att arbetet ansågs meningsfullt snarare än enbart tvingat.</div>`
+      },
+      {
+        label: 'Kunskapsluckor',
+        title: 'Kunskapsluckor: det förlorade Nildeltat',
+        html: `<p>Paradoxen med Egypten: vi vet enormt mycket om de <strong>döda</strong>: gravar, mumier och gravtexter, men relativt lite om hur de levande faktiskt organiserade sin vardag utanför templen och palatsen.</p>
+        <p>Den största geografiska kunskapsluckan är <strong>Nildeltats antika städer</strong>. Deltats mark har i årtusenden odlats intensivt och de tidiga bosättningslagren är begravda under slam och moderna städer. Mängder av historiska städer är sannolikt oåterkalleligen förlorade.</p>
+        <div class="callout" style="border-color:#c9a030">Egyptens historia skrevs länge av europeiska arkeologer med europeiska prioriteringar. Det är först på senare decennier som man systematiskt börjat fråga: vad visste de egna afrikanerna om sin historia, och hur skiljer sig det berättade från det vi grävt fram?</div>`
+      }
+    ]
+  },
+  {
+    id: 'indus',
+    img: 'images/civ-indusdalen.webp',
+    imgAlt: 'Indussigill med enhörning från Mohenjo-daro, ca 2500 f.Kr.',
+    name: 'Indusdalens civilisation',
+    startYear: 2500,
+    color: '#3e8f84',
+    colorL: '#52b0a4',
+    topics: [
+      {
+        label: 'Uppkomst',
+        title: 'Uppkomst: en civilisation utan namn',
+        html: `<p>Indusdalens civilisation nådde sin mogna fas omkring <strong>2500 f.Kr.</strong> och täckte ett geografiskt område som var <em>större</em> än både Mesopotamien och Egypten — ett faktum som sällan tas upp i skolböcker. De två stora metropolerna var <strong>Harappa</strong> och <strong>Mohenjo-daro</strong>.</p>
+        <div class="callout" style="border-color:#3e8f84">Vi vet inte vad de kallade sig själva. Vi vet inte vad de kallade sina städer. Vi vet inte vad de trodde på. Skriften är inte dechiffrerad, och utan den saknar vi direkt tillgång till hur de förstod sin egen värld.</div>
+        <p>Det vi vet härstammar uteslutande från arkeologi: byggnader, keramik, sigillstenar och den infrastruktur som avslöjar en extraordinär grad av teknisk och social organisation.</p>`
+      },
+      {
+        label: 'Politisk struktur',
+        title: 'Styre: den "huvudlösa" civilisationen',
+        html: `<p>Indusdalens civilisation uppvisar en djupgående paradox: <strong>extremt hög standardisering</strong> utan tydliga tecken på centraliserad maktutövning. Tegelstenar hade exakt samma proportioner över ett område lika stort som Centraleuropa. Viktsystem var identiska från stad till stad.</p>
+        <p>Men: <strong>inga palats</strong> har hittats. Inga kungagravar. Inga triumfmonument. Inga bilder av krigare, erövring eller gudomliga härskare.</p>
+        <div class="callout" style="border-color:#3e8f84">Forskare kallar det ibland en "acephalous" (huvudlös) stat, ett samhälle med hög grad av samordning men utan den synliga koncentrationen av makt och rikedom vi ser i Egypten och Mesopotamien. Hur det fungerade är en av forntidens stora öppna frågor.</div>`
+      },
+      {
+        label: 'Indus-skriften',
+        title: 'Skrift: det olösta systemet',
+        html: `<p>Indus-skriften består av ungefär <strong>400 distinkta tecken</strong>, piktografiska symboler primärt funna på sigillstenar av täljsten. Dessa sigill användes troligen vid handel och identifikation.</p>
+        <p>Trots decennier av forskning och datoranalys förblir skriften otolkad. Orsakerna är flera: inskrifterna är extremt <strong>korta</strong> (ofta 5–6 tecken), det finns inga kända parallelltexter på kända språk, och det underliggande språket är okänt.</p>
+        <div class="callout" style="border-color:#3e8f84">Otolkad skrift är inte detsamma som primitiv skrift. Det faktum att vi inte förstår den säger mer om våra egna begränsningar som forskare än om systemets komplexitet.</div>`
+      },
+      {
+        label: 'Vardagsliv',
+        title: 'Vardagsliv: hygien som statsideologi',
+        html: `<p>Det mest slående med Indusdalens städer är deras <strong>sanitära infrastruktur</strong>. Nästan varje hus i Mohenjo-daro hade en privat brunn, ett badrum, och var kopplat till ett avancerat avloppssystem med täckta dräneringsrör av tegel.</p>
+        <div class="callout" style="border-color:#3e8f84">Standarden för vatten och avlopp nåddes inte igen i Europa förrän under det sena 1800-talets sanitetsrevolution, mer än 3 500 år senare.</div>
+        <p>Den sociala skiktningen verkar ha varit relativt <strong>jämlik</strong> jämfört med Egypten och Mesopotamien; husens storlek varierar, men inte i den dramatiska grad som pekar på extrem koncentration av rikedom hos en elit.</p>`
+      },
+      {
+        label: 'Kunskapsluckor',
+        title: 'Kunskapsluckor: civilisationen som tystnat',
+        html: `<p>Indusdalens civilisation upphörde gradvis under <strong>1900–1700 f.Kr.</strong> utan att vi vet varför. Teorier inkluderar klimatförändringar, monsunförskjutningar, flodernas kursändringar och epidemier, men inget tydligt svar har framkommit.</p>
+        <p>Det allvarligaste kunskapsproblemet är skriftens otolkbarhet. Utan den vet vi: inget om deras gudar och religiösa föreställningar, inga namn på härskare eller städer, ingen politisk historia, inget om hur de tänkte om sig själva.</p>
+        <div class="callout" style="border-color:#3e8f84">Vi har en av historiens mest imponerande materiella civilisationer, och inget inre liv att matcha den mot. Det gör Indusdalen till en unik arkeologisk situation: en civilisation vi kan mäta men inte höra.</div>`
+      }
+    ]
+  }
+];
+
+// ── Date ruler ──
+const ruler = document.getElementById('dateRuler');
+[3500, 3000, 2500, 2000].forEach(year => {
+  const el = document.createElement('div');
+  el.className = 'date-tick';
+  el.style.left = pct(year);
+  el.innerHTML = `<span class="date-tick-label">${year} f.Kr.</span><div class="date-tick-line"></div>`;
+  ruler.appendChild(el);
+});
+
+// ── Civ rows ──
+const rowsContainer = document.getElementById('civRows');
+
+civs.forEach(civ => {
+  const startPct = ((START - civ.startYear) / RANGE * 100);
+  const widthPct = 100 - startPct;
+  const arrowH = 26;
+
+  const block = document.createElement('div');
+  block.className = 'civ-block';
+
+  // Arrow row
+  const arrowRow = document.createElement('div');
+  arrowRow.className = 'arrow-row';
+  arrowRow.innerHTML = `
+    <div class="arrow-band" style="left:${startPct}%;width:${widthPct}%;">
+      <div class="arrow-body" style="background:linear-gradient(90deg,${civ.color}e0,${civ.colorL}c0);flex:1;">
+        <span class="civ-name-on-arrow">${civ.name}</span>
+      </div>
+      <div class="arrow-head-shape" style="
+        border-top:${arrowH}px solid transparent;
+        border-bottom:${arrowH}px solid transparent;
+        border-left:${arrowH}px solid ${civ.colorL}c0;
+      "></div>
+    </div>`;
+  block.appendChild(arrowRow);
+
+  // Topic buttons
+  const topicRow = document.createElement('div');
+  topicRow.className = 'topic-row';
+  topicRow.style.paddingLeft = startPct + '%';
+
+  // Tablet
+  const tabletWrap = document.createElement('div');
+  tabletWrap.className = 'tablet-wrap';
+
+  const tablet = document.createElement('div');
+  tablet.className = 'tablet';
+  tablet.innerHTML = `
+    <div class="tablet-top-bar" style="background:${civ.color};"></div>
+    <div class="tablet-img-wrap">
+      <img
+        src="${civ.img}"
+        alt="${civ.imgAlt}"
+        onerror="
+          this.style.display='none';
+          var ph=document.createElement('div');
+          ph.className='img-placeholder';
+          ph.style.height='180px';
+          ph.innerHTML='<div class=\\'ph-icon\\'>◻</div><div class=\\'ph-name\\'>${civ.img.split('/')[1]}</div><div class=\\'ph-dims\\'>800 × 480 px</div>';
+          this.parentElement.appendChild(ph);
+        "
+      >
+    </div>
+    <div class="tablet-title" style="color:${civ.colorL};"></div>
+    <div class="tablet-content"></div>`;
+  tabletWrap.appendChild(tablet);
+
+  let openTopic = null;
+
+  civ.topics.forEach(topic => {
+    const btn = document.createElement('button');
+    btn.className = 'topic-btn';
+    btn.textContent = topic.label;
+
+    btn.addEventListener('click', () => {
+      if (openTopic === topic.label) {
+        tabletWrap.classList.remove('open');
+        btn.classList.remove('active');
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+        openTopic = null;
+      } else {
+        topicRow.querySelectorAll('.topic-btn').forEach(b => {
+          b.classList.remove('active');
+          b.style.background = '';
+          b.style.borderColor = '';
+          b.style.color = '';
+        });
+        btn.classList.add('active');
+        btn.style.background = civ.color + '28';
+        btn.style.borderColor = civ.color;
+        btn.style.color = '#fff';
+
+        tablet.querySelector('.tablet-title').textContent = topic.title;
+        tablet.querySelector('.tablet-content').innerHTML = topic.html;
+
+        // Style callouts dynamically
+        tablet.querySelectorAll('.callout').forEach(c => {
+          c.style.borderLeftColor = civ.colorL;
+        });
+
+        tabletWrap.classList.add('open');
+        openTopic = topic.label;
+      }
+    });
+
+    topicRow.appendChild(btn);
+  });
+
+  block.appendChild(topicRow);
+  block.appendChild(tabletWrap);
+
+  const divider = document.createElement('div');
+  divider.className = 'civ-divider';
+  block.appendChild(divider);
+
+  rowsContainer.appendChild(block);
+});
+
+// ── Comparison table ──
+const compData = [
+  {
+    id: 'comp-meso', color: '#c0701e', header: 'Mesopotamien',
+    tagline: 'Rivalitet som drivkraft',
+    items: [
+      { lbl: 'Statsform',         val: 'Stadsstater i ständig konkurrens med varandra' },
+      { lbl: 'Maktens ursprung',  val: 'Tempelekonomin, sedan militärledaren lugal' },
+      { lbl: 'Härskaren som',     val: 'Gudarnas representant på jorden' },
+      { lbl: 'Konfliktnivå',      val: 'Hög', badge: '#8a3a10' },
+      { lbl: 'Skriftsystem',      val: 'Kilskrift, dechiffrerad på 1800-talet' },
+      { lbl: 'Bestående arv',     val: 'Lagstiftning, matematik och världens äldsta litteratur', italic: true },
+    ]
+  },
+  {
+    id: 'comp-egypt', color: '#c9a030', header: 'Egypten',
+    tagline: 'Stabilitet som statsidé',
+    items: [
+      { lbl: 'Statsform',         val: 'Sammanhållen enhetsstat längs hela Nilen' },
+      { lbl: 'Maktens ursprung',  val: 'Gudomlig monarki med faraon i centrum' },
+      { lbl: 'Härskaren som',     val: 'Levande gud och väktare av den kosmiska ordningen Ma\'at' },
+      { lbl: 'Konfliktnivå',      val: 'Låg', badge: '#4a6a18' },
+      { lbl: 'Skriftsystem',      val: 'Hieroglyfer, dechiffrerade 1822' },
+      { lbl: 'Bestående arv',     val: 'Monumentalarkitektur, medicinvetenskap och kalender', italic: true },
+    ]
+  },
+  {
+    id: 'comp-indus', color: '#3e8f84', header: 'Indusdalen',
+    tagline: 'Ordning utan ett enda känt namn',
+    mystery: true,
+    items: [
+      { lbl: 'Statsform',         val: 'Troligen decentraliserad, kallad "huvudlös" av forskare' },
+      { lbl: 'Maktens ursprung',  val: 'Okänd. Inga palatsfynd, inga kungagravar' },
+      { lbl: 'Härskaren som',     val: 'Okänt. Inga triumfbilder eller gudomlighetsanspråk har hittats' },
+      { lbl: 'Konfliktnivå',      val: 'Okänd', badge: '#2a4050' },
+      { lbl: 'Skriftsystem',      val: 'Indus-skriften, ännu inte tolkad trots ett sekel av forskning' },
+      { lbl: 'Bestående arv',     val: 'Världens äldsta kända avloppsnät och en stadsplanering utan motstycke', italic: true },
+    ]
+  }
+];
+
+compData.forEach(col => {
+  const el = document.getElementById(col.id);
+  if (col.mystery) {
+    el.style.background = 'rgba(62,143,132,0.06)';
+    el.style.borderLeft = '2px solid #3e8f8440';
+  }
+  el.innerHTML = `
+    <div class="comp-col-head" style="color:${col.color};border-bottom-color:${col.color};">${col.header}</div>
+    <div style="font-style:italic;color:var(--text3);font-size:0.82em;margin:-10px 0 16px;font-family:'Crimson Text',serif;">${col.tagline}</div>
+    ${col.items.map(i => {
+      const valHtml = i.badge
+        ? `<span style="display:inline-block;background:${i.badge};color:#ddd;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:2px;">${i.val}</span>`
+        : i.italic
+          ? `<span style="font-style:italic;color:var(--text2);">${i.val}</span>`
+          : i.val;
+      return `
+        <div class="comp-item">
+          <div class="comp-lbl">${i.lbl}</div>
+          <div class="comp-val">${valHtml}</div>
+        </div>`;
+    }).join('')}`;
+});
+
+// ── Knowledge gaps ──
+const gaps = [
+  { lbl: 'Mesopotamien: textkällor', fill: 72, color: '#c0701e', note: 'Kilskrift dechiffrerad; tusentals tavlor bevarade' },
+  { lbl: 'Mesopotamien: vardagsliv', fill: 28, color: '#c0701e', note: 'Fokus på elit och tempel i källorna' },
+  { lbl: 'Egypten: överklass & kult', fill: 82, color: '#c9a030', note: 'Gravar, papyrus, monument i torrt klimat' },
+  { lbl: 'Egypten: vanliga bönder', fill: 22, color: '#c9a030', note: 'Lite material bevarat från vardagslivet' },
+  { lbl: 'Egypten: Nildeltats städer', fill: 8, color: '#c9a030', note: 'Täckta av slam och moderna städer' },
+  { lbl: 'Indusdalen: materiell kultur', fill: 52, color: '#3e8f84', note: 'Byggnader, verktyg, keramik, men ingen text' },
+  { lbl: 'Indusdalen: tänkande & tro', fill: 2, color: '#3e8f84', note: 'Skriften otolkad; nästan total blindfläck' },
+];
+
+const gapContainer = document.getElementById('gapBars');
+gaps.forEach(g => {
+  const row = document.createElement('div');
+  row.className = 'gap-row';
+  row.innerHTML = `
+    <div class="gap-label-txt">${g.lbl}</div>
+    <div class="gap-track"><div class="gap-fill" style="background:${g.color};" data-fill="${g.fill}"></div></div>
+    <div class="gap-pct">${g.fill}%</div>
+    <div class="gap-note-txt">${g.note}</div>`;
+  gapContainer.appendChild(row);
+});
+
+// Animate bars on scroll
+const animateBars = () => {
+  document.querySelectorAll('.gap-fill').forEach(bar => {
+    const rect = bar.closest('.gap-row').getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.9) {
+      bar.style.width = bar.dataset.fill + '%';
+    }
+  });
+};
+window.addEventListener('scroll', animateBars, { passive: true });
+animateBars();
+
+// ── Tab switching ──
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
