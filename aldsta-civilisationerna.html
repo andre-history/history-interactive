@@ -523,6 +523,17 @@ footer {
   border-bottom-color: var(--egypt);
 }
 
+.tab-era {
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: var(--text3);
+  display: block;
+  margin-top: 2px;
+  font-weight: 400;
+}
+
+.tab-btn.active .tab-era { color: var(--egypt); }
+
 /* ── TAB PANELS ── */
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
@@ -569,9 +580,9 @@ footer {
 <body>
 <nav class="tab-nav">
   <div class="tab-nav-inner">
-    <button class="tab-btn active" data-tab="1">Världens äldsta civilisationer</button>
-    <button class="tab-btn" data-tab="2">Tab 2</button>
-    <button class="tab-btn" data-tab="3">Tab 3</button>
+    <button class="tab-btn active" data-tab="1">De äldsta civilisationerna <span class="tab-era">3500–2000 f.Kr.</span></button>
+    <button class="tab-btn" data-tab="2">Den sammankopplade världen <span class="tab-era">2000–1200 f.Kr.</span></button>
+    <button class="tab-btn" data-tab="3">Järnålderns imperier <span class="tab-era">1200–300 f.Kr.</span></button>
   </div>
 </nav>
 
@@ -633,16 +644,16 @@ footer {
 <div class="tab-panel" id="panel-2">
   <div class="wrap empty-panel">
     <div class="empty-panel-icon">◻</div>
-    <div class="empty-panel-title">Tab 2</div>
-    <p class="empty-panel-sub">Innehåll under uppbyggnad</p>
+    <div class="empty-panel-title">Den sammankopplade världen · 2000–1200 f.Kr.</div>
+    <p class="empty-panel-sub">Babylon, Egyptens Nya rike, Nubien/Kush, Shang-Kina, olmekerna och bronsålderskollapsen</p>
   </div>
 </div>
 
 <div class="tab-panel" id="panel-3">
   <div class="wrap empty-panel">
     <div class="empty-panel-icon">◻</div>
-    <div class="empty-panel-title">Tab 3</div>
-    <p class="empty-panel-sub">Innehåll under uppbyggnad</p>
+    <div class="empty-panel-title">Järnålderns imperier · 1200–300 f.Kr.</div>
+    <p class="empty-panel-sub">Assyrien, Fenicien, Kushriket och Akemenidernas Persien</p>
   </div>
 </div>
 
