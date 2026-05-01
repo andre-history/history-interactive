@@ -712,7 +712,7 @@ footer {
   transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1);
 }
 
-.pillar.open .pillar-body { max-height: 500px; }
+.pillar.open .pillar-body { max-height: 800px; }
 
 .pillar-body-inner {
   border-top: 1px solid var(--border);
@@ -817,10 +817,11 @@ footer {
   font-size: 9px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  white-space: nowrap;
+  white-space: normal;
   flex-shrink: 0;
-  width: 130px;
+  width: 140px;
   color: var(--text3);
+  line-height: 1.5;
 }
 
 .legacy-node {
@@ -2578,7 +2579,7 @@ const chains = [
   },
   {
     color: '#2a5898',
-    source: 'Akemenidernas Persien',
+    source: 'Akemenidernas<br>Persien',
     nodes: [
       { text: 'Kungsvägen (2500 km)', tip: 'En välskött väg från Susa till Sardes med hästbytesstationer längs hela sträckan. En kurir kunde tillryggalägga hela vägen på sju dagar, vilket var revolutionerande.' },
       { text: 'Enhetlig valuta (daric)', tip: 'Persiens guldmynt, daric, accepterades över hela riket. En köpman i Egypten och en i Indien kunde göra affärer utan att behöva byta en massa olika betalningsmedel.' },
