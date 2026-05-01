@@ -985,8 +985,8 @@ footer {
 }
 
 </style>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <nav class="tab-nav">
@@ -1188,17 +1188,21 @@ footer {
         <div class="collapse-panel-title" style="color:#c9a030;">Nätverket på sin höjdpunkt · ca 1300 f.Kr.</div>
         <div id="map-before" style="width:100%;height:220px;border-radius:2px;overflow:hidden;position:relative;"></div>
         <div class="collapse-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#c9a030;"></div> Aktiv stormakt</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#c9a03040;border:1px dashed #c9a030;"></div> Perifera</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#4a9fd4;"></div> Egypten</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#e09040;"></div> Babylon</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#7b5ea7;"></div> Kush</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#c8c8a0;"></div> Hittiterna</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#70b870;"></div> Mykene</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#e07060;border:1px dashed #e07060;box-sizing:border-box;"></div> Shang (isolerat)</div>
         </div>
       </div>
       <div class="collapse-panel">
         <div class="collapse-panel-title" style="color:#8a3030;">Efter kollapsen · ca 1150 f.Kr.</div>
         <div id="map-after" style="width:100%;height:220px;border-radius:2px;overflow:hidden;position:relative;"></div>
         <div class="collapse-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#8a3030;"></div> Utplånad</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#c06030;"></div> Försvagad</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#7aaa55;"></div> Överlevde</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#cc2020;"></div> Utplånad (Hittiterna, Mykene)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#e08020;outline:2px dashed #f0a040;outline-offset:2px;"></div> Försvagad men överlevde (Babylon, Egypten)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#40c060;"></div> Klarade sig (Kush, Shang)</div>
         </div>
       </div>
     </div>
@@ -1720,43 +1724,43 @@ function initMap2() {
       });
       nodes.forEach(n => {
         L.circleMarker(n.latlng, {
-          radius: 9,
+          radius: n.radius || 9,
           fillColor: n.fill, color: n.stroke,
           weight: n.weight || 2, opacity: 1,
           fillOpacity: n.fillOpacity || 0.5,
           dashArray: n.dashArray || null
         }).addTo(m)
-        .bindTooltip(`<span style="font-family:'Cinzel',serif;font-size:10px;">${n.label} ${n.icon}</span>`,
-          { permanent: true, direction: 'top', className: 'collapse-tip', offset: [0, -6] });
+        .bindTooltip(`<span style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;">${n.label}</span>`,
+          { permanent: true, direction: 'top', className: 'collapse-tip', offset: [0, -8] });
       });
     }
 
     const beforeNodes = [
-      { latlng: [32.5, 44.4], fill: '#b85c1a', stroke: '#d97d3a', label: 'Babylon',    icon: '✓', fillOpacity: 0.6 },
-      { latlng: [26.0, 30.5], fill: '#c9a030', stroke: '#e8c050', label: 'Egypten',    icon: '✓', fillOpacity: 0.6 },
-      { latlng: [15.0, 32.5], fill: '#b05a3a', stroke: '#c87050', label: 'Kush',       icon: '✓', fillOpacity: 0.5 },
-      { latlng: [38.5, 35.5], fill: '#806040', stroke: '#a08050', label: 'Hittiterna', icon: '✓', fillOpacity: 0.5 },
-      { latlng: [37.5, 22.5], fill: '#5a6a3a', stroke: '#7a8a5a', label: 'Mykene',     icon: '✓', fillOpacity: 0.5 },
-      { latlng: [34.0, 113.0], fill: '#3a7a5e', stroke: '#5aaa7e', label: 'Shang',     icon: '~', fillOpacity: 0.3, dashArray: '3 3' },
+      { latlng: [32.5, 44.4],  fill: '#e09040', stroke: '#f0b060', label: 'Babylon',    icon: '', fillOpacity: 0.75, radius: 10 },
+      { latlng: [26.0, 30.5],  fill: '#4a9fd4', stroke: '#6abef4', label: 'Egypten',    icon: '', fillOpacity: 0.75, radius: 11 },
+      { latlng: [15.0, 32.5],  fill: '#7b5ea7', stroke: '#9b7ec7', label: 'Kush',       icon: '', fillOpacity: 0.7,  radius: 9  },
+      { latlng: [38.5, 35.5],  fill: '#c8c8a0', stroke: '#e8e8c0', label: 'Hittiterna', icon: '', fillOpacity: 0.7,  radius: 9  },
+      { latlng: [37.5, 22.5],  fill: '#70b870', stroke: '#90d890', label: 'Mykene',     icon: '', fillOpacity: 0.7,  radius: 9  },
+      { latlng: [34.0, 113.0], fill: '#e07060', stroke: '#f09080', label: 'Shang',      icon: '', fillOpacity: 0.45, radius: 8, dashArray: '4 3' },
     ];
     const beforeRoutes = [
-      { coords: [[32.5,44.4],[26.0,30.5]], color:'#c9a030', weight:2 },
-      { coords: [[26.0,30.5],[15.0,32.5]], color:'#c9a030', weight:2 },
-      { coords: [[32.5,44.4],[38.5,35.5]], color:'#c9a03070', weight:1.5, dash:'5 4' },
-      { coords: [[26.0,30.5],[38.5,35.5]], color:'#c9a03070', weight:1.5, dash:'5 4' },
-      { coords: [[38.5,35.5],[37.5,22.5]], color:'#c9a03050', weight:1.5, dash:'5 4' },
+      { coords: [[32.5,44.4],[26.0,30.5]], color:'#ffffffa0', weight:2 },
+      { coords: [[26.0,30.5],[15.0,32.5]], color:'#ffffffa0', weight:2 },
+      { coords: [[32.5,44.4],[38.5,35.5]], color:'#ffffff60', weight:1.5, dash:'5 4' },
+      { coords: [[26.0,30.5],[38.5,35.5]], color:'#ffffff60', weight:1.5, dash:'5 4' },
+      { coords: [[38.5,35.5],[37.5,22.5]], color:'#ffffff50', weight:1.5, dash:'5 4' },
     ];
     const afterNodes = [
-      { latlng: [32.5, 44.4], fill: '#b85c1a', stroke: '#b85c1a', label: 'Babylon',     icon: '⚡', fillOpacity: 0.25, dashArray: '4 3', weight: 1.5 },
-      { latlng: [26.0, 30.5], fill: '#c9a030', stroke: '#c9a030', label: 'Egypten',     icon: '⚡', fillOpacity: 0.2,  dashArray: '4 3', weight: 1.5 },
-      { latlng: [15.0, 32.5], fill: '#b05a3a', stroke: '#b05a3a', label: 'Kush',        icon: '✓', fillOpacity: 0.55 },
-      { latlng: [38.5, 35.5], fill: '#302020', stroke: '#806040', label: 'Hittiterna',  icon: '✕', fillOpacity: 0.1,  weight: 1 },
-      { latlng: [37.5, 22.5], fill: '#302020', stroke: '#806040', label: 'Mykene',      icon: '✕', fillOpacity: 0.1,  weight: 1 },
-      { latlng: [34.0, 113.0], fill: '#3a7a5e', stroke: '#5aaa7e', label: 'Shang',      icon: '✓', fillOpacity: 0.4 },
+      { latlng: [32.5, 44.4],  fill: '#e08020', stroke: '#f0a040', label: 'Babylon',    icon: '', fillOpacity: 0.5, dashArray: '5 3', weight: 2, radius: 10 },
+      { latlng: [26.0, 30.5],  fill: '#e08020', stroke: '#f0a040', label: 'Egypten',    icon: '', fillOpacity: 0.5, dashArray: '5 3', weight: 2, radius: 11 },
+      { latlng: [15.0, 32.5],  fill: '#40c060', stroke: '#60e080', label: 'Kush',       icon: '', fillOpacity: 0.75, radius: 9 },
+      { latlng: [38.5, 35.5],  fill: '#cc2020', stroke: '#ee4040', label: 'Hittiterna', icon: '', fillOpacity: 0.8,  radius: 9 },
+      { latlng: [37.5, 22.5],  fill: '#cc2020', stroke: '#ee4040', label: 'Mykene',     icon: '', fillOpacity: 0.8,  radius: 9 },
+      { latlng: [34.0, 113.0], fill: '#40c060', stroke: '#60e080', label: 'Shang',      icon: '', fillOpacity: 0.6,  radius: 8 },
     ];
     const afterRoutes = [
-      { coords: [[32.5,44.4],[26.0,30.5]], color:'#50202020', weight:1, dash:'2 5' },
-      { coords: [[32.5,44.4],[38.5,35.5]], color:'#50202020', weight:1, dash:'2 6' },
+      { coords: [[32.5,44.4],[26.0,30.5]], color:'#ffffff20', weight:1, dash:'3 5' },
+      { coords: [[32.5,44.4],[38.5,35.5]], color:'#ffffff15', weight:1, dash:'3 6' },
     ];
 
     makeCollapseMap('map-before', beforeNodes, beforeRoutes);
@@ -1782,27 +1786,33 @@ function initMap2() {
     document.head.appendChild(tipStyle);
 }
 
-// Initiera kartan när tab 2 aktiveras
-// Strategi: gör panel-2 kort synlig (men osynlig visuellt) vid sidladdning
-// så Leaflet kan mäta containern, initiera, sedan dölja igen.
-(function preInitMaps() {
+// Initiera kartor — vänta till allt (inklusive Leaflet) är laddat
+window.addEventListener('load', function() {
+  if (typeof L === 'undefined') {
+    console.warn('Leaflet ej tillgängligt');
+    return;
+  }
+
   const panel = document.getElementById('panel-2');
-  // Gör synlig men osynlig visuellt
+
+  // Gör panelen mätbar men osynlig
   panel.style.visibility = 'hidden';
-  panel.style.display = 'block';
-  panel.style.position = 'absolute';
+  panel.style.display    = 'block';
+  panel.style.position   = 'absolute';
   panel.style.pointerEvents = 'none';
 
+  // Två RAF-cykler garanterar att webbläsaren räknat ut layout
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       initMap2();
-      // Återställ till dold
-      panel.style.visibility = '';
-      panel.style.display = '';
-      panel.style.position = '';
+
+      // Återställ
+      panel.style.visibility   = '';
+      panel.style.display      = '';
+      panel.style.position     = '';
       panel.style.pointerEvents = '';
 
-      // invalidateSize när tabben faktiskt öppnas
+      // invalidateSize vid tab-klick
       document.querySelectorAll('.tab-btn').forEach(btn => {
         if (btn.dataset.tab === '2') btn.addEventListener('click', () => {
           requestAnimationFrame(() => {
@@ -1812,7 +1822,7 @@ function initMap2() {
       });
     });
   });
-})();
+});
 
 const nodeData = {
   babylon: {
