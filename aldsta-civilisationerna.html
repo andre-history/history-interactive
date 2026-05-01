@@ -1620,24 +1620,12 @@ function initMap2() {
   if (window._map2init) return;
   window._map2init = true;
 
-  const tileOpts = {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
-  };
-  const tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+  const TILE_URL  = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+  const TILE_OPTS = { attribution: '© OpenStreetMap © CARTO', subdomains: 'abcd', maxZoom: 19 };
+  function makeTiles(m) { L.tileLayer(TILE_URL, TILE_OPTS).addTo(m); }
 
-    // ── Huvudkarta ──
-    const map = L.map('map2', {      center: [20, 30],
-      zoom: 2,
-      minZoom: 1,
-      maxZoom: 5,
-      zoomControl: true,
-      attributionControl: true
-    });
-
-    const tileOpts2 = tileOpts;
-    L.tileLayer(tileUrl, tileOpts2).addTo(map);
+  const map = L.map('map2', { center: [20, 30], zoom: 2, minZoom: 1, maxZoom: 5 });
+  makeTiles(map);
 
     // Handelsleder
     const routes = [
@@ -1723,7 +1711,7 @@ function initMap2() {
         dragging: false, scrollWheelZoom: false, doubleClickZoom: false
       });
       document.getElementById(divId)._leaflet_map = m;
-      L.tileLayer(tileUrl, tileOpts).addTo(m);
+      makeTiles(m);
       routes.forEach(r => {
         L.polyline(r.coords, {
           color: r.color, weight: r.weight,
