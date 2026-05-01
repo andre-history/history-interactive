@@ -1731,17 +1731,17 @@ function initMap2() {
           dashArray: n.dashArray || null
         }).addTo(m)
         .bindTooltip(`<span style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;">${n.label}</span>`,
-          { permanent: true, direction: 'top', className: 'collapse-tip', offset: [0, -8] });
+          { permanent: true, direction: n.dir || 'top', className: 'collapse-tip', offset: n.offset || [0, -8] });
       });
     }
 
     const beforeNodes = [
-      { latlng: [32.5, 44.4],  fill: '#e09040', stroke: '#f0b060', label: 'Babylon',    icon: '', fillOpacity: 0.75, radius: 10 },
-      { latlng: [26.0, 30.5],  fill: '#4a9fd4', stroke: '#6abef4', label: 'Egypten',    icon: '', fillOpacity: 0.75, radius: 11 },
-      { latlng: [15.0, 32.5],  fill: '#7b5ea7', stroke: '#9b7ec7', label: 'Kush',       icon: '', fillOpacity: 0.7,  radius: 9  },
-      { latlng: [38.5, 35.5],  fill: '#c8c8a0', stroke: '#e8e8c0', label: 'Hittiterna', icon: '', fillOpacity: 0.7,  radius: 9  },
-      { latlng: [37.5, 22.5],  fill: '#70b870', stroke: '#90d890', label: 'Mykene',     icon: '', fillOpacity: 0.7,  radius: 9  },
-      { latlng: [34.0, 113.0], fill: '#e07060', stroke: '#f09080', label: 'Shang',      icon: '', fillOpacity: 0.45, radius: 8, dashArray: '4 3' },
+      { latlng: [32.5, 44.4],  fill: '#e09040', stroke: '#f0b060', label: 'Babylon',    icon: '', fillOpacity: 0.75, radius: 10, dir: 'right',  offset: [8, 0]   },
+      { latlng: [26.0, 30.5],  fill: '#4a9fd4', stroke: '#6abef4', label: 'Egypten',    icon: '', fillOpacity: 0.75, radius: 11, dir: 'left',   offset: [-8, 0]  },
+      { latlng: [15.0, 32.5],  fill: '#7b5ea7', stroke: '#9b7ec7', label: 'Kush',       icon: '', fillOpacity: 0.7,  radius: 9,  dir: 'right',  offset: [8, 0]   },
+      { latlng: [38.5, 35.5],  fill: '#c8c8a0', stroke: '#e8e8c0', label: 'Hittiterna', icon: '', fillOpacity: 0.7,  radius: 9,  dir: 'top',    offset: [0, -8]  },
+      { latlng: [37.5, 22.5],  fill: '#70b870', stroke: '#90d890', label: 'Mykene',     icon: '', fillOpacity: 0.7,  radius: 9,  dir: 'left',   offset: [-8, 0]  },
+      { latlng: [34.0, 113.0], fill: '#e07060', stroke: '#f09080', label: 'Shang',      icon: '', fillOpacity: 0.45, radius: 8,  dir: 'top',    offset: [0, -8], dashArray: '4 3' },
     ];
     const beforeRoutes = [
       { coords: [[32.5,44.4],[26.0,30.5]], color:'#ffffffa0', weight:2 },
@@ -1751,12 +1751,12 @@ function initMap2() {
       { coords: [[38.5,35.5],[37.5,22.5]], color:'#ffffff50', weight:1.5, dash:'5 4' },
     ];
     const afterNodes = [
-      { latlng: [32.5, 44.4],  fill: '#e08020', stroke: '#f0a040', label: 'Babylon',    icon: '', fillOpacity: 0.5, dashArray: '5 3', weight: 2, radius: 10 },
-      { latlng: [26.0, 30.5],  fill: '#e08020', stroke: '#f0a040', label: 'Egypten',    icon: '', fillOpacity: 0.5, dashArray: '5 3', weight: 2, radius: 11 },
-      { latlng: [15.0, 32.5],  fill: '#40c060', stroke: '#60e080', label: 'Kush',       icon: '', fillOpacity: 0.75, radius: 9 },
-      { latlng: [38.5, 35.5],  fill: '#cc2020', stroke: '#ee4040', label: 'Hittiterna', icon: '', fillOpacity: 0.8,  radius: 9 },
-      { latlng: [37.5, 22.5],  fill: '#cc2020', stroke: '#ee4040', label: 'Mykene',     icon: '', fillOpacity: 0.8,  radius: 9 },
-      { latlng: [34.0, 113.0], fill: '#40c060', stroke: '#60e080', label: 'Shang',      icon: '', fillOpacity: 0.6,  radius: 8 },
+      { latlng: [32.5, 44.4],  fill: '#e08020', stroke: '#f0a040', label: 'Babylon',    icon: '', fillOpacity: 0.5, dashArray: '5 3', weight: 2, radius: 10, dir: 'right',  offset: [8, 0]  },
+      { latlng: [26.0, 30.5],  fill: '#e08020', stroke: '#f0a040', label: 'Egypten',    icon: '', fillOpacity: 0.5, dashArray: '5 3', weight: 2, radius: 11, dir: 'left',   offset: [-8, 0] },
+      { latlng: [15.0, 32.5],  fill: '#40c060', stroke: '#60e080', label: 'Kush',       icon: '', fillOpacity: 0.75, radius: 9,                              dir: 'right',  offset: [8, 0]  },
+      { latlng: [38.5, 35.5],  fill: '#cc2020', stroke: '#ee4040', label: 'Hittiterna', icon: '', fillOpacity: 0.8,  radius: 9,                              dir: 'top',    offset: [0, -8] },
+      { latlng: [37.5, 22.5],  fill: '#cc2020', stroke: '#ee4040', label: 'Mykene',     icon: '', fillOpacity: 0.8,  radius: 9,                              dir: 'left',   offset: [-8, 0] },
+      { latlng: [34.0, 113.0], fill: '#40c060', stroke: '#60e080', label: 'Shang',      icon: '', fillOpacity: 0.6,  radius: 8,                              dir: 'top',    offset: [0, -8] },
     ];
     const afterRoutes = [
       { coords: [[32.5,44.4],[26.0,30.5]], color:'#ffffff20', weight:1, dash:'3 5' },
