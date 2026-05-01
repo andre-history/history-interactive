@@ -985,6 +985,7 @@ footer {
 }
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </style>
 </head>
 <body>
@@ -1616,12 +1617,16 @@ animateBars();
 
 // ── Leaflet-karta (tab 2) ──
 function initMap2() {
-  if (!document.getElementById('map2') || window._map2init) return;
+  if (window._map2init) return;
   window._map2init = true;
 
-  const script = document.createElement('script');
-  script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-  script.onload = () => {
+  const tileOpts = {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  };
+  const tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+
     // ── Huvudkarta ──
     const map = L.map('map2', {      center: [20, 30],
       zoom: 2,
@@ -1631,14 +1636,8 @@ function initMap2() {
       attributionControl: true
     });
 
-    const tileOpts = {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19
-    };
-    const tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
-
-    L.tileLayer(tileUrl, tileOpts).addTo(map);
+    const tileOpts2 = tileOpts;
+    L.tileLayer(tileUrl, tileOpts2).addTo(map);
 
     // Handelsleder
     const routes = [
@@ -1773,23 +1772,12 @@ function initMap2() {
     ];
 
     makeCollapseMap('map-before', beforeNodes, beforeRoutes);
+    document.getElementById('map-before')._leaflet_map.invalidateSize();
+
     makeCollapseMap('map-after',  afterNodes,  afterRoutes);
+    document.getElementById('map-after')._leaflet_map.invalidateSize();
 
-    // Spara referenser för invalidateSize vid tab-byte
-    window._leafletMaps = [
-      map,
-      L.map._instances ? null : null // collapse maps sköts via egen referens
-    ];
-
-    // invalidateSize direkt och vid resize
-    setTimeout(() => {
-      map.invalidateSize();
-      ['map-before','map-after'].forEach(id => {
-        const m = document.getElementById(id)._leaflet_map;
-        if (m) m.invalidateSize();
-      });
-    }, 100);
-
+    // Extra invalidation efter layout stabiliserat sig
     window._invalidateMaps = () => {
       try { map.invalidateSize(); } catch(e){}
       ['map-before','map-after'].forEach(id => {
@@ -1798,19 +1786,20 @@ function initMap2() {
       });
     };
 
+    setTimeout(window._invalidateMaps, 150);
+    setTimeout(window._invalidateMaps, 500);
+
     const tipStyle = document.createElement('style');
     tipStyle.textContent = `.collapse-tip { background: #1c1812cc !important; border: 1px solid #3a3025 !important; color: #e2d9c5 !important; box-shadow: none !important; padding: 2px 6px; font-size: 10px; white-space: nowrap; } .collapse-tip::before { border-top-color: #3a3025 !important; }`;
     document.head.appendChild(tipStyle);
-
-  };  // end script.onload
-  document.head.appendChild(script);
 }
 
 // Initiera kartan när tab 2 aktiveras
 document.querySelectorAll('.tab-btn').forEach(btn => {
   if (btn.dataset.tab === '2') btn.addEventListener('click', () => {
-    setTimeout(initMap2, 50);
-    setTimeout(() => { if (window._invalidateMaps) window._invalidateMaps(); }, 200);
+    setTimeout(initMap2, 80);
+    setTimeout(() => { if (window._invalidateMaps) window._invalidateMaps(); }, 400);
+    setTimeout(() => { if (window._invalidateMaps) window._invalidateMaps(); }, 900);
   });
 });
 
