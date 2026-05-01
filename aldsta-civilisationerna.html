@@ -1782,7 +1782,11 @@ function initMap2() {
     setTimeout(window._invalidateMaps, 500);
 
     const tipStyle = document.createElement('style');
-    tipStyle.textContent = `.collapse-tip { background: #1c1812cc !important; border: 1px solid #3a3025 !important; color: #e2d9c5 !important; box-shadow: none !important; padding: 2px 6px; font-size: 10px; white-space: nowrap; } .collapse-tip::before { border-top-color: #3a3025 !important; }`;
+    tipStyle.textContent = `
+      .collapse-tip { background: #1c1812cc !important; border: 1px solid #3a3025 !important; color: #e2d9c5 !important; box-shadow: none !important; padding: 2px 8px; font-size: 11px; white-space: nowrap; }
+      .collapse-tip::before,
+      .collapse-tip::after { display: none !important; }
+    `;
     document.head.appendChild(tipStyle);
 }
 
