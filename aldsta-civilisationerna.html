@@ -1587,7 +1587,7 @@ footer {
     <div class="section-label">Jämförelse · Välj ett eller flera imperier</div>
     <div class="radar-wrap">
       <div class="radar-svg-wrap">
-        <canvas id="radarCanvas" width="480" height="400"></canvas>
+        <canvas id="radarCanvas" width="540" height="420"></canvas>
       </div>
       <div>
         <div class="radar-controls" id="radarControls"></div>
@@ -2445,8 +2445,8 @@ empires.forEach(e => {
 const canvas = document.getElementById('radarCanvas');
 const ctx = canvas.getContext('2d');
 const W = canvas.width, H = canvas.height;
-const cx = W / 2, cy = H / 2 + 10;
-const R = Math.min(W, H) * 0.38;
+const cx = W / 2 + 30, cy = H / 2 + 10;
+const R = Math.min(W, H) * 0.31;
 const N = radarAxes.length;
 const activeEmpires = new Set();
 
