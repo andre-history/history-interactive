@@ -984,9 +984,9 @@ footer {
   animation: fadeUp 0.4s ease 0.1s forwards;
 }
 
+</style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-</style>
 </head>
 <body>
 <nav class="tab-nav">
@@ -1783,13 +1783,36 @@ function initMap2() {
 }
 
 // Initiera kartan när tab 2 aktiveras
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  if (btn.dataset.tab === '2') btn.addEventListener('click', () => {
-    setTimeout(initMap2, 80);
-    setTimeout(() => { if (window._invalidateMaps) window._invalidateMaps(); }, 400);
-    setTimeout(() => { if (window._invalidateMaps) window._invalidateMaps(); }, 900);
+// Strategi: gör panel-2 kort synlig (men osynlig visuellt) vid sidladdning
+// så Leaflet kan mäta containern, initiera, sedan dölja igen.
+(function preInitMaps() {
+  const panel = document.getElementById('panel-2');
+  // Gör synlig men osynlig visuellt
+  panel.style.visibility = 'hidden';
+  panel.style.display = 'block';
+  panel.style.position = 'absolute';
+  panel.style.pointerEvents = 'none';
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      initMap2();
+      // Återställ till dold
+      panel.style.visibility = '';
+      panel.style.display = '';
+      panel.style.position = '';
+      panel.style.pointerEvents = '';
+
+      // invalidateSize när tabben faktiskt öppnas
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.dataset.tab === '2') btn.addEventListener('click', () => {
+          requestAnimationFrame(() => {
+            if (window._invalidateMaps) window._invalidateMaps();
+          });
+        });
+      });
+    });
   });
-});
+})();
 
 const nodeData = {
   babylon: {
