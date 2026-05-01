@@ -110,10 +110,10 @@ h1 {
 
 .date-ruler {
   position: relative;
-  height: 36px;
-  border-bottom: 1px solid var(--border);
+  height: 44px;
+  border-bottom: 1px solid var(--border2);
   margin-bottom: 20px;
-  margin-left: 0;
+  background: linear-gradient(to bottom, transparent 60%, rgba(255,255,255,0.02) 100%);
 }
 
 .date-tick {
@@ -128,18 +128,45 @@ h1 {
 
 .date-tick-line {
   width: 1px;
-  height: 10px;
-  background: var(--border2);
+  height: 14px;
+  background: var(--text3);
 }
 
 .date-tick-label {
   font-family: 'Cinzel', serif;
   font-size: 10px;
-  color: var(--text3);
+  color: var(--text2);
   white-space: nowrap;
   position: absolute;
-  bottom: 14px;
+  bottom: 18px;
   transform: translateX(-50%);
+  letter-spacing: 0.5px;
+}
+
+/* Start-marker per civilisation */
+.civ-start-marker {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: var(--color, #888);
+  opacity: 0.6;
+}
+
+.civ-start-marker::after {
+  content: attr(data-year);
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--color, #888);
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  opacity: 1;
+  text-shadow: 0 0 8px rgba(0,0,0,0.8);
 }
 
 /* ── CIVILISATION ROWS ── */
@@ -568,13 +595,396 @@ footer {
   font-size: 0.9em;
 }
 
-@media (max-width: 680px) {
-  .wrap { padding: 40px 20px 60px; }
-  .gap-row { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
-  .gap-label-txt { grid-column: 1 / -1; }
-  .gap-note-txt { display: none; }
-  .comp-grid { grid-template-columns: 1fr; }
+/* ══════════════════════════════════
+   TAB 2 — SAMMANKOPPLADE VÄRLDEN
+══════════════════════════════════ */
+
+/* Colors */
+:root {
+  --babylon: #b85c1a;
+  --babylon-l: #d97d3a;
+  --egypt2: #c9a030;
+  --egypt2-l: #e8c050;
+  --kush: #7a3e2a;
+  --kush-l: #b05a3a;
+  --shang: #5a7a3e;
+  --shang-l: #7aaa55;
+  --olmec: #3a6a7a;
+  --olmec-l: #55a0b0;
+  --network: #c9a03055;
 }
+
+.t2-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 64px 40px 80px;
+}
+
+.t2-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+/* ── Network map ── */
+.network-section { margin-bottom: 72px; }
+
+.network-container {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.network-svg { width: 100%; height: auto; }
+
+.node-circle {
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.node-circle:hover { filter: brightness(1.3); }
+.node-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+  fill: #e2d9c5;
+  text-anchor: middle;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+.node-year {
+  font-family: 'Crimson Text', serif;
+  font-size: 9px;
+  fill: #b0a086;
+  text-anchor: middle;
+  pointer-events: none;
+  font-style: italic;
+}
+.trade-label {
+  font-family: 'Crimson Text', serif;
+  font-size: 9px;
+  fill: #c9a03099;
+  text-anchor: middle;
+  font-style: italic;
+  pointer-events: none;
+}
+.network-edge {
+  stroke: #c9a03040;
+  stroke-width: 1.5;
+  fill: none;
+  stroke-dasharray: 4 3;
+}
+.network-edge.strong {
+  stroke: #c9a03070;
+  stroke-width: 2;
+  stroke-dasharray: none;
+}
+.isolated-note {
+  font-family: 'Crimson Text', serif;
+  font-size: 9px;
+  fill: #6e5e46;
+  text-anchor: middle;
+  font-style: italic;
+}
+
+/* Node info panel */
+.node-info {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 22px 26px 24px;
+  margin-top: 20px;
+  display: none;
+  position: relative;
+}
+.node-info.visible { display: block; }
+.node-info-bar {
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+}
+.node-info-title {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.node-info-body {
+  color: var(--text2);
+  font-size: 0.95em;
+  line-height: 1.8;
+}
+.node-info-body strong { color: var(--text); }
+.node-info-body em { color: var(--text); }
+.node-callout {
+  border-left: 3px solid;
+  padding: 10px 16px;
+  margin: 14px 0;
+  background: rgba(255,255,255,0.025);
+  font-style: italic;
+  color: #c4b89a;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── Civ cards grid ── */
+.cards-section { margin-bottom: 72px; }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.civ-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.civ-card-top {
+  height: 4px;
+}
+
+.civ-card-head {
+  padding: 18px 20px 14px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.civ-card-name {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+.civ-card-period {
+  font-style: italic;
+  color: var(--text3);
+  font-size: 0.82em;
+  margin-top: 3px;
+  font-family: 'Crimson Text', serif;
+}
+
+.civ-card-toggle {
+  font-size: 18px;
+  color: var(--text3);
+  transition: transform 0.3s;
+  flex-shrink: 0;
+  margin-top: 2px;
+  line-height: 1;
+}
+
+.civ-card.open .civ-card-toggle { transform: rotate(45deg); }
+
+.civ-card-tags {
+  padding: 0 20px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.civ-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 2px;
+  border: 1px solid;
+  opacity: 0.75;
+}
+
+.civ-card-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+.civ-card.open .civ-card-body { max-height: 400px; }
+
+.civ-card-body-inner {
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  color: var(--text2);
+  font-size: 0.9em;
+  line-height: 1.78;
+}
+.civ-card-body-inner strong { color: var(--text); }
+
+/* ── Trade infographic ── */
+.trade-section { margin-bottom: 72px; }
+
+.trade-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+.trade-category {
+  flex: 1;
+  padding: 22px 18px;
+  border-right: 1px solid var(--border);
+}
+.trade-category:last-child { border-right: none; }
+
+.trade-cat-icon {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 12px;
+  opacity: 0.85;
+}
+
+.trade-cat-title {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--egypt);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.trade-item {
+  font-size: 0.85em;
+  color: var(--text2);
+  line-height: 1.55;
+  margin-bottom: 6px;
+}
+
+.trade-item-name { color: var(--text); font-weight: 600; }
+.trade-origin { color: var(--text3); font-style: italic; font-size: 0.9em; }
+
+/* ── Collapse section ── */
+.collapse-section { margin-bottom: 32px; }
+
+.collapse-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--border);
+  margin-bottom: 24px;
+}
+
+.collapse-panel {
+  background: var(--bg2);
+  padding: 24px;
+}
+
+.collapse-panel-title {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.collapse-svg { width: 100%; height: auto; }
+
+.collapse-legend {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.82em;
+  color: var(--text3);
+  font-style: italic;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.collapse-analysis {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid #b85c1a;
+  border-radius: 2px;
+  padding: 20px 24px;
+  color: var(--text2);
+  font-size: 0.95em;
+  line-height: 1.82;
+}
+.collapse-analysis strong { color: var(--text); }
+
+/* ── T2 footer ── */
+.t2-footer {
+  margin-top: 80px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text3);
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+@media (max-width: 680px) {
+  .t2-wrap { padding: 40px 20px 60px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .trade-flow { flex-direction: column; }
+  .trade-category { border-right: none; border-bottom: 1px solid var(--border); }
+  .collapse-grid { grid-template-columns: 1fr; }
+}
+
+/* ── TIDSLINJE-ANIMATIONER ── */
+@keyframes arrowGrow {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.arrow-band {
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+}
+.arrow-band.anim {
+  animation: arrowGrow 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.topic-row {
+  opacity: 0;
+}
+.topic-row.anim {
+  animation: fadeUp 0.45s ease forwards;
+}
+.date-ruler {
+  opacity: 0;
+  animation: fadeUp 0.4s ease 0.1s forwards;
+}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </style>
 </head>
 <body>
@@ -642,11 +1052,165 @@ footer {
 </div>
 
 <div class="tab-panel" id="panel-2">
-  <div class="wrap empty-panel">
-    <div class="empty-panel-icon">◻</div>
-    <div class="empty-panel-title">Den sammankopplade världen · 2000–1200 f.Kr.</div>
-    <p class="empty-panel-sub">Babylon, Egyptens Nya rike, Nubien/Kush, Shang-Kina, olmekerna och bronsålderskollapsen</p>
+<div class="t2-wrap">
+
+  <div class="t2-header">
+    <div class="eyebrow">Det andra millenniet f.Kr. · Nätverk, imperier, kollaps</div>
+    <h1>Den sammankopplade världen</h1>
+    <p class="subtitle">Hur stormakterna i Främre orienten, Afrika, Asien och Amerika band samman sin tid — och hur hela systemet gick under</p>
+    <div class="header-rule"></div>
   </div>
+
+  <!-- ── SEKTION 1: NÄTVERKSKARTA ── -->
+  <section class="network-section">
+    <div class="section-label">Nätverket · Klicka på en civilisation för att utforska</div>
+    <div class="network-container">
+      <div id="map2" style="width:100%;height:420px;border-radius:3px;border:1px solid var(--border);"></div>
+
+      <div class="node-info" id="nodeInfo">
+        <div class="node-info-bar" id="nodeBar"></div>
+        <div class="node-info-title" id="nodeTitle"></div>
+        <div class="node-info-body" id="nodeBody"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEKTION 2: CIVILISATIONSKORT ── -->
+  <section class="cards-section">
+    <div class="section-label">Civilisationerna · Klicka för att expandera</div>
+    <div class="cards-grid" id="civCards2"></div>
+  </section>
+
+  <!-- ── SEKTION 3: MER ÄN VAROR ── -->
+  <section class="trade-section">
+    <div class="section-label">Vad rörde sig längs handelsvägarna?</div>
+    <div class="trade-flow">
+      <div class="trade-category">
+        <div class="trade-cat-icon">
+          <!-- Råvaror: vågskål/balans -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="14" y1="4" x2="14" y2="24" stroke="#c9a030" stroke-width="1.5"/>
+            <line x1="6" y1="8" x2="22" y2="8" stroke="#c9a030" stroke-width="1.5"/>
+            <ellipse cx="7" cy="13" rx="5" ry="3" stroke="#c9a030" stroke-width="1.2" fill="none"/>
+            <ellipse cx="21" cy="13" rx="5" ry="3" stroke="#c9a030" stroke-width="1.2" fill="none"/>
+            <line x1="6" y1="8" x2="2" y2="13" stroke="#c9a030" stroke-width="1"/>
+            <line x1="8" y1="8" x2="12" y2="13" stroke="#c9a030" stroke-width="1"/>
+            <line x1="20" y1="8" x2="16" y2="13" stroke="#c9a030" stroke-width="1"/>
+            <line x1="22" y1="8" x2="26" y2="13" stroke="#c9a030" stroke-width="1"/>
+            <line x1="11" y1="24" x2="17" y2="24" stroke="#c9a030" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="trade-cat-title">Råvaror</div>
+        <div class="trade-item"><span class="trade-item-name">Lapis lazuli</span><br><span class="trade-origin">från Badakhshan, Afghanistan</span></div>
+        <div class="trade-item"><span class="trade-item-name">Tenn</span><br><span class="trade-origin">från Anatolien och Afghanistan</span></div>
+        <div class="trade-item"><span class="trade-item-name">Bärnsten</span><br><span class="trade-origin">från Baltikum via mellanhänder</span></div>
+        <div class="trade-item"><span class="trade-item-name">Koppar</span><br><span class="trade-origin">från Cypern och Sinai</span></div>
+        <div class="trade-item"><span class="trade-item-name">Guld och elfenben</span><br><span class="trade-origin">från Nubien och Kush</span></div>
+      </div>
+      <div class="trade-category">
+        <div class="trade-cat-icon">
+          <!-- Teknologi: pilspets/stridsvagnshjul -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="14,3 19,13 14,11 9,13" stroke="#c9a030" stroke-width="1.3" fill="#c9a03022"/>
+            <line x1="14" y1="11" x2="14" y2="25" stroke="#c9a030" stroke-width="1.5"/>
+            <line x1="9" y1="19" x2="19" y2="19" stroke="#c9a030" stroke-width="1.2"/>
+            <line x1="9" y1="22" x2="19" y2="22" stroke="#c9a030" stroke-width="0.8" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="trade-cat-title">Teknologi</div>
+        <div class="trade-item"><span class="trade-item-name">Hästdragna stridsvagnar</span><br><span class="trade-origin">spred sig från stäppen till hela Främre orienten</span></div>
+        <div class="trade-item"><span class="trade-item-name">Kompositbågen</span><br><span class="trade-origin">revolutionerade krigföringen globalt</span></div>
+        <div class="trade-item"><span class="trade-item-name">Bronssmidesmetoder</span><br><span class="trade-origin">standardiserades via handeln</span></div>
+        <div class="trade-item"><span class="trade-item-name">Skeppsbyggnad</span><br><span class="trade-origin">fenicierna vidareförde kanaanéisk teknik</span></div>
+      </div>
+      <div class="trade-category">
+        <div class="trade-cat-icon">
+          <!-- Skrift: lertavla med kilskriftsrader -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="3" width="18" height="22" rx="2" stroke="#c9a030" stroke-width="1.3" fill="#c9a03012"/>
+            <line x1="9" y1="9"  x2="19" y2="9"  stroke="#c9a030" stroke-width="1" opacity="0.9"/>
+            <line x1="9" y1="13" x2="19" y2="13" stroke="#c9a030" stroke-width="1" opacity="0.9"/>
+            <line x1="9" y1="17" x2="16" y2="17" stroke="#c9a030" stroke-width="1" opacity="0.9"/>
+            <line x1="9" y1="21" x2="13" y2="21" stroke="#c9a030" stroke-width="1" opacity="0.6"/>
+            <!-- kilformade markeringar -->
+            <polygon points="9,8 11,9 9,10" fill="#c9a030" opacity="0.7"/>
+            <polygon points="9,12 11,13 9,14" fill="#c9a030" opacity="0.7"/>
+          </svg>
+        </div>
+        <div class="trade-cat-title">Skrift och idéer</div>
+        <div class="trade-item"><span class="trade-item-name">Akkadiskan</span><br><span class="trade-origin">tidens diplomatiska lingua franca</span></div>
+        <div class="trade-item"><span class="trade-item-name">Alfabetet i Ugarit</span><br><span class="trade-origin">kilskrift förenklades till 30 tecken</span></div>
+        <div class="trade-item"><span class="trade-item-name">Juridiska normer</span><br><span class="trade-origin">Hammurabis lagstiftningsprinciper spreds</span></div>
+        <div class="trade-item"><span class="trade-item-name">Religiösa berättelser</span><br><span class="trade-origin">syndaflodsmyten delad i hela regionen</span></div>
+      </div>
+      <div class="trade-category">
+        <div class="trade-cat-icon">
+          <!-- Människor: tre stiliserade figurer -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- mittenfigur -->
+            <circle cx="14" cy="7" r="3" stroke="#c9a030" stroke-width="1.3" fill="none"/>
+            <line x1="14" y1="10" x2="14" y2="19" stroke="#c9a030" stroke-width="1.3"/>
+            <line x1="9"  y1="13" x2="19" y2="13" stroke="#c9a030" stroke-width="1.3"/>
+            <line x1="14" y1="19" x2="10" y2="25" stroke="#c9a030" stroke-width="1.3"/>
+            <line x1="14" y1="19" x2="18" y2="25" stroke="#c9a030" stroke-width="1.3"/>
+            <!-- vänsterfigur, mindre -->
+            <circle cx="6" cy="9" r="2.2" stroke="#c9a030" stroke-width="1" fill="none" opacity="0.5"/>
+            <line x1="6" y1="11" x2="6" y2="18" stroke="#c9a030" stroke-width="1" opacity="0.5"/>
+            <line x1="3" y1="14" x2="9" y2="14" stroke="#c9a030" stroke-width="1" opacity="0.5"/>
+            <!-- högerfigur, mindre -->
+            <circle cx="22" cy="9" r="2.2" stroke="#c9a030" stroke-width="1" fill="none" opacity="0.5"/>
+            <line x1="22" y1="11" x2="22" y2="18" stroke="#c9a030" stroke-width="1" opacity="0.5"/>
+            <line x1="19" y1="14" x2="25" y2="14" stroke="#c9a030" stroke-width="1" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="trade-cat-title">Människor</div>
+        <div class="trade-item"><span class="trade-item-name">Diplomater och budbärare</span><br><span class="trade-origin">Amarnabreven visar kungligt brevutbyte</span></div>
+        <div class="trade-item"><span class="trade-item-name">Köpmän</span><br><span class="trade-origin">privata handelshus som Assurhandeln</span></div>
+        <div class="trade-item"><span class="trade-item-name">Hantverkare</span><br><span class="trade-origin">specialister anlitades tvärs gränserna</span></div>
+        <div class="trade-item"><span class="trade-item-name">Slavar och krigsfångar</span><br><span class="trade-origin">ofrivillig men massiv rörlighet</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEKTION 4: BRONSÅLDERSKOLLAPSEN ── -->
+  <section class="collapse-section">
+    <div class="section-label">Bronsålderskollapsen ca 1200 f.Kr.</div>
+
+    <div style="max-width:720px;margin:0 auto 32px;color:var(--text2);font-size:1.02em;line-height:1.85;">
+      <p style="margin-bottom:12px;">Runt 1200 f.Kr. rasade den sammankopplade värld som bronsåldern byggt upp på bara några decennier. Hettiternas rike försvann från historiens karta. Den mykenska kulturen i Grekland gick under. Städer längs hela östra Medelhavets kust brändes ned eller övergavs, och handelsnätverken som förbundit Egypten med Mesopotamien i århundraden tystnade.</p>
+      <p style="margin-bottom:12px;">Varför det hände är en av arkeologins stora olösta frågor. Troligen rör det sig om flera samverkande orsaker: långvarig torka och missväxt, interna sociala spänningar, och en rörelse av folkgrupper som antika källor kallar Sjöfolken. Avgörande var också att tennhandeln bröt samman. Tenn var ett nödvändigt råmaterial för att smälta brons, och utan brons stannade hela den militärteknologi som dåtidens stater vilade på.</p>
+      <p>Det viktigaste att förstå är att <strong>ingen enskild orsak räcker som förklaring</strong>. Bronsålderskollapsen var en systemkrasch: just för att samhällena var så tätt sammankopplade förstärkte varje störning nästa, tills hela nätverket föll.</p>
+    </div>
+
+    <div class="collapse-grid">
+      <div class="collapse-panel">
+        <div class="collapse-panel-title" style="color:#c9a030;">Nätverket på sin höjdpunkt · ca 1300 f.Kr.</div>
+        <div id="map-before" style="width:100%;height:220px;border-radius:2px;"></div>
+        <div class="collapse-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#c9a030;"></div> Aktiv stormakt</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#c9a03040;border:1px dashed #c9a030;"></div> Perifera</div>
+        </div>
+      </div>
+      <div class="collapse-panel">
+        <div class="collapse-panel-title" style="color:#8a3030;">Efter kollapsen · ca 1150 f.Kr.</div>
+        <div id="map-after" style="width:100%;height:220px;border-radius:2px;"></div>
+        <div class="collapse-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#8a3030;"></div> Utplånad</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#c06030;"></div> Försvagad</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#7aaa55;"></div> Överlevde</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapse-analysis">
+      <strong>Systemets sårbarhet:</strong> Kollapsen visar att extrem interkonnektivitet gör ett system skört. Eftersom de distanta ekonomierna var synkroniserade, ledde en störning i en del av nätverket till en dominoeffekt. Brutna handelsvägar för tenn gjorde bronstillverkning omöjlig. Torka slog mot skördar längs hela östra Medelhavet. Sjöfolkens härjningar — vilka de nu var — knuffade redan instabila stater över kanten. <strong>Inget av detta var tillräckligt ensamt; det var kombinationen som slog ut systemet.</strong>
+    </div>
+  </section>
+
+  <footer class="t2-footer">
+    Baserat på arkeologiska och historiska källor &middot; Gymnasium Historia 1b &middot; andre-history.github.io
+  </footer>
+</div>
 </div>
 
 <div class="tab-panel" id="panel-3">
@@ -808,7 +1372,16 @@ const ruler = document.getElementById('dateRuler');
   const el = document.createElement('div');
   el.className = 'date-tick';
   el.style.left = pct(year);
-  el.innerHTML = `<span class="date-tick-label">${year} f.Kr.</span><div class="date-tick-line"></div>`;
+
+  // Första ticken (3500): ankra till vänster så etiketten inte kapas
+  const labelStyle = year === 3500
+    ? 'position:absolute;bottom:18px;left:0;transform:none;font-family:\'Cinzel\',serif;font-size:10px;color:var(--text2);white-space:nowrap;letter-spacing:0.5px;'
+    : '';
+
+  el.innerHTML = labelStyle
+    ? `<span style="${labelStyle}">${year} f.Kr.</span><div class="date-tick-line"></div>`
+    : `<span class="date-tick-label">${year} f.Kr.</span><div class="date-tick-line"></div>`;
+
   ruler.appendChild(el);
 });
 
@@ -836,7 +1409,8 @@ civs.forEach(civ => {
         border-bottom:${arrowH}px solid transparent;
         border-left:${arrowH}px solid ${civ.colorL}c0;
       "></div>
-    </div>`;
+    </div>
+    <div class="civ-start-marker" style="left:${startPct}%;--color:${civ.colorL};" data-year="${civ.startYear} f.Kr."></div>`;
   block.appendChild(arrowRow);
 
   // Topic buttons
@@ -923,16 +1497,30 @@ civs.forEach(civ => {
   rowsContainer.appendChild(block);
 });
 
-// ── Comparison table ──
+// ── Tidslinje-animationer ──
+// Kronologisk ordning: Mesopotamien (3500), Egypten (3100), Indusdalen (2500)
+const arrowDelay  = [0.3, 1.2, 2.1];   // sekunder per pil
+const buttonDelay = [1.0, 1.9, 2.8];   // knappar tonas in efter sin pil
+
+document.querySelectorAll('.arrow-band').forEach((band, i) => {
+  band.style.animationDelay = arrowDelay[i] + 's';
+  band.classList.add('anim');
+});
+
+document.querySelectorAll('#civRows .topic-row').forEach((row, i) => {
+  row.style.animationDelay = buttonDelay[i] + 's';
+  row.classList.add('anim');
+});
+
 const compData = [
   {
     id: 'comp-meso', color: '#c0701e', header: 'Mesopotamien',
     tagline: 'Rivalitet som drivkraft',
     items: [
+      { lbl: 'Konfliktnivå',      val: 'Hög', badge: '#8a3a10' },
       { lbl: 'Statsform',         val: 'Stadsstater i ständig konkurrens med varandra' },
       { lbl: 'Maktens ursprung',  val: 'Tempelekonomin, sedan militärledaren lugal' },
       { lbl: 'Härskaren som',     val: 'Gudarnas representant på jorden' },
-      { lbl: 'Konfliktnivå',      val: 'Hög', badge: '#8a3a10' },
       { lbl: 'Skriftsystem',      val: 'Kilskrift, dechiffrerad på 1800-talet' },
       { lbl: 'Bestående arv',     val: 'Lagstiftning, matematik och världens äldsta litteratur', italic: true },
     ]
@@ -941,10 +1529,10 @@ const compData = [
     id: 'comp-egypt', color: '#c9a030', header: 'Egypten',
     tagline: 'Stabilitet som statsidé',
     items: [
+      { lbl: 'Konfliktnivå',      val: 'Låg', badge: '#4a6a18' },
       { lbl: 'Statsform',         val: 'Sammanhållen enhetsstat längs hela Nilen' },
       { lbl: 'Maktens ursprung',  val: 'Gudomlig monarki med faraon i centrum' },
       { lbl: 'Härskaren som',     val: 'Levande gud och väktare av den kosmiska ordningen Ma\'at' },
-      { lbl: 'Konfliktnivå',      val: 'Låg', badge: '#4a6a18' },
       { lbl: 'Skriftsystem',      val: 'Hieroglyfer, dechiffrerade 1822' },
       { lbl: 'Bestående arv',     val: 'Monumentalarkitektur, medicinvetenskap och kalender', italic: true },
     ]
@@ -954,10 +1542,10 @@ const compData = [
     tagline: 'Ordning utan ett enda känt namn',
     mystery: true,
     items: [
+      { lbl: 'Konfliktnivå',      val: 'Okänd', badge: '#2a4050' },
       { lbl: 'Statsform',         val: 'Troligen decentraliserad, kallad "huvudlös" av forskare' },
       { lbl: 'Maktens ursprung',  val: 'Okänd. Inga palatsfynd, inga kungagravar' },
       { lbl: 'Härskaren som',     val: 'Okänt. Inga triumfbilder eller gudomlighetsanspråk har hittats' },
-      { lbl: 'Konfliktnivå',      val: 'Okänd', badge: '#2a4050' },
       { lbl: 'Skriftsystem',      val: 'Indus-skriften, ännu inte tolkad trots ett sekel av forskning' },
       { lbl: 'Bestående arv',     val: 'Världens äldsta kända avloppsnät och en stadsplanering utan motstycke', italic: true },
     ]
@@ -1021,6 +1609,297 @@ const animateBars = () => {
 };
 window.addEventListener('scroll', animateBars, { passive: true });
 animateBars();
+
+// ══════════════════════════════════
+// TAB 2 — JAVASCRIPT
+// ══════════════════════════════════
+
+// ── Leaflet-karta (tab 2) ──
+function initMap2() {
+  if (!document.getElementById('map2') || window._map2init) return;
+  window._map2init = true;
+
+  const script = document.createElement('script');
+  script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+  script.onload = () => {
+    // ── Huvudkarta ──
+    const map = L.map('map2', {
+      center: [20, 30],
+      zoom: 2,
+      minZoom: 1,
+      maxZoom: 5,
+      zoomControl: true,
+      attributionControl: true
+    });
+
+    const tileOpts = {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    };
+    const tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+
+    L.tileLayer(tileUrl, tileOpts).addTo(map);
+
+    // Handelsleder
+    const routes = [
+      { coords: [[32.5, 44.4], [26.0, 30.5]], color: '#c9a030', weight: 2, dash: false },  // Babylon–Egypten
+      { coords: [[26.0, 30.5], [15.0, 32.5]], color: '#c9a030', weight: 2, dash: false },  // Egypten–Kush
+      { coords: [[32.5, 44.4], [37.0, 36.0]], color: '#c9a03060', weight: 1.5, dash: true }, // Babylon–Hittiterna
+      { coords: [[26.0, 30.5], [37.0, 36.0]], color: '#c9a03060', weight: 1.5, dash: true }, // Egypten–Hittiterna
+    ];
+
+    routes.forEach(r => {
+      L.polyline(r.coords, {
+        color: r.color,
+        weight: r.weight,
+        dashArray: r.dash ? '6 5' : null,
+        opacity: 0.7
+      }).addTo(map);
+    });
+
+    // Noder
+    const nodes = [
+      { id: 'babylon', latlng: [32.5, 44.4],  color: '#b85c1a', label: 'Babylon',    sub: '1792–1750 f.Kr.', r: 14 },
+      { id: 'egypt',   latlng: [26.0, 30.5],  color: '#c9a030', label: 'Egypten',    sub: 'Nya riket',       r: 16 },
+      { id: 'kush',    latlng: [15.0, 32.5],  color: '#b05a3a', label: 'Kush',       sub: 'Kerma',           r: 12 },
+      { id: 'shang',   latlng: [34.0, 113.0], color: '#7aaa55', label: 'Shang-Kina', sub: '1600–1046 f.Kr.', r: 12 },
+      { id: 'olmec',   latlng: [18.0, -95.0], color: '#55a0b0', label: 'Olmekerna',  sub: 'Mesoamerika',     r: 12 },
+    ];
+
+    let activeNode = null;
+
+    nodes.forEach(n => {
+      const circle = L.circleMarker(n.latlng, {
+        radius: n.r,
+        fillColor: n.color,
+        color: n.color,
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.35
+      }).addTo(map);
+
+      const icon = L.divIcon({
+        className: '',
+        html: `<div style="
+          font-family:'Cinzel',serif;
+          font-size:9px;
+          letter-spacing:1px;
+          text-transform:uppercase;
+          color:#e2d9c5;
+          white-space:nowrap;
+          text-shadow:0 1px 3px #000,0 0 6px #000;
+          pointer-events:none;
+          text-align:center;
+          margin-top:2px;
+        ">${n.label}<br><span style="font-family:'Crimson Text',serif;font-style:italic;font-size:8px;color:#b0a086;">${n.sub}</span></div>`,
+        iconAnchor: [-n.r - 2, -4]
+      });
+      L.marker(n.latlng, { icon, interactive: false }).addTo(map);
+
+      circle.on('click', () => {
+        if (activeNode === n.id) {
+          document.getElementById('nodeInfo').classList.remove('visible');
+          activeNode = null;
+          map.eachLayer(l => { if (l.setStyle && l.options.fillColor) l.setStyle({ fillOpacity: 0.35 }); });
+        } else {
+          showNode(n.id);
+          activeNode = n.id;
+          map.eachLayer(l => {
+            if (l.setStyle && l.options.fillColor) {
+              l.setStyle({ fillOpacity: l.options.fillColor === n.color ? 0.7 : 0.15 });
+            }
+          });
+        }
+      });
+
+      circle.on('mouseover', function() { this.setStyle({ fillOpacity: 0.6 }); });
+      circle.on('mouseout',  function() { this.setStyle({ fillOpacity: activeNode === n.id ? 0.7 : 0.35 }); });
+    });
+
+    // ── Kollapskartor ──
+    function makeCollapseMap(divId, nodes, routes) {
+      const m = L.map(divId, {
+        center: [35, 35], zoom: 3, minZoom: 2, maxZoom: 5,
+        zoomControl: false, attributionControl: false,
+        dragging: false, scrollWheelZoom: false, doubleClickZoom: false
+      });
+      L.tileLayer(tileUrl, tileOpts).addTo(m);
+      routes.forEach(r => {
+        L.polyline(r.coords, {
+          color: r.color, weight: r.weight,
+          dashArray: r.dash || null, opacity: 0.6
+        }).addTo(m);
+      });
+      nodes.forEach(n => {
+        L.circleMarker(n.latlng, {
+          radius: 9,
+          fillColor: n.fill, color: n.stroke,
+          weight: n.weight || 2, opacity: 1,
+          fillOpacity: n.fillOpacity || 0.5,
+          dashArray: n.dashArray || null
+        }).addTo(m)
+        .bindTooltip(`<span style="font-family:'Cinzel',serif;font-size:10px;">${n.label} ${n.icon}</span>`,
+          { permanent: true, direction: 'top', className: 'collapse-tip', offset: [0, -6] });
+      });
+    }
+
+    const beforeNodes = [
+      { latlng: [32.5, 44.4], fill: '#b85c1a', stroke: '#d97d3a', label: 'Babylon',    icon: '✓', fillOpacity: 0.6 },
+      { latlng: [26.0, 30.5], fill: '#c9a030', stroke: '#e8c050', label: 'Egypten',    icon: '✓', fillOpacity: 0.6 },
+      { latlng: [15.0, 32.5], fill: '#b05a3a', stroke: '#c87050', label: 'Kush',       icon: '✓', fillOpacity: 0.5 },
+      { latlng: [38.5, 35.5], fill: '#806040', stroke: '#a08050', label: 'Hittiterna', icon: '✓', fillOpacity: 0.5 },
+      { latlng: [37.5, 22.5], fill: '#5a6a3a', stroke: '#7a8a5a', label: 'Mykene',     icon: '✓', fillOpacity: 0.5 },
+      { latlng: [34.0, 113.0], fill: '#3a7a5e', stroke: '#5aaa7e', label: 'Shang',     icon: '~', fillOpacity: 0.3, dashArray: '3 3' },
+    ];
+    const beforeRoutes = [
+      { coords: [[32.5,44.4],[26.0,30.5]], color:'#c9a030', weight:2 },
+      { coords: [[26.0,30.5],[15.0,32.5]], color:'#c9a030', weight:2 },
+      { coords: [[32.5,44.4],[38.5,35.5]], color:'#c9a03070', weight:1.5, dash:'5 4' },
+      { coords: [[26.0,30.5],[38.5,35.5]], color:'#c9a03070', weight:1.5, dash:'5 4' },
+      { coords: [[38.5,35.5],[37.5,22.5]], color:'#c9a03050', weight:1.5, dash:'5 4' },
+    ];
+    const afterNodes = [
+      { latlng: [32.5, 44.4], fill: '#b85c1a', stroke: '#b85c1a', label: 'Babylon',     icon: '⚡', fillOpacity: 0.25, dashArray: '4 3', weight: 1.5 },
+      { latlng: [26.0, 30.5], fill: '#c9a030', stroke: '#c9a030', label: 'Egypten',     icon: '⚡', fillOpacity: 0.2,  dashArray: '4 3', weight: 1.5 },
+      { latlng: [15.0, 32.5], fill: '#b05a3a', stroke: '#b05a3a', label: 'Kush',        icon: '✓', fillOpacity: 0.55 },
+      { latlng: [38.5, 35.5], fill: '#302020', stroke: '#806040', label: 'Hittiterna',  icon: '✕', fillOpacity: 0.1,  weight: 1 },
+      { latlng: [37.5, 22.5], fill: '#302020', stroke: '#806040', label: 'Mykene',      icon: '✕', fillOpacity: 0.1,  weight: 1 },
+      { latlng: [34.0, 113.0], fill: '#3a7a5e', stroke: '#5aaa7e', label: 'Shang',      icon: '✓', fillOpacity: 0.4 },
+    ];
+    const afterRoutes = [
+      { coords: [[32.5,44.4],[26.0,30.5]], color:'#50202020', weight:1, dash:'2 5' },
+      { coords: [[32.5,44.4],[38.5,35.5]], color:'#50202020', weight:1, dash:'2 6' },
+    ];
+
+    makeCollapseMap('map-before', beforeNodes, beforeRoutes);
+    makeCollapseMap('map-after',  afterNodes,  afterRoutes);
+
+    const tipStyle = document.createElement('style');
+    tipStyle.textContent = `.collapse-tip { background: #1c1812cc !important; border: 1px solid #3a3025 !important; color: #e2d9c5 !important; box-shadow: none !important; padding: 2px 6px; font-size: 10px; white-space: nowrap; } .collapse-tip::before { border-top-color: #3a3025 !important; }`;
+    document.head.appendChild(tipStyle);
+
+  };  // end script.onload
+  document.head.appendChild(script);
+}
+
+// Initiera kartan när tab 2 aktiveras
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  if (btn.dataset.tab === '2') btn.addEventListener('click', () => setTimeout(initMap2, 50));
+});
+
+const nodeData = {
+  babylon: {
+    color: '#b85c1a', colorL: '#d97d3a',
+    title: 'Babylonien under Hammurabi · ca 1792–1750 f.Kr.',
+    html: `<p>Hammurabi transformerade Babylon från en obetydlig handelsort till centrum för ett mäktigt rike genom en kombination av <strong>militär styrka och diplomatisk list</strong>. Han spelade ut sina rivaler mot varandra — allierade sig med en för att krossa en annan — tills han kontrollerade hela södra Mesopotamien.</p>
+    <div class="node-callout" style="border-color:#d97d3a">Hammurabis lag var inte primärt en lagbok i modern mening. Det var <strong>imperialistisk propaganda</strong> — en stele med kungen avbildad inför solguden Shamash, som legitimerade hans herravälde och framställde honom som den rättvise herden som gudarna utsett.</div>
+    <p>Samhället var strikt skiktat i tre klasser: <em>awilum</em> (adel och fria män), <em>mushkenum</em> (allmoge) och <em>wardum</em> (slavar). Straffets hårdhet berodde helt på ofrets och förövarens sociala status.</p>`
+  },
+  egypt: {
+    color: '#c9a030', colorL: '#e8c050',
+    title: 'Egyptens Nya rike · ca 1550–1200 f.Kr.',
+    html: `<p>Efter att ha drivit ut de utländska Hyksos-härskarna inledde Egypten sin mest expansiva era. <strong>Thutmosis III</strong> genomförde sjutton militära kampanjer och skapade ett imperium från Eufrat till fjärde katarakten i Nubien. <strong>Ramses II</strong> förhandlade senare fram det äldsta kända fredsfördraget med Hettitriket efter slaget vid Kadesh.</p>
+    <div class="node-callout" style="border-color:#e8c050">Amarnabreven, en samling lerplattor funna i Egypten, avslöjar den diplomatiska världen inifrån: kungliga brev på akkadiska där Egyptens grannar bönfaller om guld, kallar faraon "broder" och klagar när gåvorna uteblir. En levande bild av bronssålderns internationella ordning.</div>
+    <p>Egypten var nätverkets tyngsta aktör. Guld flödade söderut från Nubiens gruvor och omvandlades till diplomatiskt kapital: gåvor, allianser och prestige i ett system där kungarnas "vänskap" var tidens valuta.</p>`
+  },
+  kush: {
+    color: '#b05a3a', colorL: '#c87050',
+    title: 'Nubien och Kush · centrum i Kerma',
+    html: `<p>Kush var inte Egyptens lydstat — det var en självständig makt med egna traditioner, konungadömen och handelsnätverk djupt in i det afrikanska inlandet. Med centrum i <strong>Kerma</strong> kontrollerade Kush tillgången till guld, elfenben, ebenholts och rökelse.</p>
+    <div class="node-callout" style="border-color:#c87050">Under Egyptens svagaste perioder agerade Kush självständigt och expanderade norrut. Under Nya riket koloniserade Egypten Nubien och tillsatte en "kunglig son av Kush" som guvernör — men lokala eliter behöll ofta faktisk makt och absorberade selektivt egyptisk kultur.</div>
+    <p>Det nubiska arvet lever vidare: järnsmide, pyramidtraditioner (de nubiska pyramiderna är fler till antalet än de egyptiska) och en politisk tradition som senare, under den 25:e dynastin, skulle leda till att <strong>nubiska faraoner styrde hela Egypten</strong>.</p>`
+  },
+  shang: {
+    color: '#5a7a3e', colorL: '#7aaa55',
+    title: 'Shang-dynastin · ca 1600–1046 f.Kr.',
+    html: `<p>Shang-dynastin etablerade en sofistikerad bronsålderskultur i Gula flodens dalgång som utvecklades med begränsad direkt kontakt med Främre orienten. Ändå nådde teknologin fram: <strong>hästdragna stridsvagnar</strong>, som uppfanns på de eurasiska stäpperna, dök upp i Kina ungefär samtidigt som i Mesopotamien.</p>
+    <div class="node-callout" style="border-color:#7aaa55">Shang-kungarna kommunicerade med förfäderna via <strong>orakelben</strong>: sköldpaddsskal och oxskuldror där frågor ristades in, benet värmdes tills det sprack, och sprickorna tolkades som svar. Dessa ben är källan till det kinesiska skriftsystemets ursprung.</div>
+    <p>Shang visar att civilisationens grundmönster — centralstyre, monumentalt byggande, skrift, social skiktning — uppstod oberoende i Östasien. Nätverket var globalt, men inte alla var med i det.</p>`
+  },
+  olmec: {
+    color: '#3a6a7a', colorL: '#55a0b0',
+    title: 'Olmekerna · ca 1500–500 f.Kr.',
+    html: `<p>Längs Mexikanska golfen skapade olmekerna den första komplexa kulturen i Mesoamerika utan någon kontakt med den gamla världen. Deras monumentala <strong>stenhuvuden</strong>, upp till tre meter höga och tiotals ton tunga, föreställer individuella härskare och vittnar om centralstyre och organiserad arbetskraft.</p>
+    <div class="node-callout" style="border-color:#55a0b0">Olmekernas parallella historia är ett av historiens starkaste argument mot idén att civilisation "spreds" från ett enda centrum. Urbanism, social skiktning, rituella centra och monumentalt byggande uppstod självständigt på Mexikanska golfen — utan påverkan från Egypten eller Mesopotamien.</div>
+    <p>Olmekerna etablerade begreppet <strong>schaman-kungar</strong> förknippade med jaguar-mystik och skapade konceptuella och konstnärliga traditioner som maya- och aztekkulturerna senare byggde vidare på.</p>`
+  }
+};
+
+function showNode(id) {
+  const d = nodeData[id];
+  const info = document.getElementById('nodeInfo');
+  const wasOpen = info.classList.contains('visible') && info.dataset.current === id;
+
+  if (wasOpen) {
+    info.classList.remove('visible');
+    info.dataset.current = '';
+    document.querySelectorAll('.node-circle').forEach(n => n.style.opacity = '1');
+    return;
+  }
+
+  document.getElementById('nodeBar').style.background = d.color;
+  document.getElementById('nodeTitle').style.color = d.colorL;
+  document.getElementById('nodeTitle').textContent = d.title;
+  document.getElementById('nodeBody').innerHTML = d.html;
+  info.dataset.current = id;
+  info.classList.add('visible');
+
+  document.querySelectorAll('.node-circle').forEach(n => {
+    n.style.opacity = n.dataset.node === id ? '1' : '0.45';
+  });
+}
+
+// ── Civilisationskort (tab 2) ──
+const cards2 = [
+  {
+    name: 'Babylonien', period: 'ca 1792–1750 f.Kr.', color: '#b85c1a', colorL: '#d97d3a',
+    tags: ['Lagstiftning', 'Diplomatik', 'Klassamhälle'],
+    body: `<p>Hammurabi skapade inte bara ett rike — han skapade en mall för imperiebyggande. Hans metodiska sätt att spela ut rivaler mot varandra och sedan ena dem under Babylons flagga kopierades av härskare i årtusenden efter honom.</p>
+    <p><strong>Hammurabis lag</strong> reglerade allt från löner och arv till straff för dålig byggkvalitet. Men lagen var lika mycket ett PR-projekt som ett juridiskt instrument: stelen med kungen inför solguden visades offentligt som bevis på gudomlig sanktion.</p>`
+  },
+  {
+    name: 'Egypten · Nya riket', period: 'ca 1550–1200 f.Kr.', color: '#c9a030', colorL: '#e8c050',
+    tags: ['Militärimperium', 'Diplomati', 'Guld'],
+    body: `<p>Nya riket var Egyptens höjdpunkt som militär stormakt. Faraonerna förde krig i Kanaan, Syrien och Nubien och skapade ett imperium som kontrollerade handeln längs hela östra Medelhavet.</p>
+    <p>Samtidigt var Egypten kärnan i bronssålderns diplomatiska system. <strong>Amarnabreven</strong> visar hur kungar sände gåvor, bad om guld och kallade varandra "bröder" i ett nätverk av ömsesidigt beroende som höll freden — tills det inte längre gjorde det.</p>`
+  },
+  {
+    name: 'Nubien / Kush', period: 'Kerma och vidare', color: '#b05a3a', colorL: '#c87050',
+    tags: ['Handel', 'Guld', 'Självständighet'],
+    body: `<p>Kushs historia skrivs ofta som Egyptens biroll. Det är en missvisande bild. Kush var en självständig handelsmakt med egna kulturella traditioner, egna kungar och djupa nätverk in i subsahariskt Afrika.</p>
+    <p>Det nubiska arvet är mer varaktigt än många inser: de nubiska pyramiderna är fler än de egyptiska, järnsmidet i Meroe påverkade hela Afrika, och den 25:e dynastin visar att <strong>makten flödade i båda riktningarna längs Nilen</strong>.</p>`
+  },
+  {
+    name: 'Shang-Kina och Olmekerna', period: 'ca 1600–500 f.Kr.', color: '#3a6a7a', colorL: '#55a0b0',
+    tags: ['Oberoende uppkomst', 'Orakelben', 'Jaguar-mystik'],
+    body: `<p>Shang-dynastin och olmekerna bevisar samma sak från varsitt håll: civilisationens grundformer uppstod oberoende på flera platser. Det fanns ingen spridning utifrån — det var parallell uppfinning driven av liknande sociala och ekologiska förutsättningar.</p>
+    <p><strong>Shang:</strong> orakelben som skriftens ursprung, bronsskicklighet som inte stod Mesopotamien efter, stridsvagnar via stäppkontakt. <strong>Olmekerna:</strong> stenhuvuden, schaman-kungar, rituella centra — utan en enda kontaktpunkt med den gamla världen.</p>`
+  }
+];
+
+const cardGrid = document.getElementById('civCards2');
+cards2.forEach(card => {
+  const el = document.createElement('div');
+  el.className = 'civ-card';
+  el.innerHTML = `
+    <div class="civ-card-top" style="background:${card.color};"></div>
+    <div class="civ-card-head">
+      <div>
+        <div class="civ-card-name" style="color:${card.colorL};">${card.name}</div>
+        <div class="civ-card-period">${card.period}</div>
+      </div>
+      <div class="civ-card-toggle">+</div>
+    </div>
+    <div class="civ-card-tags">
+      ${card.tags.map(t => `<span class="civ-tag" style="color:${card.colorL};border-color:${card.color}40;">${t}</span>`).join('')}
+    </div>
+    <div class="civ-card-body">
+      <div class="civ-card-body-inner">${card.body}</div>
+    </div>`;
+  el.addEventListener('click', () => el.classList.toggle('open'));
+  cardGrid.appendChild(el);
+});
 
 // ── Tab switching ──
 document.querySelectorAll('.tab-btn').forEach(btn => {
